@@ -1,0 +1,12 @@
+# ignore target folder
+target/
+
+# ignore IDE files
+.settings/
+.classpath
+.project
+.idea
+
+#ignore build
+build/_workspace
+build/bin/
