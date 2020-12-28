@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -32,7 +32,7 @@ import (
 	"github.com/kokprojects/go-kok/cmd/utils"
 	"github.com/kokprojects/go-kok/contracts/release"
 	"github.com/kokprojects/go-kok/dashboard"
-	"github.com/kokprojects/go-kok/eth"
+	"github.com/kokprojects/go-kok/kok"
 	"github.com/kokprojects/go-kok/node"
 	"github.com/kokprojects/go-kok/params"
 	whisper "github.com/kokprojects/go-kok/whisper/whisperv5"
@@ -73,19 +73,19 @@ var tomlSettings = toml.Config{
 	},
 }
 
-type ethstatsConfig struct {
+type kokstatsConfig struct {
 	URL string `toml:",omitempty"`
 }
 
-type gethConfig struct {
-	Eth       eth.Config
+type gkokConfig struct {
+	kok       kok.Config
 	Shh       whisper.Config
 	Node      node.Config
-	Ethstats  ethstatsConfig
+	kokstats  kokstatsConfig
 	Dashboard dashboard.Config
 }
 
-func loadConfig(file string, cfg *gethConfig) error {
+func loadConfig(file string, cfg *gkokConfig) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -104,16 +104,16 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit)
-	cfg.HTTPModules = append(cfg.HTTPModules, "eth", "shh", "dpos")
-	cfg.WSModules = append(cfg.WSModules, "eth", "shh")
-	cfg.IPCPath = "geth.ipc"
+	cfg.HTTPModules = append(cfg.HTTPModules, "kok", "shh", "dpos")
+	cfg.WSModules = append(cfg.WSModules, "kok", "shh")
+	cfg.IPCPath = "gkok.ipc"
 	return cfg
 }
 
-func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
+func makeConfigNode(ctx *cli.Context) (*node.Node, gkokConfig) {
 	// Load defaults.
-	cfg := gethConfig{
-		Eth:       eth.DefaultConfig,
+	cfg := gkokConfig{
+		kok:       kok.DefaultConfig,
 		Shh:       whisper.DefaultConfig,
 		Node:      defaultNodeConfig(),
 		Dashboard: dashboard.DefaultConfig,
@@ -132,9 +132,9 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.SetEthConfig(ctx, stack, &cfg.Eth)
-	if ctx.GlobalIsSet(utils.EthStatsURLFlag.Name) {
-		cfg.Ethstats.URL = ctx.GlobalString(utils.EthStatsURLFlag.Name)
+	utils.SetkokConfig(ctx, stack, &cfg.kok)
+	if ctx.GlobalIsSet(utils.kokStatsURLFlag.Name) {
+		cfg.kokstats.URL = ctx.GlobalString(utils.kokStatsURLFlag.Name)
 	}
 
 	utils.SetShhConfig(ctx, stack, &cfg.Shh)
@@ -155,9 +155,9 @@ func enableWhisper(ctx *cli.Context) bool {
 
 func makeFullNode(ctx *cli.Context) *node.Node {
 	stack, cfg := makeConfigNode(ctx)
-	//fmt.Println("----------------------NetworkId:",cfg.Eth.NetworkId)
-	core.NetWorkId = cfg.Eth.NetworkId
-	utils.RegisterEthService(stack, &cfg.Eth)
+	//fmt.Println("----------------------NetworkId:",cfg.kok.NetworkId)
+	core.NetWorkId = cfg.kok.NetworkId
+	utils.RegisterkokService(stack, &cfg.kok)
 
 	if ctx.GlobalBool(utils.DashboardEnabledFlag.Name) {
 		utils.RegisterDashboardService(stack, &cfg.Dashboard)
@@ -174,9 +174,9 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 		utils.RegisterShhService(stack, &cfg.Shh)
 	}
 
-	// Add the Ethereum Stats daemon if requested.
-	if cfg.Ethstats.URL != "" {
-		utils.RegisterEthStatsService(stack, cfg.Ethstats.URL)
+	// Add the kokereum Stats daemon if requested.
+	if cfg.kokstats.URL != "" {
+		utils.RegisterkokStatsService(stack, cfg.kokstats.URL)
 	}
 
 	// Add the release oracle service so it boots along with node.
@@ -191,7 +191,7 @@ func makeFullNode(ctx *cli.Context) *node.Node {
 		copy(config.Commit[:], commit)
 		return release.NewReleaseService(ctx, config)
 	}); err != nil {
-		utils.Fatalf("Failed to register the Geth release oracle service: %v", err)
+		utils.Fatalf("Failed to register the Gkok release oracle service: %v", err)
 	}
 	return stack
 }
@@ -201,8 +201,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.Eth.Genesis != nil {
-		cfg.Eth.Genesis = nil
+	if cfg.kok.Genesis != nil {
+		cfg.kok.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 

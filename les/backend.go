@@ -1,20 +1,20 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light kokereum Subprotocol.
 package les
 
 import (
@@ -30,13 +30,13 @@ import (
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/bloombits"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/eth/downloader"
-	"github.com/kokprojects/go-kok/eth/filters"
-	"github.com/kokprojects/go-kok/eth/gasprice"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/kok/downloader"
+	"github.com/kokprojects/go-kok/kok/filters"
+	"github.com/kokprojects/go-kok/kok/gasprice"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
-	"github.com/kokprojects/go-kok/internal/ethapi"
+	"github.com/kokprojects/go-kok/internal/kokapi"
 	"github.com/kokprojects/go-kok/light"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/node"
@@ -46,7 +46,7 @@ import (
 	rpc "github.com/kokprojects/go-kok/rpc"
 )
 
-type LightEthereum struct {
+type Lightkokereum struct {
 	odr         *LesOdr
 	relay       *LesTxRelay
 	chainConfig *params.ChainConfig
@@ -61,7 +61,7 @@ type LightEthereum struct {
 	reqDist         *requestDistributor
 	retriever       *retrieveManager
 	// DB interfaces
-	chainDb ethdb.Database // Block chain database
+	chainDb kokdb.Database // Block chain database
 
 	bloomRequests                              chan chan *bloombits.Retrieval // Channel receiving bloom data retrieval requests
 	bloomIndexer, chtIndexer, bloomTrieIndexer *core.ChainIndexer
@@ -73,13 +73,13 @@ type LightEthereum struct {
 	accountManager *accounts.Manager
 
 	networkId     uint64
-	netRPCService *ethapi.PublicNetAPI
+	netRPCService *kokapi.PublicNetAPI
 
 	wg sync.WaitGroup
 }
 
-func New(ctx *node.ServiceContext, config *eth.Config) (*LightEthereum, error) {
-	chainDb, err := eth.CreateDB(ctx, config, "lightchaindata")
+func New(ctx *node.ServiceContext, config *kok.Config) (*Lightkokereum, error) {
+	chainDb, err := kok.CreateDB(ctx, config, "lightchaindata")
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func New(ctx *node.ServiceContext, config *eth.Config) (*LightEthereum, error) {
 	peers := newPeerSet()
 	quitSync := make(chan struct{})
 
-	leth := &LightEthereum{
+	lkok := &Lightkokereum{
 		chainConfig:      chainConfig,
 		chainDb:          chainDb,
 		eventMux:         ctx.EventMux,
@@ -103,37 +103,37 @@ func New(ctx *node.ServiceContext, config *eth.Config) (*LightEthereum, error) {
 		shutdownChan:     make(chan bool),
 		networkId:        config.NetworkId,
 		bloomRequests:    make(chan chan *bloombits.Retrieval),
-		bloomIndexer:     eth.NewBloomIndexer(chainDb, light.BloomTrieFrequency),
+		bloomIndexer:     kok.NewBloomIndexer(chainDb, light.BloomTrieFrequency),
 		chtIndexer:       light.NewChtIndexer(chainDb, true),
 		bloomTrieIndexer: light.NewBloomTrieIndexer(chainDb, true),
 	}
 
-	leth.relay = NewLesTxRelay(peers, leth.reqDist)
-	leth.serverPool = newServerPool(chainDb, quitSync, &leth.wg)
-	leth.retriever = newRetrieveManager(peers, leth.reqDist, leth.serverPool)
-	leth.odr = NewLesOdr(chainDb, leth.chtIndexer, leth.bloomTrieIndexer, leth.bloomIndexer, leth.retriever)
-	if leth.blockchain, err = light.NewLightChain(leth.odr, leth.chainConfig, leth.engine); err != nil {
+	lkok.relay = NewLesTxRelay(peers, lkok.reqDist)
+	lkok.serverPool = newServerPool(chainDb, quitSync, &lkok.wg)
+	lkok.retriever = newRetrieveManager(peers, lkok.reqDist, lkok.serverPool)
+	lkok.odr = NewLesOdr(chainDb, lkok.chtIndexer, lkok.bloomTrieIndexer, lkok.bloomIndexer, lkok.retriever)
+	if lkok.blockchain, err = light.NewLightChain(lkok.odr, lkok.chainConfig, lkok.engine); err != nil {
 		return nil, err
 	}
-	leth.bloomIndexer.Start(leth.blockchain)
+	lkok.bloomIndexer.Start(lkok.blockchain)
 	// Rewind the chain in case of an incompatible config upgrade.
 	if compat, ok := genesisErr.(*params.ConfigCompatError); ok {
 		log.Warn("Rewinding chain to upgrade configuration", "err", compat)
-		leth.blockchain.SetHead(compat.RewindTo)
+		lkok.blockchain.Skokead(compat.RewindTo)
 		core.WriteChainConfig(chainDb, genesisHash, chainConfig)
 	}
 
-	leth.txPool = light.NewTxPool(leth.chainConfig, leth.blockchain, leth.relay)
-	if leth.protocolManager, err = NewProtocolManager(leth.chainConfig, true, ClientProtocolVersions, config.NetworkId, leth.eventMux, leth.engine, leth.peers, leth.blockchain, nil, chainDb, leth.odr, leth.relay, quitSync, &leth.wg); err != nil {
+	lkok.txPool = light.NewTxPool(lkok.chainConfig, lkok.blockchain, lkok.relay)
+	if lkok.protocolManager, err = NewProtocolManager(lkok.chainConfig, true, ClientProtocolVersions, config.NetworkId, lkok.eventMux, lkok.engine, lkok.peers, lkok.blockchain, nil, chainDb, lkok.odr, lkok.relay, quitSync, &lkok.wg); err != nil {
 		return nil, err
 	}
-	leth.ApiBackend = &LesApiBackend{leth, nil}
+	lkok.ApiBackend = &LesApiBackend{lkok, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.GasPrice
 	}
-	leth.ApiBackend.gpo = gasprice.NewOracle(leth.ApiBackend, gpoParams)
-	return leth, nil
+	lkok.ApiBackend.gpo = gasprice.NewOracle(lkok.ApiBackend, gpoParams)
+	return lkok, nil
 }
 
 func lesTopic(genesisHash common.Hash, protocolVersion uint) discv5.Topic {
@@ -166,22 +166,22 @@ func (s *LightDummyAPI) Mining() bool {
 	return false
 }
 
-// APIs returns the collection of RPC services the ethereum package offers.
+// APIs returns the collection of RPC services the kokereum package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
-func (s *LightEthereum) APIs() []rpc.API {
-	return append(ethapi.GetAPIs(s.ApiBackend), []rpc.API{
+func (s *Lightkokereum) APIs() []rpc.API {
+	return append(kokapi.GetAPIs(s.ApiBackend), []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "kok",
 			Version:   "1.0",
 			Service:   &LightDummyAPI{},
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "kok",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "kok",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.ApiBackend, true),
 			Public:    true,
@@ -194,29 +194,29 @@ func (s *LightEthereum) APIs() []rpc.API {
 	}...)
 }
 
-func (s *LightEthereum) ResetWithGenesisBlock(gb *types.Block) {
+func (s *Lightkokereum) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *LightEthereum) BlockChain() *light.LightChain      { return s.blockchain }
-func (s *LightEthereum) TxPool() *light.TxPool              { return s.txPool }
-func (s *LightEthereum) Engine() consensus.Engine           { return s.engine }
-func (s *LightEthereum) LesVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
-func (s *LightEthereum) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
-func (s *LightEthereum) EventMux() *event.TypeMux           { return s.eventMux }
+func (s *Lightkokereum) BlockChain() *light.LightChain      { return s.blockchain }
+func (s *Lightkokereum) TxPool() *light.TxPool              { return s.txPool }
+func (s *Lightkokereum) Engine() consensus.Engine           { return s.engine }
+func (s *Lightkokereum) LesVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
+func (s *Lightkokereum) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
+func (s *Lightkokereum) EventMux() *event.TypeMux           { return s.eventMux }
 
 // Protocols implements node.Service, returning all the currently configured
 // network protocols to start.
-func (s *LightEthereum) Protocols() []p2p.Protocol {
+func (s *Lightkokereum) Protocols() []p2p.Protocol {
 	return s.protocolManager.SubProtocols
 }
 
 // Start implements node.Service, starting all internal goroutines needed by the
-// Ethereum protocol implementation.
-func (s *LightEthereum) Start(srvr *p2p.Server) error {
+// kokereum protocol implementation.
+func (s *Lightkokereum) Start(srvr *p2p.Server) error {
 	s.startBloomHandlers()
 	log.Warn("Light client mode is an experimental feature")
-	s.netRPCService = ethapi.NewPublicNetAPI(srvr, s.networkId)
+	s.netRPCService = kokapi.NewPublicNetAPI(srvr, s.networkId)
 	// search the topic belonging to the oldest supported protocol because
 	// servers always advertise all supported protocols
 	protocolVersion := ClientProtocolVersions[len(ClientProtocolVersions)-1]
@@ -226,8 +226,8 @@ func (s *LightEthereum) Start(srvr *p2p.Server) error {
 }
 
 // Stop implements node.Service, terminating all internal goroutines used by the
-// Ethereum protocol.
-func (s *LightEthereum) Stop() error {
+// kokereum protocol.
+func (s *Lightkokereum) Stop() error {
 	s.odr.Stop()
 	if s.bloomIndexer != nil {
 		s.bloomIndexer.Close()

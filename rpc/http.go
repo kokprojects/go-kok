@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -128,7 +128,7 @@ func (hc *httpConn) doRequest(ctx context.Context, msg interface{}) (io.ReadClos
 	return resp.Body, nil
 }
 
-// httpReadWriteNopCloser wraps a io.Reader and io.Writer with a NOP Close method.
+// httpReadWriteNopCloser wraps a io.Reader and io.Writer with a NOP Close mkokod.
 type httpReadWriteNopCloser struct {
 	io.Reader
 	io.Writer
@@ -149,7 +149,7 @@ func NewHTTPServer(cors []string, srv *Server) *http.Server {
 // ServeHTTP serves JSON-RPC requests over HTTP.
 func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Permit dumb empty requests for remote health-checks (AWS)
-	if r.Method == "GET" && r.ContentLength == 0 && r.URL.RawQuery == "" {
+	if r.Mkokod == "GET" && r.ContentLength == 0 && r.URL.RawQuery == "" {
 		return
 	}
 	if code, err := validateRequest(r); err != nil {
@@ -163,14 +163,14 @@ func (srv *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer codec.Close()
 
 	w.Header().Set("content-type", contentType)
-	srv.ServeSingleRequest(codec, OptionMethodInvocation)
+	srv.ServeSingleRequest(codec, OptionMkokodInvocation)
 }
 
 // validateRequest returns a non-zero response code and error message if the
 // request is invalid.
 func validateRequest(r *http.Request) (int, error) {
-	if r.Method == "PUT" || r.Method == "DELETE" {
-		return http.StatusMethodNotAllowed, errors.New("method not allowed")
+	if r.Mkokod == "PUT" || r.Mkokod == "DELETE" {
+		return http.StatusMkokodNotAllowed, errors.New("mkokod not allowed")
 	}
 	if r.ContentLength > maxHTTPRequestContentLength {
 		err := fmt.Errorf("content length too large (%d>%d)", r.ContentLength, maxHTTPRequestContentLength)
@@ -192,7 +192,7 @@ func newCorsHandler(srv *Server, allowedOrigins []string) http.Handler {
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: allowedOrigins,
-		AllowedMethods: []string{"POST", "GET"},
+		AllowedMkokods: []string{"POST", "GET"},
 		MaxAge:         600,
 		AllowedHeaders: []string{"*"},
 	})

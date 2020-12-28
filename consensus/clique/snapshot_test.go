@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package clique
 
@@ -26,7 +26,7 @@ import (
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/crypto"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 )
 
@@ -37,7 +37,7 @@ type testerVote struct {
 }
 
 // testerAccountPool is a pool to maintain currently active tester accounts,
-// mapped from textual names used in the tests below to actual Ethereum private
+// mapped from textual names used in the tests below to actual kokereum private
 // keys capable of signing transactions.
 type testerAccountPool struct {
 	accounts map[string]*ecdsa.PrivateKey
@@ -64,24 +64,24 @@ func (ap *testerAccountPool) address(account string) common.Address {
 	if ap.accounts[account] == nil {
 		ap.accounts[account], _ = crypto.GenerateKey()
 	}
-	// Resolve and return the Ethereum address
+	// Resolve and return the kokereum address
 	return crypto.PubkeyToAddress(ap.accounts[account].PublicKey)
 }
 
 // testerChainReader implements consensus.ChainReader to access the genesis
-// block. All other methods and requests will panic.
+// block. All other mkokods and requests will panic.
 type testerChainReader struct {
-	db ethdb.Database
+	db kokdb.Database
 }
 
 func (r *testerChainReader) Config() *params.ChainConfig                 { return params.AllCliqueProtocolChanges }
 func (r *testerChainReader) CurrentHeader() *types.Header                { panic("not supported") }
-func (r *testerChainReader) GetHeader(common.Hash, uint64) *types.Header { panic("not supported") }
+func (r *testerChainReader) Gkokeader(common.Hash, uint64) *types.Header { panic("not supported") }
 func (r *testerChainReader) GetBlock(common.Hash, uint64) *types.Block   { panic("not supported") }
-func (r *testerChainReader) GetHeaderByHash(common.Hash) *types.Header   { panic("not supported") }
-func (r *testerChainReader) GetHeaderByNumber(number uint64) *types.Header {
+func (r *testerChainReader) GkokeaderByHash(common.Hash) *types.Header   { panic("not supported") }
+func (r *testerChainReader) GkokeaderByNumber(number uint64) *types.Header {
 	if number == 0 {
-		return core.GetHeader(r.db, core.GetCanonicalHash(r.db, 0), 0)
+		return core.Gkokeader(r.db, core.GetCanonicalHash(r.db, 0), 0)
 	}
 	panic("not supported")
 }
@@ -351,7 +351,7 @@ func TestVoting(t *testing.T) {
 			copy(genesis.ExtraData[extraVanity+j*common.AddressLength:], signer[:])
 		}
 		// Create a pristine blockchain with the genesis injected
-		db, _ := ethdb.NewMemDatabase()
+		db, _ := kokdb.NewMemDatabase()
 		genesis.Commit(db)
 
 		// Assemble a chain of headers from the cast votes

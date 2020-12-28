@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package release contains the node service that tracks client releases.
 package release
@@ -27,8 +27,8 @@ import (
 
 	"github.com/kokprojects/go-kok/accounts/abi/bind"
 	"github.com/kokprojects/go-kok/common"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/internal/ethapi"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/internal/kokapi"
 	"github.com/kokprojects/go-kok/les"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/node"
@@ -41,7 +41,7 @@ const releaseRecheckInterval = time.Hour
 
 // Config contains the configurations of the release service.
 type Config struct {
-	Oracle common.Address // Ethereum address of the release oracle
+	Oracle common.Address // kokereum address of the release oracle
 	Major  uint32         // Major version component of the release
 	Minor  uint32         // Minor version component of the release
 	Patch  uint32         // Patch version component of the release
@@ -60,21 +60,21 @@ type ReleaseService struct {
 // NewReleaseService creates a new service to periodically check for new client
 // releases and notify the user of such.
 func NewReleaseService(ctx *node.ServiceContext, config Config) (node.Service, error) {
-	// Retrieve the Ethereum service dependency to access the blockchain
-	var apiBackend ethapi.Backend
-	var ethereum *eth.Ethereum
-	if err := ctx.Service(&ethereum); err == nil {
-		apiBackend = ethereum.ApiBackend
+	// Retrieve the kokereum service dependency to access the blockchain
+	var apiBackend kokapi.Backend
+	var kokereum *kok.kokereum
+	if err := ctx.Service(&kokereum); err == nil {
+		apiBackend = kokereum.ApiBackend
 	} else {
-		var ethereum *les.LightEthereum
-		if err := ctx.Service(&ethereum); err == nil {
-			apiBackend = ethereum.ApiBackend
+		var kokereum *les.Lightkokereum
+		if err := ctx.Service(&kokereum); err == nil {
+			apiBackend = kokereum.ApiBackend
 		} else {
 			return nil, err
 		}
 	}
 	// Construct the release service
-	contract, err := NewReleaseOracle(config.Oracle, eth.NewContractBackend(apiBackend))
+	contract, err := NewReleaseOracle(config.Oracle, kok.NewContractBackend(apiBackend))
 	if err != nil {
 		return nil, err
 	}

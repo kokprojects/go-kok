@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package abi
 
@@ -336,13 +336,13 @@ func TestPack(t *testing.T) {
 	}
 }
 
-func TestMethodPack(t *testing.T) {
+func TestMkokodPack(t *testing.T) {
 	abi, err := JSON(strings.NewReader(jsondata2))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	sig := abi.Methods["slice"].Id()
+	sig := abi.Mkokods["slice"].Id()
 	sig = append(sig, common.LeftPadBytes([]byte{1}, 32)...)
 	sig = append(sig, common.LeftPadBytes([]byte{2}, 32)...)
 
@@ -356,7 +356,7 @@ func TestMethodPack(t *testing.T) {
 	}
 
 	var addrA, addrB = common.Address{1}, common.Address{2}
-	sig = abi.Methods["sliceAddress"].Id()
+	sig = abi.Mkokods["sliceAddress"].Id()
 	sig = append(sig, common.LeftPadBytes([]byte{32}, 32)...)
 	sig = append(sig, common.LeftPadBytes([]byte{2}, 32)...)
 	sig = append(sig, common.LeftPadBytes(addrA[:], 32)...)
@@ -371,7 +371,7 @@ func TestMethodPack(t *testing.T) {
 	}
 
 	var addrC, addrD = common.Address{3}, common.Address{4}
-	sig = abi.Methods["sliceMultiAddress"].Id()
+	sig = abi.Mkokods["sliceMultiAddress"].Id()
 	sig = append(sig, common.LeftPadBytes([]byte{64}, 32)...)
 	sig = append(sig, common.LeftPadBytes([]byte{160}, 32)...)
 	sig = append(sig, common.LeftPadBytes([]byte{2}, 32)...)
@@ -389,7 +389,7 @@ func TestMethodPack(t *testing.T) {
 		t.Errorf("expected %x got %x", sig, packed)
 	}
 
-	sig = abi.Methods["slice256"].Id()
+	sig = abi.Mkokods["slice256"].Id()
 	sig = append(sig, common.LeftPadBytes([]byte{1}, 32)...)
 	sig = append(sig, common.LeftPadBytes([]byte{2}, 32)...)
 

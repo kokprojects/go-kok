@@ -1,35 +1,35 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package accounts implements high level Ethereum account management.
+// Package accounts implements high level kokereum account management.
 package accounts
 
 import (
 	"math/big"
 
-	ethereum "github.com/kokprojects/go-kok"
+	kokereum "github.com/kokprojects/go-kok"
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/event"
 )
 
-// Account represents an Ethereum account located at a specific location defined
+// Account represents an kokereum account located at a specific location defined
 // by the optional URL field.
 type Account struct {
-	Address common.Address `json:"address"` // Ethereum account address derived from the key
+	Address common.Address `json:"address"` // kokereum account address derived from the key
 	URL     URL            `json:"url"`     // Optional resource locator within a backend
 }
 
@@ -51,7 +51,7 @@ type Wallet interface {
 	// wallets and/or to access derivation seeds.
 	//
 	// The passphrase parameter may or may not be used by the implementation of a
-	// particular wallet instance. The reason there is no passwordless open method
+	// particular wallet instance. The reason there is no passwordless open mkokod
 	// is to strive towards a uniform wallet handling, oblivious to the different
 	// backend providers.
 	//
@@ -67,7 +67,7 @@ type Wallet interface {
 	// rather only contain the accounts explicitly pinned during account derivation.
 	Accounts() []Account
 
-	// Contains returns whether an account is part of this particular wallet or not.
+	// Contains returns whkoker an account is part of this particular wallet or not.
 	Contains(account Account) bool
 
 	// Derive attempts to explicitly derive a hierarchical deterministic account at
@@ -85,7 +85,7 @@ type Wallet interface {
 	//
 	// You can disable automatic account discovery by calling SelfDerive with a nil
 	// chain state reader.
-	SelfDerive(base DerivationPath, chain ethereum.ChainStateReader)
+	SelfDerive(base DerivationPath, chain kokereum.ChainStateReader)
 
 	// SignHash requests the wallet to sign the given hash.
 	//

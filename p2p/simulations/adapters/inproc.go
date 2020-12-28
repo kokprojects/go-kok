@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package adapters
 
@@ -179,12 +179,12 @@ func (self *SimNode) ServeRPC(conn net.Conn) error {
 	if err != nil {
 		return err
 	}
-	handler.ServeCodec(rpc.NewJSONCodec(conn), rpc.OptionMethodInvocation|rpc.OptionSubscriptions)
+	handler.ServeCodec(rpc.NewJSONCodec(conn), rpc.OptionMkokodInvocation|rpc.OptionSubscriptions)
 	return nil
 }
 
 // Snapshots creates snapshots of the services by calling the
-// simulation_snapshot RPC method
+// simulation_snapshot RPC mkokod
 func (self *SimNode) Snapshots() (map[string][]byte, error) {
 	self.lock.RLock()
 	services := make(map[string]node.Service, len(self.running))

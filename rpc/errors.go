@@ -1,33 +1,33 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
 import "fmt"
 
 // request is for an unknown service
-type methodNotFoundError struct {
+type mkokodNotFoundError struct {
 	service string
-	method  string
+	mkokod  string
 }
 
-func (e *methodNotFoundError) ErrorCode() int { return -32601 }
+func (e *mkokodNotFoundError) ErrorCode() int { return -32601 }
 
-func (e *methodNotFoundError) Error() string {
-	return fmt.Sprintf("The method %s%s%s does not exist/is not available", e.service, serviceMethodSeparator, e.method)
+func (e *mkokodNotFoundError) Error() string {
+	return fmt.Sprintf("The mkokod %s%s%s does not exist/is not available", e.service, serviceMkokodSeparator, e.mkokod)
 }
 
 // received message isn't a valid request

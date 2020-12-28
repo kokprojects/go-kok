@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -86,7 +86,7 @@ func (w *wizard) makeGenesis() {
 // manageGenesis permits the modification of chain configuration parameters in
 // a genesis config and the export of the entire genesis spec.
 func (w *wizard) manageGenesis() {
-	// Figure out whether to modify or export the genesis
+	// Figure out whkoker to modify or export the genesis
 	fmt.Println()
 	fmt.Println(" 1. Modify existing fork rules")
 	fmt.Println(" 2. Export genesis configuration")
@@ -129,6 +129,6 @@ func (w *wizard) manageGenesis() {
 		log.Info("Exported existing genesis block")
 
 	default:
-		log.Error("That's not something I can do")
+		log.Error("That's not somkoking I can do")
 	}
 }

@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package miner
 
@@ -25,7 +25,7 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/consensus"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/log"
 )
@@ -50,7 +50,7 @@ type RemoteAgent struct {
 	hashrateMu sync.RWMutex
 	hashrate   map[common.Hash]hashrate
 
-	running int32 // running indicates whether the agent is active. Call atomically
+	running int32 // running indicates whkoker the agent is active. Call atomically
 }
 
 func NewRemoteAgent(chain consensus.ChainReader, engine consensus.Engine) *RemoteAgent {
@@ -94,8 +94,8 @@ func (a *RemoteAgent) Stop() {
 	close(a.workCh)
 }
 
-// GetHashRate returns the accumulated hashrate of all identifier combined
-func (a *RemoteAgent) GetHashRate() (tot int64) {
+// GkokashRate returns the accumulated hashrate of all identifier combined
+func (a *RemoteAgent) GkokashRate() (tot int64) {
 	a.hashrateMu.RLock()
 	defer a.hashrateMu.RUnlock()
 
@@ -116,7 +116,7 @@ func (a *RemoteAgent) GetWork() ([3]string, error) {
 		block := a.currentWork.Block
 
 		res[0] = block.HashNoNonce().Hex()
-		seedHash := ethash.SeedHash(block.NumberU64())
+		seedHash := kokash.SeedHash(block.NumberU64())
 		res[1] = common.BytesToHash(seedHash).Hex()
 		// Calculate the "target" to be returned to the external miner
 		n := big.NewInt(1)
@@ -132,7 +132,7 @@ func (a *RemoteAgent) GetWork() ([3]string, error) {
 }
 
 // SubmitWork tries to inject a pow solution into the remote agent, returning
-// whether the solution was accepted or not (not can be both a bad pow as well as
+// whkoker the solution was accepted or not (not can be both a bad pow as well as
 // any other error, like no work pending).
 func (a *RemoteAgent) SubmitWork(nonce types.BlockNonce, mixDigest, hash common.Hash) bool {
 	a.mu.Lock()

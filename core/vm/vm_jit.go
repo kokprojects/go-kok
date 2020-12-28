@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // +build evmjit
 
@@ -25,7 +25,7 @@ int   evmjit_run(void* _jit, void* _data, void* _env);
 void  evmjit_destroy(void* _jit);
 
 // Shared library evmjit (e.g. libevmjit.so) is expected to be installed in /usr/local/lib
-// More: https://github.com/ethereum/evmjit
+// More: https://github.com/kokereum/evmjit
 #cgo LDFLAGS: -levmjit
 */
 import "C"
@@ -291,7 +291,7 @@ func env_blockhash(_vm unsafe.Pointer, _number unsafe.Pointer, _result unsafe.Po
 	currNumber := vm.Env().BlockNumber()
 	limit := big.NewInt(0).Sub(currNumber, big.NewInt(256))
 	if number.Cmp(limit) >= 0 && number.Cmp(currNumber) < 0 {
-		hash := vm.Env().GetHash(uint64(number.Int64()))
+		hash := vm.Env().Gkokash(uint64(number.Int64()))
 		*result = hash2llvm(hash)
 	} else {
 		*result = i256{}

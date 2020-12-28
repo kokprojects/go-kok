@@ -1,20 +1,20 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package tests implements execution of Ethereum JSON tests.
+// Package tests implements execution of kokereum JSON tests.
 package tests
 
 import (
@@ -27,12 +27,12 @@ import (
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/common/hexutil"
 	"github.com/kokprojects/go-kok/common/math"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 	"github.com/kokprojects/go-kok/rlp"
 )
@@ -98,7 +98,7 @@ func (t *BlockTest) Run() error {
 	}
 
 	// import pre accounts & construct test genesis block & state root
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	gblock, err := t.genesis(config).Commit(db)
 	if err != nil {
 		return err
@@ -110,7 +110,7 @@ func (t *BlockTest) Run() error {
 		return fmt.Errorf("genesis block state root does not match test: computed=%x, test=%x", gblock.Root().Bytes()[:6], t.json.Genesis.StateRoot[:6])
 	}
 
-	chain, err := core.NewBlockChain(db, config, ethash.NewShared(), vm.Config{})
+	chain, err := core.NewBlockChain(db, config, kokash.NewShared(), vm.Config{})
 	if err != nil {
 		return err
 	}
@@ -150,9 +150,9 @@ func (t *BlockTest) genesis(config *params.ChainConfig) *core.Genesis {
 	}
 }
 
-/* See https://github.com/ethereum/tests/wiki/Blockchain-Tests-II
+/* See https://github.com/kokereum/tests/wiki/Blockchain-Tests-II
 
-   Whether a block is valid or not is a bit subtle, it's defined by presence of
+   Whkoker a block is valid or not is a bit subtle, it's defined by presence of
    blockHeader, transactions and uncleHeaders fields. If they are missing, the block is
    invalid and we must verify that we do not accept it.
 

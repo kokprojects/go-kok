@@ -1,22 +1,22 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Contains all the wrappers from the bind package.
 
-package geth
+package gkok
 
 import (
 	"math/big"
@@ -29,7 +29,7 @@ import (
 )
 
 // Signer is an interaface defining the callback when a contract requires a
-// method to sign the transaction before submission.
+// mkokod to sign the transaction before submission.
 type Signer interface {
 	Sign(*Address, *Transaction) (tx *Transaction, _ error)
 }
@@ -68,7 +68,7 @@ func (opts *CallOpts) SetGasLimit(limit int64)     { /* TODO(karalabe) */ }
 func (opts *CallOpts) SetContext(context *Context) { opts.opts.Context = context.context }
 
 // TransactOpts is the collection of authorization data required to create a
-// valid Ethereum transaction.
+// valid kokereum transaction.
 type TransactOpts struct {
 	opts bind.TransactOpts
 }
@@ -103,7 +103,7 @@ func (opts *TransactOpts) SetGasLimit(limit int64)     { opts.opts.GasLimit = bi
 func (opts *TransactOpts) SetContext(context *Context) { opts.opts.Context = context.context }
 
 // BoundContract is the base wrapper object that reflects a contract on the
-// Ethereum network. It contains a collection of methods that are used by the
+// kokereum network. It contains a collection of mkokods that are used by the
 // higher level contract bindings to operate.
 type BoundContract struct {
 	contract *bind.BoundContract
@@ -111,9 +111,9 @@ type BoundContract struct {
 	deployer *types.Transaction
 }
 
-// DeployContract deploys a contract onto the Ethereum blockchain and binds the
+// DeployContract deploys a contract onto the kokereum blockchain and binds the
 // deployment address with a wrapper.
-func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client *EthereumClient, args *Interfaces) (contract *BoundContract, _ error) {
+func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client *kokereumClient, args *Interfaces) (contract *BoundContract, _ error) {
 	// Deploy the contract to the network
 	parsed, err := abi.JSON(strings.NewReader(abiJSON))
 	if err != nil {
@@ -132,7 +132,7 @@ func DeployContract(opts *TransactOpts, abiJSON string, bytecode []byte, client 
 
 // BindContract creates a low level contract interface through which calls and
 // transactions may be made through.
-func BindContract(address *Address, abiJSON string, client *EthereumClient) (contract *BoundContract, _ error) {
+func BindContract(address *Address, abiJSON string, client *kokereumClient) (contract *BoundContract, _ error) {
 	parsed, err := abi.JSON(strings.NewReader(abiJSON))
 	if err != nil {
 		return nil, err
@@ -151,21 +151,21 @@ func (c *BoundContract) GetDeployer() *Transaction {
 	return &Transaction{c.deployer}
 }
 
-// Call invokes the (constant) contract method with params as input values and
+// Call invokes the (constant) contract mkokod with params as input values and
 // sets the output to result.
-func (c *BoundContract) Call(opts *CallOpts, out *Interfaces, method string, args *Interfaces) error {
+func (c *BoundContract) Call(opts *CallOpts, out *Interfaces, mkokod string, args *Interfaces) error {
 	results := make([]interface{}, len(out.objects))
 	copy(results, out.objects)
-	if err := c.contract.Call(&opts.opts, &results, method, args.objects...); err != nil {
+	if err := c.contract.Call(&opts.opts, &results, mkokod, args.objects...); err != nil {
 		return err
 	}
 	copy(out.objects, results)
 	return nil
 }
 
-// Transact invokes the (paid) contract method with params as input values.
-func (c *BoundContract) Transact(opts *TransactOpts, method string, args *Interfaces) (tx *Transaction, _ error) {
-	rawTx, err := c.contract.Transact(&opts.opts, method, args.objects...)
+// Transact invokes the (paid) contract mkokod with params as input values.
+func (c *BoundContract) Transact(opts *TransactOpts, mkokod string, args *Interfaces) (tx *Transaction, _ error) {
+	rawTx, err := c.contract.Transact(&opts.opts, mkokod, args.objects...)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +173,7 @@ func (c *BoundContract) Transact(opts *TransactOpts, method string, args *Interf
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
+// its default mkokod if one is available.
 func (c *BoundContract) Transfer(opts *TransactOpts) (tx *Transaction, _ error) {
 	rawTx, err := c.contract.Transfer(&opts.opts)
 	if err != nil {

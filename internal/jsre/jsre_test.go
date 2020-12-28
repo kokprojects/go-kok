@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package jsre
 
@@ -32,7 +32,7 @@ type msg struct {
 	Msg string
 }
 
-func (no *testNativeObjectBinding) TestMethod(call otto.FunctionCall) otto.Value {
+func (no *testNativeObjectBinding) TestMkokod(call otto.FunctionCall) otto.Value {
 	m, err := call.Argument(0).ToString()
 	if err != nil {
 		return otto.UndefinedValue()
@@ -107,7 +107,7 @@ func TestBind(t *testing.T) {
 
 	jsre.Bind("no", &testNativeObjectBinding{})
 
-	_, err := jsre.Run(`no.TestMethod("testMsg")`)
+	_, err := jsre.Run(`no.TestMkokod("testMsg")`)
 	if err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}

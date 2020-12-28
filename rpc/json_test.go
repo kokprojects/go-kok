@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -41,7 +41,7 @@ func TestJSONRequestParsing(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	req := bytes.NewBufferString(`{"id": 1234, "jsonrpc": "2.0", "method": "calc_add", "params": [11, 22]}`)
+	req := bytes.NewBufferString(`{"id": 1234, "jsonrpc": "2.0", "mkokod": "calc_add", "params": [11, 22]}`)
 	var str string
 	reply := bytes.NewBufferString(str)
 	rw := &RWC{bufio.NewReadWriter(bufio.NewReader(req), bufio.NewWriter(reply))}
@@ -65,8 +65,8 @@ func TestJSONRequestParsing(t *testing.T) {
 		t.Fatalf("Expected service 'calc' but got '%s'", requests[0].service)
 	}
 
-	if requests[0].method != "add" {
-		t.Fatalf("Expected method 'Add' but got '%s'", requests[0].method)
+	if requests[0].mkokod != "add" {
+		t.Fatalf("Expected mkokod 'Add' but got '%s'", requests[0].mkokod)
 	}
 
 	if rawId, ok := requests[0].id.(*json.RawMessage); ok {

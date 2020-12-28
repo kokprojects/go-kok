@@ -42,9 +42,9 @@ It has these top-level messages:
 	GetPublicKey
 	PublicKey
 	GetAddress
-	EthereumGetAddress
+	kokereumGetAddress
 	Address
-	EthereumAddress
+	kokereumAddress
 	WipeDevice
 	LoadDevice
 	ResetDevice
@@ -69,12 +69,12 @@ It has these top-level messages:
 	SimpleSignTx
 	TxRequest
 	TxAck
-	EthereumSignTx
-	EthereumTxRequest
-	EthereumTxAck
-	EthereumSignMessage
-	EthereumVerifyMessage
-	EthereumMessageSignature
+	kokereumSignTx
+	kokereumTxRequest
+	kokereumTxAck
+	kokereumSignMessage
+	kokereumVerifyMessage
+	kokereumMessageSignature
 	SignIdentity
 	SignedIdentity
 	GetECDHSessionKey
@@ -427,7 +427,7 @@ func (PinMatrixRequestType) EnumDescriptor() ([]byte, []int) { return fileDescri
 // *
 // Type of recovery procedure. These should be used as bitmask, e.g.,
 // `RecoveryDeviceType_ScrambledWords | RecoveryDeviceType_Matrix`
-// listing every method supported by the host computer.
+// listing every mkokod supported by the host computer.
 //
 // Note that ScrambledWords must be supported by every implementation
 // for backward compatibility; there is no way to not support it.
@@ -1097,7 +1097,7 @@ func (m *IdentityType) GetUser() string {
 	return ""
 }
 
-func (m *IdentityType) GetHost() string {
+func (m *IdentityType) Gkokost() string {
 	if m != nil && m.Host != nil {
 		return *m.Host
 	}

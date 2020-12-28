@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package console
 
@@ -28,7 +28,7 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core"
-	"github.com/kokprojects/go-kok/eth"
+	"github.com/kokprojects/go-kok/kok"
 	"github.com/kokprojects/go-kok/internal/jsre"
 	"github.com/kokprojects/go-kok/node"
 )
@@ -65,7 +65,7 @@ func (p *hookedPrompter) PromptPassword(prompt string) (string, error) {
 func (p *hookedPrompter) PromptConfirm(prompt string) (bool, error) {
 	return false, errors.New("not implemented")
 }
-func (p *hookedPrompter) SetHistory(history []string)              {}
+func (p *hookedPrompter) Skokistory(history []string)              {}
 func (p *hookedPrompter) AppendHistory(command string)             {}
 func (p *hookedPrompter) SetWordCompleter(completer WordCompleter) {}
 
@@ -73,7 +73,7 @@ func (p *hookedPrompter) SetWordCompleter(completer WordCompleter) {}
 type tester struct {
 	workspace string
 	stack     *node.Node
-	ethereum  *eth.Ethereum
+	kokereum  *kok.kokereum
 	console   *Console
 	input     *hookedPrompter
 	output    *bytes.Buffer
@@ -81,29 +81,29 @@ type tester struct {
 
 // newTester creates a test environment based on which the console can operate.
 // Please ensure you call Close() on the returned tester to avoid leaks.
-func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
+func newTester(t *testing.T, confOverride func(*kok.Config)) *tester {
 	// Create a temporary storage for the node keys and initialize it
 	workspace, err := ioutil.TempDir("", "console-tester-")
 	if err != nil {
 		t.Fatalf("failed to create temporary keystore: %v", err)
 	}
 
-	// Create a networkless protocol stack and start an Ethereum service within
+	// Create a networkless protocol stack and start an kokereum service within
 	stack, err := node.New(&node.Config{DataDir: workspace, UseLightweightKDF: true, Name: testInstance})
 	if err != nil {
 		t.Fatalf("failed to create node: %v", err)
 	}
-	ethConf := &eth.Config{
+	kokConf := &kok.Config{
 		Genesis:   core.DefaultGenesisBlock(),
 		Coinbase:  common.HexToAddress(testAddress),
 		Validator: common.HexToAddress(testAddress),
 		PowTest:   true,
 	}
 	if confOverride != nil {
-		confOverride(ethConf)
+		confOverride(kokConf)
 	}
-	if err = stack.Register(func(ctx *node.ServiceContext) (node.Service, error) { return eth.New(ctx, ethConf) }); err != nil {
-		t.Fatalf("failed to register Ethereum protocol: %v", err)
+	if err = stack.Register(func(ctx *node.ServiceContext) (node.Service, error) { return kok.New(ctx, kokConf) }); err != nil {
+		t.Fatalf("failed to register kokereum protocol: %v", err)
 	}
 	// Start the node and assemble the JavaScript console around it
 	if err = stack.Start(); err != nil {
@@ -128,13 +128,13 @@ func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
 		t.Fatalf("failed to create JavaScript console: %v", err)
 	}
 	// Create the final tester and return
-	var ethereum *eth.Ethereum
-	stack.Service(&ethereum)
+	var kokereum *kok.kokereum
+	stack.Service(&kokereum)
 
 	return &tester{
 		workspace: workspace,
 		stack:     stack,
-		ethereum:  ethereum,
+		kokereum:  kokereum,
 		console:   console,
 		input:     prompter,
 		output:    printer,

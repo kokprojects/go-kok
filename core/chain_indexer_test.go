@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -25,7 +25,7 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 )
 
 // Runs multiple tests with randomized parameters.
@@ -47,7 +47,7 @@ func TestChainIndexerWithChildren(t *testing.T) {
 // multiple backends. The section size and required confirmation count parameters
 // are randomized.
 func testChainIndexer(t *testing.T, count int) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	defer db.Close()
 
 	// Create a chain of indexers and ensure they all report empty
@@ -58,7 +58,7 @@ func testChainIndexer(t *testing.T, count int) {
 			confirmsReq = uint64(rand.Intn(10))
 		)
 		backends[i] = &testChainIndexBackend{t: t, processCh: make(chan uint64)}
-		backends[i].indexer = NewChainIndexer(db, ethdb.NewTable(db, string([]byte{byte(i)})), backends[i], sectionSize, confirmsReq, 0, fmt.Sprintf("indexer-%d", i))
+		backends[i].indexer = NewChainIndexer(db, kokdb.NewTable(db, string([]byte{byte(i)})), backends[i], sectionSize, confirmsReq, 0, fmt.Sprintf("indexer-%d", i))
 
 		if sections, _, _ := backends[i].indexer.Sections(); sections != 0 {
 			t.Fatalf("Canonical section count mismatch: have %v, want %v", sections, 0)

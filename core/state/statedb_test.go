@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package state
 
@@ -32,14 +32,14 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 )
 
 // Tests that updating a state trie does not leak any database writes prior to
 // actually committing the state.
 func TestUpdateLeaks(t *testing.T) {
 	// Create an empty state database
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	state, _ := New(common.Hash{}, NewDatabase(db))
 
 	// Update it with some accounts
@@ -66,8 +66,8 @@ func TestUpdateLeaks(t *testing.T) {
 // only the one right before the commit.
 func TestIntermediateLeaks(t *testing.T) {
 	// Create two state databases, one transitioning to the final state, the other final from the beginning
-	transDb, _ := ethdb.NewMemDatabase()
-	finalDb, _ := ethdb.NewMemDatabase()
+	transDb, _ := kokdb.NewMemDatabase()
+	finalDb, _ := kokdb.NewMemDatabase()
 	transState, _ := New(common.Hash{}, NewDatabase(transDb))
 	finalState, _ := New(common.Hash{}, NewDatabase(finalDb))
 
@@ -137,8 +137,8 @@ func TestSnapshotRandom(t *testing.T) {
 // A new state is created and all actions are applied to it. Several snapshots are taken
 // in between actions. The test then reverts each snapshot. For each snapshot the actions
 // leading up to it are replayed on a fresh, empty state. The behaviour of all public
-// accessor methods on the reverted state must match the return value of the equivalent
-// methods on the replayed state.
+// accessor mkokods on the reverted state must match the return value of the equivalent
+// mkokods on the replayed state.
 type snapshotTest struct {
 	addrs     []common.Address // all account addresses
 	actions   []testAction     // modifications to the state
@@ -283,7 +283,7 @@ func (test *snapshotTest) String() string {
 func (test *snapshotTest) run() bool {
 	// Run all actions and create snapshots.
 	var (
-		db, _        = ethdb.NewMemDatabase()
+		db, _        = kokdb.NewMemDatabase()
 		state, _     = New(common.Hash{}, NewDatabase(db))
 		snapshotRevs = make([]int, len(test.snapshots))
 		sindex       = 0
@@ -312,7 +312,7 @@ func (test *snapshotTest) run() bool {
 	return true
 }
 
-// checkEqual checks that methods of state and checkstate return the same values.
+// checkEqual checks that mkokods of state and checkstate return the same values.
 func (test *snapshotTest) checkEqual(state, checkstate *StateDB) error {
 	for _, addr := range test.addrs {
 		var err error
@@ -323,7 +323,7 @@ func (test *snapshotTest) checkEqual(state, checkstate *StateDB) error {
 			}
 			return true
 		}
-		// Check basic accessor methods.
+		// Check basic accessor mkokods.
 		checkeq("Exist", state.Exist(addr), checkstate.Exist(addr))
 		checkeq("HasSuicided", state.HasSuicided(addr), checkstate.HasSuicided(addr))
 		checkeq("GetBalance", state.GetBalance(addr), checkstate.GetBalance(addr))

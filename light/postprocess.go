@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package light
 
@@ -27,7 +27,7 @@ import (
 	"github.com/kokprojects/go-kok/common/bitutil"
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
 	"github.com/kokprojects/go-kok/rlp"
@@ -52,7 +52,7 @@ type trustedCheckpoint struct {
 
 var (
 	mainnetCheckpoint = trustedCheckpoint{
-		name:          "ETH mainnet",
+		name:          "kok mainnet",
 		sectionIdx:    129,
 		sectionHead:   common.HexToHash("64100587c8ec9a76870056d07cb0f58622552d16de6253a59cac4b580c899501"),
 		chtRoot:       common.HexToHash("bb4fb4076cbe6923c8a8ce8f158452bbe19564959313466989fda095a60884ca"),
@@ -89,7 +89,7 @@ type ChtNode struct {
 
 // GetChtRoot reads the CHT root assoctiated to the given section from the database
 // Note that sectionIdx is specified according to LES/1 CHT section size
-func GetChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetChtRoot(db kokdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	data, _ := db.Get(append(append(chtPrefix, encNumber[:]...), sectionHead.Bytes()...))
@@ -98,13 +98,13 @@ func GetChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) c
 
 // GetChtV2Root reads the CHT root assoctiated to the given section from the database
 // Note that sectionIdx is specified according to LES/2 CHT section size
-func GetChtV2Root(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetChtV2Root(db kokdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
 	return GetChtRoot(db, (sectionIdx+1)*(ChtFrequency/ChtV1Frequency)-1, sectionHead)
 }
 
 // StoreChtRoot writes the CHT root assoctiated to the given section into the database
 // Note that sectionIdx is specified according to LES/1 CHT section size
-func StoreChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
+func StoreChtRoot(db kokdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	db.Put(append(append(chtPrefix, encNumber[:]...), sectionHead.Bytes()...), root.Bytes())
@@ -112,16 +112,16 @@ func StoreChtRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common
 
 // ChtIndexerBackend implements core.ChainIndexerBackend
 type ChtIndexerBackend struct {
-	db, cdb              ethdb.Database
+	db, cdb              kokdb.Database
 	section, sectionSize uint64
 	lastHash             common.Hash
 	trie                 *trie.Trie
 }
 
 // NewBloomTrieIndexer creates a BloomTrie chain indexer
-func NewChtIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer {
-	cdb := ethdb.NewTable(db, ChtTablePrefix)
-	idb := ethdb.NewTable(db, "chtIndex-")
+func NewChtIndexer(db kokdb.Database, clientMode bool) *core.ChainIndexer {
+	cdb := kokdb.NewTable(db, ChtTablePrefix)
+	idb := kokdb.NewTable(db, "chtIndex-")
 	var sectionSize, confirmReq uint64
 	if clientMode {
 		sectionSize = ChtFrequency
@@ -178,8 +178,8 @@ func (c *ChtIndexerBackend) Commit() error {
 
 const (
 	BloomTrieFrequency        = 32768
-	ethBloomBitsSection       = 4096
-	ethBloomBitsConfirmations = 256
+	kokBloomBitsSection       = 4096
+	kokBloomBitsConfirmations = 256
 )
 
 var (
@@ -188,7 +188,7 @@ var (
 )
 
 // GetBloomTrieRoot reads the BloomTrie root assoctiated to the given section from the database
-func GetBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
+func GetBloomTrieRoot(db kokdb.Database, sectionIdx uint64, sectionHead common.Hash) common.Hash {
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	data, _ := db.Get(append(append(bloomTriePrefix, encNumber[:]...), sectionHead.Bytes()...))
@@ -196,7 +196,7 @@ func GetBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead common.H
 }
 
 // StoreBloomTrieRoot writes the BloomTrie root assoctiated to the given section into the database
-func StoreBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
+func StoreBloomTrieRoot(db kokdb.Database, sectionIdx uint64, sectionHead, root common.Hash) {
 	var encNumber [8]byte
 	binary.BigEndian.PutUint64(encNumber[:], sectionIdx)
 	db.Put(append(append(bloomTriePrefix, encNumber[:]...), sectionHead.Bytes()...), root.Bytes())
@@ -204,28 +204,28 @@ func StoreBloomTrieRoot(db ethdb.Database, sectionIdx uint64, sectionHead, root 
 
 // BloomTrieIndexerBackend implements core.ChainIndexerBackend
 type BloomTrieIndexerBackend struct {
-	db, cdb                                    ethdb.Database
+	db, cdb                                    kokdb.Database
 	section, parentSectionSize, bloomTrieRatio uint64
 	trie                                       *trie.Trie
 	sectionHeads                               []common.Hash
 }
 
 // NewBloomTrieIndexer creates a BloomTrie chain indexer
-func NewBloomTrieIndexer(db ethdb.Database, clientMode bool) *core.ChainIndexer {
-	cdb := ethdb.NewTable(db, BloomTrieTablePrefix)
-	idb := ethdb.NewTable(db, "bltIndex-")
+func NewBloomTrieIndexer(db kokdb.Database, clientMode bool) *core.ChainIndexer {
+	cdb := kokdb.NewTable(db, BloomTrieTablePrefix)
+	idb := kokdb.NewTable(db, "bltIndex-")
 	backend := &BloomTrieIndexerBackend{db: db, cdb: cdb}
 	var confirmReq uint64
 	if clientMode {
 		backend.parentSectionSize = BloomTrieFrequency
 		confirmReq = HelperTrieConfirmations
 	} else {
-		backend.parentSectionSize = ethBloomBitsSection
+		backend.parentSectionSize = kokBloomBitsSection
 		confirmReq = HelperTrieProcessConfirmations
 	}
 	backend.bloomTrieRatio = BloomTrieFrequency / backend.parentSectionSize
 	backend.sectionHeads = make([]common.Hash, backend.bloomTrieRatio)
-	return core.NewChainIndexer(db, idb, backend, BloomTrieFrequency, confirmReq-ethBloomBitsConfirmations, time.Millisecond*100, "bloomtrie")
+	return core.NewChainIndexer(db, idb, backend, BloomTrieFrequency, confirmReq-kokBloomBitsConfirmations, time.Millisecond*100, "bloomtrie")
 }
 
 // Reset implements core.ChainIndexerBackend

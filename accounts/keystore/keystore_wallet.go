@@ -1,25 +1,25 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package keystore
 
 import (
 	"math/big"
 
-	ethereum "github.com/kokprojects/go-kok"
+	kokereum "github.com/kokprojects/go-kok"
 	"github.com/kokprojects/go-kok/accounts"
 	"github.com/kokprojects/go-kok/core/types"
 )
@@ -36,7 +36,7 @@ func (w *keystoreWallet) URL() accounts.URL {
 	return w.account.URL
 }
 
-// Status implements accounts.Wallet, returning whether the account held by the
+// Status implements accounts.Wallet, returning whkoker the account held by the
 // keystore wallet is unlocked or not.
 func (w *keystoreWallet) Status() (string, error) {
 	w.keystore.mu.RLock()
@@ -62,7 +62,7 @@ func (w *keystoreWallet) Accounts() []accounts.Account {
 	return []accounts.Account{w.account}
 }
 
-// Contains implements accounts.Wallet, returning whether a particular account is
+// Contains implements accounts.Wallet, returning whkoker a particular account is
 // or is not wrapped by this wallet instance.
 func (w *keystoreWallet) Contains(account accounts.Account) bool {
 	return account.Address == w.account.Address && (account.URL == (accounts.URL{}) || account.URL == w.account.URL)
@@ -76,7 +76,7 @@ func (w *keystoreWallet) Derive(path accounts.DerivationPath, pin bool) (account
 
 // SelfDerive implements accounts.Wallet, but is a noop for plain wallets since
 // there is no notion of hierarchical account derivation for plain keystore accounts.
-func (w *keystoreWallet) SelfDerive(base accounts.DerivationPath, chain ethereum.ChainStateReader) {}
+func (w *keystoreWallet) SelfDerive(base accounts.DerivationPath, chain kokereum.ChainStateReader) {}
 
 // SignHash implements accounts.Wallet, attempting to sign the given hash with
 // the given account. If the wallet does not wrap this particular account, an

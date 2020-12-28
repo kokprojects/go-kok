@@ -1,23 +1,23 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package bind generates Ethereum contract Go bindings.
+// Package bind generates kokereum contract Go bindings.
 //
-// Detailed usage document and tutorial available on the go-ethereum Wiki page:
-// https://github.com/kokprojects/go-kok/wiki/Native-DApps:-Go-bindings-to-Ethereum-contracts
+// Detailed usage document and tutorial available on the go-kokereum Wiki page:
+// https://github.com/kokprojects/go-kok/wiki/Native-DApps:-Go-bindings-to-kokereum-contracts
 package bind
 
 import (
@@ -63,15 +63,15 @@ func Bind(types []string, abis []string, bytecodes []string, pkg string, lang La
 			return r
 		}, abis[i])
 
-		// Extract the call and transact methods, and sort them alphabetically
+		// Extract the call and transact mkokods, and sort them alphabetically
 		var (
-			calls     = make(map[string]*tmplMethod)
-			transacts = make(map[string]*tmplMethod)
+			calls     = make(map[string]*tmplMkokod)
+			transacts = make(map[string]*tmplMkokod)
 		)
-		for _, original := range evmABI.Methods {
-			// Normalize the method for capital cases and non-anonymous inputs/outputs
+		for _, original := range evmABI.Mkokods {
+			// Normalize the mkokod for capital cases and non-anonymous inputs/outputs
 			normalized := original
-			normalized.Name = methodNormalizer[lang](original.Name)
+			normalized.Name = mkokodNormalizer[lang](original.Name)
 
 			normalized.Inputs = make([]abi.Argument, len(original.Inputs))
 			copy(normalized.Inputs, original.Inputs)
@@ -87,11 +87,11 @@ func Bind(types []string, abis []string, bytecodes []string, pkg string, lang La
 					normalized.Outputs[j].Name = capitalise(output.Name)
 				}
 			}
-			// Append the methods to the call or transact lists
+			// Append the mkokods to the call or transact lists
 			if original.Const {
-				calls[original.Name] = &tmplMethod{Original: original, Normalized: normalized, Structured: structured(original)}
+				calls[original.Name] = &tmplMkokod{Original: original, Normalized: normalized, Structured: structured(original)}
 			} else {
-				transacts[original.Name] = &tmplMethod{Original: original, Normalized: normalized, Structured: structured(original)}
+				transacts[original.Name] = &tmplMkokod{Original: original, Normalized: normalized, Structured: structured(original)}
 			}
 		}
 		contracts[types[i]] = &tmplContract{
@@ -255,14 +255,14 @@ func bindTypeJava(kind abi.Type) string {
 }
 
 // namedType is a set of functions that transform language specific types to
-// named versions that my be used inside method names.
+// named versions that my be used inside mkokod names.
 var namedType = map[Lang]func(string, abi.Type) string{
 	LangGo:   func(string, abi.Type) string { panic("this shouldn't be needed") },
 	LangJava: namedTypeJava,
 }
 
 // namedTypeJava converts some primitive data types to named variants that can
-// be used as parts of method names.
+// be used as parts of mkokod names.
 func namedTypeJava(javaKind string, solKind abi.Type) string {
 	switch javaKind {
 	case "byte[]":
@@ -297,9 +297,9 @@ func namedTypeJava(javaKind string, solKind abi.Type) string {
 	}
 }
 
-// methodNormalizer is a name transformer that modifies Solidity method names to
+// mkokodNormalizer is a name transformer that modifies Solidity mkokod names to
 // conform to target language naming concentions.
-var methodNormalizer = map[Lang]func(string) string{
+var mkokodNormalizer = map[Lang]func(string) string{
 	LangGo:   capitalise,
 	LangJava: decapitalise,
 }
@@ -314,13 +314,13 @@ func decapitalise(input string) string {
 	return strings.ToLower(input[:1]) + input[1:]
 }
 
-// structured checks whether a method has enough information to return a proper
+// structured checks whkoker a mkokod has enough information to return a proper
 // Go struct ot if flat returns are needed.
-func structured(method abi.Method) bool {
-	if len(method.Outputs) < 2 {
+func structured(mkokod abi.Mkokod) bool {
+	if len(mkokod.Outputs) < 2 {
 		return false
 	}
-	for _, out := range method.Outputs {
+	for _, out := range mkokod.Outputs {
 		if out.Name == "" {
 			return false
 		}

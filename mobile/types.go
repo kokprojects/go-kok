@@ -1,22 +1,22 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Contains all the wrappers from the core/types package.
 
-package geth
+package gkok
 
 import (
 	"encoding/json"
@@ -39,8 +39,8 @@ func (n *Nonce) GetBytes() []byte {
 	return n.nonce[:]
 }
 
-// GetHex retrieves the hex string representation of the block nonce.
-func (n *Nonce) GetHex() string {
+// Gkokex retrieves the hex string representation of the block nonce.
+func (n *Nonce) Gkokex() string {
 	return fmt.Sprintf("0x%x", n.nonce[:])
 }
 
@@ -54,12 +54,12 @@ func (b *Bloom) GetBytes() []byte {
 	return b.bloom[:]
 }
 
-// GetHex retrieves the hex string representation of the bloom filter.
-func (b *Bloom) GetHex() string {
+// Gkokex retrieves the hex string representation of the bloom filter.
+func (b *Bloom) Gkokex() string {
 	return fmt.Sprintf("0x%x", b.bloom[:])
 }
 
-// Header represents a block header in the Ethereum blockchain.
+// Header represents a block header in the kokereum blockchain.
 type Header struct {
 	header *types.Header
 }
@@ -118,7 +118,7 @@ func (h *Header) GetTime() int64         { return h.header.Time.Int64() }
 func (h *Header) GetExtra() []byte       { return h.header.Extra }
 func (h *Header) GetMixDigest() *Hash    { return &Hash{h.header.MixDigest} }
 func (h *Header) GetNonce() *Nonce       { return &Nonce{h.header.Nonce} }
-func (h *Header) GetHash() *Hash         { return &Hash{h.header.Hash()} }
+func (h *Header) Gkokash() *Hash         { return &Hash{h.header.Hash()} }
 
 // Headers represents a slice of headers.
 type Headers struct{ headers []*types.Header }
@@ -136,7 +136,7 @@ func (h *Headers) Get(index int) (header *Header, _ error) {
 	return &Header{h.headers[index]}, nil
 }
 
-// Block represents an entire block in the Ethereum blockchain.
+// Block represents an entire block in the kokereum blockchain.
 type Block struct {
 	block *types.Block
 }
@@ -196,17 +196,17 @@ func (b *Block) GetExtra() []byte       { return b.block.Extra() }
 func (b *Block) GetMixDigest() *Hash    { return &Hash{b.block.MixDigest()} }
 func (b *Block) GetNonce() int64        { return int64(b.block.Nonce()) }
 
-func (b *Block) GetHash() *Hash        { return &Hash{b.block.Hash()} }
-func (b *Block) GetHashNoNonce() *Hash { return &Hash{b.block.HashNoNonce()} }
+func (b *Block) Gkokash() *Hash        { return &Hash{b.block.Hash()} }
+func (b *Block) GkokashNoNonce() *Hash { return &Hash{b.block.HashNoNonce()} }
 
-func (b *Block) GetHeader() *Header             { return &Header{b.block.Header()} }
+func (b *Block) Gkokeader() *Header             { return &Header{b.block.Header()} }
 func (b *Block) GetUncles() *Headers            { return &Headers{b.block.Uncles()} }
 func (b *Block) GetTransactions() *Transactions { return &Transactions{b.block.Transactions()} }
 func (b *Block) GetTransaction(hash *Hash) *Transaction {
 	return &Transaction{b.block.Transaction(hash.hash)}
 }
 
-// Transaction represents a single Ethereum transaction.
+// Transaction represents a single kokereum transaction.
 type Transaction struct {
 	tx *types.Transaction
 }
@@ -261,13 +261,13 @@ func (tx *Transaction) GetGasPrice() *BigInt { return &BigInt{tx.tx.GasPrice()} 
 func (tx *Transaction) GetValue() *BigInt    { return &BigInt{tx.tx.Value()} }
 func (tx *Transaction) GetNonce() int64      { return int64(tx.tx.Nonce()) }
 
-func (tx *Transaction) GetHash() *Hash   { return &Hash{tx.tx.Hash()} }
+func (tx *Transaction) Gkokash() *Hash   { return &Hash{tx.tx.Hash()} }
 func (tx *Transaction) GetCost() *BigInt { return &BigInt{tx.tx.Cost()} }
 
 // Deprecated: GetSigHash cannot know which signer to use.
 func (tx *Transaction) GetSigHash() *Hash { return &Hash{types.HomesteadSigner{}.Hash(tx.tx)} }
 
-// Deprecated: use EthereumClient.TransactionSender
+// Deprecated: use kokereumClient.TransactionSender
 func (tx *Transaction) GetFrom(chainID *BigInt) (address *Address, _ error) {
 	var signer types.Signer = types.HomesteadSigner{}
 	if chainID != nil {

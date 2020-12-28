@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package discv5
 
@@ -304,7 +304,7 @@ func (r ticketRef) waitTime() mclock.AbsTime {
 	return r.t.regTime[r.idx] - r.t.issueTime
 }
 
-// Less reports whether the element with
+// Less reports whkoker the element with
 // index i should sort before the element with index j.
 func (s ticketRefByWaitTime) Less(i, j int) bool {
 	return s[i].waitTime() < s[j].waitTime()
@@ -515,10 +515,10 @@ func (s *ticketStore) searchLookupDone(lookup lookupInfo, nodes []*Node, ping fu
 	}
 }
 
-func (s *ticketStore) adjustWithTicket(now mclock.AbsTime, targetHash common.Hash, t *ticket) {
+func (s *ticketStore) adjustWithTicket(now mclock.AbsTime, targkokash common.Hash, t *ticket) {
 	for i, topic := range t.topics {
 		if tt, ok := s.radius[topic]; ok {
-			tt.adjustWithTicket(now, targetHash, ticketRef{t, i})
+			tt.adjustWithTicket(now, targkokash, ticketRef{t, i})
 		}
 	}
 }
@@ -932,7 +932,7 @@ func (r *topicRadius) nextTarget(forceRegular bool) lookupInfo {
 	return lookupInfo{target: target, topic: r.topic, radiusLookup: false}
 }
 
-func (r *topicRadius) adjustWithTicket(now mclock.AbsTime, targetHash common.Hash, t ticketRef) {
+func (r *topicRadius) adjustWithTicket(now mclock.AbsTime, targkokash common.Hash, t ticketRef) {
 	wait := t.t.regTime[t.idx] - t.t.issueTime
 	inside := float64(wait)/float64(targetWaitTime) - 0.5
 	if inside > 1 {
@@ -941,15 +941,15 @@ func (r *topicRadius) adjustWithTicket(now mclock.AbsTime, targetHash common.Has
 	if inside < 0 {
 		inside = 0
 	}
-	r.adjust(now, targetHash, t.t.node.sha, inside)
+	r.adjust(now, targkokash, t.t.node.sha, inside)
 }
 
-func (r *topicRadius) adjust(now mclock.AbsTime, targetHash, addrHash common.Hash, inside float64) {
+func (r *topicRadius) adjust(now mclock.AbsTime, targkokash, addrHash common.Hash, inside float64) {
 	bucket := r.getBucketIdx(addrHash)
 	//fmt.Println("adjust", bucket, len(r.buckets), inside)
 	if bucket >= len(r.buckets) {
 		return
 	}
 	r.buckets[bucket].adjust(now, inside)
-	delete(r.buckets[bucket].lookupSent, targetHash)
+	delete(r.buckets[bucket].lookupSent, targkokash)
 }

@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package discover
 
@@ -40,7 +40,7 @@ import (
 )
 
 func init() {
-	spew.Config.DisableMethods = true
+	spew.Config.DisableMkokods = true
 }
 
 // shared test variables
@@ -236,8 +236,8 @@ func TestUDP_findnode(t *testing.T) {
 	// put a few nodes into the table. their exact
 	// distribution shouldn't matter much, although we need to
 	// take care not to overflow any bucket.
-	targetHash := crypto.Keccak256Hash(testTarget[:])
-	nodes := &nodesByDistance{target: targetHash}
+	targkokash := crypto.Keccak256Hash(testTarget[:])
+	nodes := &nodesByDistance{target: targkokash}
 	for i := 0; i < bucketSize; i++ {
 		nodes.push(nodeAtDistance(test.table.self.sha, i+2), bucketSize)
 	}
@@ -253,7 +253,7 @@ func TestUDP_findnode(t *testing.T) {
 	))
 	// check that closest neighbors are returned.
 	test.packetIn(nil, findnodePacket, &findnode{Target: testTarget, Expiration: futureExp})
-	expected := test.table.closest(targetHash, bucketSize)
+	expected := test.table.closest(targkokash, bucketSize)
 
 	waitNeighbors := func(want []*Node) {
 		test.waitPacketOut(func(p *neighbors) {

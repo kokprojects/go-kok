@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -32,8 +32,8 @@ func (w *wizard) deployNode(boot bool) {
 		log.Error("No genesis block configured")
 		return
 	}
-	if w.conf.ethstats == "" {
-		log.Error("No ethstats server configured")
+	if w.conf.kokstats == "" {
+		log.Error("No kokstats server configured")
 		return
 	}
 	// Select the server to interact with
@@ -43,7 +43,7 @@ func (w *wizard) deployNode(boot bool) {
 	}
 	client := w.servers[server]
 
-	// Retrieve any active ethstats configurations from the server
+	// Retrieve any active kokstats configurations from the server
 	infos, err := checkNode(client, w.network, boot)
 	if err != nil {
 		if boot {
@@ -81,12 +81,12 @@ func (w *wizard) deployNode(boot bool) {
 
 	// Set a proper name to report on the stats page
 	fmt.Println()
-	if infos.ethstats == "" {
+	if infos.kokstats == "" {
 		fmt.Printf("What should the node be called on the stats page?\n")
-		infos.ethstats = w.readString() + ":" + w.conf.ethstats
+		infos.kokstats = w.readString() + ":" + w.conf.kokstats
 	} else {
-		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.ethstats)
-		infos.ethstats = w.readDefaultString(infos.ethstats) + ":" + w.conf.ethstats
+		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.kokstats)
+		infos.kokstats = w.readDefaultString(infos.kokstats) + ":" + w.conf.kokstats
 	}
 	// If the node is a miner/signer, load up needed credentials
 	if !boot {
@@ -130,7 +130,7 @@ func (w *wizard) deployNode(boot bool) {
 	}
 	// Try to deploy the full node on the host
 	if out, err := deployNode(client, w.network, w.conf.bootFull, w.conf.bootLight, infos); err != nil {
-		log.Error("Failed to deploy Ethereum node container", "err", err)
+		log.Error("Failed to deploy kokereum node container", "err", err)
 		if len(out) > 0 {
 			fmt.Printf("%s\n", out)
 		}

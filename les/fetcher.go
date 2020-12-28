@@ -1,20 +1,20 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light kokereum Subprotocol.
 package les
 
 import (
@@ -558,7 +558,7 @@ func (f *lightFetcher) checkAnnouncedHeaders(fp *fetcherPeerInfo, headers []*typ
 			}
 			// we ran out of recently delivered headers but have not reached a node known by this peer yet, continue matching
 			td = f.chain.GetTd(header.ParentHash, header.Number.Uint64()-1)
-			header = f.chain.GetHeader(header.ParentHash, header.Number.Uint64()-1)
+			header = f.chain.Gkokeader(header.ParentHash, header.Number.Uint64()-1)
 		} else {
 			header = headers[i]
 			td = tds[i]
@@ -627,7 +627,7 @@ func (f *lightFetcher) checkSyncedHeaders(p *peer) {
 		p.Log().Debug("Synchronisation failed")
 		go f.pm.removePeer(p.id)
 	} else {
-		header := f.chain.GetHeader(n.hash, n.number)
+		header := f.chain.Gkokeader(n.hash, n.number)
 		f.newHeaders([]*types.Header{header}, []*big.Int{td})
 	}
 }
@@ -648,7 +648,7 @@ func (f *lightFetcher) checkKnownNode(p *peer, n *fetcherTreeNode) bool {
 		p.Log().Debug("Unknown peer to check known nodes")
 		return false
 	}
-	header := f.chain.GetHeader(n.hash, n.number)
+	header := f.chain.Gkokeader(n.hash, n.number)
 	if !f.checkAnnouncedHeaders(fp, []*types.Header{header}, []*big.Int{td}) {
 		p.Log().Debug("Inconsistent announcement")
 		go f.pm.removePeer(p.id)
@@ -702,7 +702,7 @@ type updateStatsEntry struct {
 }
 
 // updateMaxConfirmedTd updates the block delay statistics of active peers. Whenever a new highest Td is confirmed,
-// adds it to the end of a linked list together with the time it has been confirmed. Then checks which peers have
+// adds it to the end of a linked list togkoker with the time it has been confirmed. Then checks which peers have
 // already confirmed a head with the same or higher Td (which counts as zero block delay) and updates their statistics.
 // Those who have not confirmed such a head by now will be updated by a subsequent checkUpdateStats call with a
 // positive block delay value.

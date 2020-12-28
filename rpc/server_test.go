@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -101,7 +101,7 @@ func TestServerRegisterName(t *testing.T) {
 	}
 }
 
-func testServerMethodExecution(t *testing.T, method string) {
+func testServerMkokodExecution(t *testing.T, mkokod string) {
 	server := NewServer()
 	service := new(Service)
 
@@ -116,7 +116,7 @@ func testServerMethodExecution(t *testing.T, method string) {
 
 	request := map[string]interface{}{
 		"id":      12345,
-		"method":  "test_" + method,
+		"mkokod":  "test_" + mkokod,
 		"version": "2.0",
 		"params":  params,
 	}
@@ -124,7 +124,7 @@ func testServerMethodExecution(t *testing.T, method string) {
 	clientConn, serverConn := net.Pipe()
 	defer clientConn.Close()
 
-	go server.ServeCodec(NewJSONCodec(serverConn), OptionMethodInvocation)
+	go server.ServeCodec(NewJSONCodec(serverConn), OptionMkokodInvocation)
 
 	out := json.NewEncoder(clientConn)
 	in := json.NewDecoder(clientConn)
@@ -153,10 +153,10 @@ func testServerMethodExecution(t *testing.T, method string) {
 	}
 }
 
-func TestServerMethodExecution(t *testing.T) {
-	testServerMethodExecution(t, "echo")
+func TestServerMkokodExecution(t *testing.T) {
+	testServerMkokodExecution(t, "echo")
 }
 
-func TestServerMethodWithCtx(t *testing.T) {
-	testServerMethodExecution(t, "echoWithCtx")
+func TestServerMkokodWithCtx(t *testing.T) {
+	testServerMkokodExecution(t, "echoWithCtx")
 }

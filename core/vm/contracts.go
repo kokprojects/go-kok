@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package vm
 
@@ -30,14 +30,14 @@ import (
 )
 
 // PrecompiledContract is the basic interface for native Go contracts. The implementation
-// requires a deterministic gas count based on the input size of the Run method of the
+// requires a deterministic gas count based on the input size of the Run mkokod of the
 // contract.
 type PrecompiledContract interface {
 	RequiredGas(input []byte) uint64  // RequiredPrice calculates the contract gas use
 	Run(input []byte) ([]byte, error) // Run runs the precompiled contract
 }
 
-// PrecompiledContractsHomestead contains the default set of pre-compiled Ethereum
+// PrecompiledContractsHomestead contains the default set of pre-compiled kokereum
 // contracts used in the Frontier and Homestead releases.
 var PrecompiledContractsHomestead = map[common.Address]PrecompiledContract{
 	common.BytesToAddress([]byte{1}): &ecrecover{},
@@ -46,7 +46,7 @@ var PrecompiledContractsHomestead = map[common.Address]PrecompiledContract{
 	common.BytesToAddress([]byte{4}): &dataCopy{},
 }
 
-// PrecompiledContractsByzantium contains the default set of pre-compiled Ethereum
+// PrecompiledContractsByzantium contains the default set of pre-compiled kokereum
 // contracts used in the Byzantium release.
 var PrecompiledContractsByzantium = map[common.Address]PrecompiledContract{
 	common.BytesToAddress([]byte{1}): &ecrecover{},
@@ -106,7 +106,7 @@ type sha256hash struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
 //
-// This method does not require any overflow checking as the input size gas costs
+// This mkokod does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
 func (c *sha256hash) RequiredGas(input []byte) uint64 {
 	return uint64(len(input)+31)/32*params.Sha256PerWordGas + params.Sha256BaseGas
@@ -121,7 +121,7 @@ type ripemd160hash struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
 //
-// This method does not require any overflow checking as the input size gas costs
+// This mkokod does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
 func (c *ripemd160hash) RequiredGas(input []byte) uint64 {
 	return uint64(len(input)+31)/32*params.Ripemd160PerWordGas + params.Ripemd160BaseGas
@@ -137,7 +137,7 @@ type dataCopy struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
 //
-// This method does not require any overflow checking as the input size gas costs
+// This mkokod does not require any overflow checking as the input size gas costs
 // required for anything significant is so high it's impossible to pay for.
 func (c *dataCopy) RequiredGas(input []byte) uint64 {
 	return uint64(len(input)+31)/32*params.IdentityPerWordGas + params.IdentityBaseGas

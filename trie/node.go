@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package trie
 
@@ -59,10 +59,10 @@ func (n *shortNode) copy() *shortNode { copy := *n; return &copy }
 type nodeFlag struct {
 	hash  hashNode // cached hash of the node (may be nil)
 	gen   uint16   // cache generation counter
-	dirty bool     // whether the node has changes that must be written to the database
+	dirty bool     // whkoker the node has changes that must be written to the database
 }
 
-// canUnload tells whether a node can be unloaded.
+// canUnload tells whkoker a node can be unloaded.
 func (n *nodeFlag) canUnload(cachegen, cachelimit uint16) bool {
 	return !n.dirty && cachegen-n.gen >= cachelimit
 }

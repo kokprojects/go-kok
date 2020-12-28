@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package les
 
@@ -24,8 +24,8 @@ import (
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/crypto"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/light"
 )
 
@@ -35,13 +35,13 @@ func secAddr(addr common.Address) []byte {
 	return crypto.Keccak256(addr[:])
 }
 
-type accessTestFn func(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest
+type accessTestFn func(db kokdb.Database, bhash common.Hash, number uint64) light.OdrRequest
 
 func TestBlockAccessLes1(t *testing.T) { testAccess(t, 1, tfBlockAccess) }
 
 func TestBlockAccessLes2(t *testing.T) { testAccess(t, 2, tfBlockAccess) }
 
-func tfBlockAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfBlockAccess(db kokdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
 	return &light.BlockRequest{Hash: bhash, Number: number}
 }
 
@@ -49,7 +49,7 @@ func TestReceiptsAccessLes1(t *testing.T) { testAccess(t, 1, tfReceiptsAccess) }
 
 func TestReceiptsAccessLes2(t *testing.T) { testAccess(t, 2, tfReceiptsAccess) }
 
-func tfReceiptsAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfReceiptsAccess(db kokdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
 	return &light.ReceiptsRequest{Hash: bhash, Number: number}
 }
 
@@ -57,16 +57,16 @@ func TestTrieEntryAccessLes1(t *testing.T) { testAccess(t, 1, tfTrieEntryAccess)
 
 func TestTrieEntryAccessLes2(t *testing.T) { testAccess(t, 2, tfTrieEntryAccess) }
 
-func tfTrieEntryAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
-	return &light.TrieRequest{Id: light.StateTrieID(core.GetHeader(db, bhash, core.GetBlockNumber(db, bhash))), Key: testBankSecureTrieKey}
+func tfTrieEntryAccess(db kokdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+	return &light.TrieRequest{Id: light.StateTrieID(core.Gkokeader(db, bhash, core.GetBlockNumber(db, bhash))), Key: testBankSecureTrieKey}
 }
 
 func TestCodeAccessLes1(t *testing.T) { testAccess(t, 1, tfCodeAccess) }
 
 func TestCodeAccessLes2(t *testing.T) { testAccess(t, 2, tfCodeAccess) }
 
-func tfCodeAccess(db ethdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
-	header := core.GetHeader(db, bhash, core.GetBlockNumber(db, bhash))
+func tfCodeAccess(db kokdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
+	header := core.Gkokeader(db, bhash, core.GetBlockNumber(db, bhash))
 	if header.Number.Uint64() < testContractDeployed {
 		return nil
 	}
@@ -80,9 +80,9 @@ func testAccess(t *testing.T, protocol int, fn accessTestFn) {
 	peers := newPeerSet()
 	dist := newRequestDistributor(peers, make(chan struct{}))
 	rm := newRetrieveManager(peers, dist, nil)
-	db, _ := ethdb.NewMemDatabase()
-	ldb, _ := ethdb.NewMemDatabase()
-	odr := NewLesOdr(ldb, light.NewChtIndexer(db, true), light.NewBloomTrieIndexer(db, true), eth.NewBloomIndexer(db, light.BloomTrieFrequency), rm)
+	db, _ := kokdb.NewMemDatabase()
+	ldb, _ := kokdb.NewMemDatabase()
+	odr := NewLesOdr(ldb, light.NewChtIndexer(db, true), light.NewBloomTrieIndexer(db, true), kok.NewBloomIndexer(db, light.BloomTrieFrequency), rm)
 
 	pm := newTestProtocolManagerMust(t, false, 4, testChainGen, nil, nil, db)
 	lpm := newTestProtocolManagerMust(t, true, 0, nil, peers, odr, ldb)

@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -46,7 +46,7 @@ const (
 	tcpKeepAliveInterval = 30 * time.Second
 	defaultDialTimeout   = 10 * time.Second // used when dialing if the context has no deadline
 	defaultWriteTimeout  = 10 * time.Second // used for calls if the context has no deadline
-	subscribeTimeout     = 5 * time.Second  // overall timeout eth_subscribe, rpc_modules calls
+	subscribeTimeout     = 5 * time.Second  // overall timeout kok_subscribe, rpc_modules calls
 )
 
 const (
@@ -65,7 +65,7 @@ const (
 
 // BatchElem is an element in a batch request.
 type BatchElem struct {
-	Method string
+	Mkokod string
 	Args   []interface{}
 	// The result is unmarshaled into this field. Result must be set to a
 	// non-nil pointer value of the desired type, otherwise the response will be
@@ -81,18 +81,18 @@ type BatchElem struct {
 type jsonrpcMessage struct {
 	Version string          `json:"jsonrpc"`
 	ID      json.RawMessage `json:"id,omitempty"`
-	Method  string          `json:"method,omitempty"`
+	Mkokod  string          `json:"mkokod,omitempty"`
 	Params  json.RawMessage `json:"params,omitempty"`
 	Error   *jsonError      `json:"error,omitempty"`
 	Result  json.RawMessage `json:"result,omitempty"`
 }
 
 func (msg *jsonrpcMessage) isNotification() bool {
-	return msg.ID == nil && msg.Method != ""
+	return msg.ID == nil && msg.Mkokod != ""
 }
 
 func (msg *jsonrpcMessage) isResponse() bool {
-	return msg.hasValidID() && msg.Method == "" && len(msg.Params) == 0
+	return msg.hasValidID() && msg.Mkokod == "" && len(msg.Params) == 0
 }
 
 func (msg *jsonrpcMessage) hasValidID() bool {
@@ -131,7 +131,7 @@ type requestOp struct {
 	ids  []json.RawMessage
 	err  error
 	resp chan *jsonrpcMessage // receives up to len(ids) responses
-	sub  *ClientSubscription  // only set for EthSubscribe requests
+	sub  *ClientSubscription  // only set for kokSubscribe requests
 }
 
 func (op *requestOp) wait(ctx context.Context) (*jsonrpcMessage, error) {
@@ -210,7 +210,7 @@ func (c *Client) nextID() json.RawMessage {
 	return []byte(strconv.FormatUint(uint64(id), 10))
 }
 
-// SupportedModules calls the rpc_modules method, retrieving the list of
+// SupportedModules calls the rpc_modules mkokod, retrieving the list of
 // APIs that are available on the server.
 func (c *Client) SupportedModules() (map[string]string, error) {
 	var result map[string]string
@@ -237,9 +237,9 @@ func (c *Client) Close() {
 //
 // The result must be a pointer so that package json can unmarshal into it. You
 // can also pass nil, in which case the result is ignored.
-func (c *Client) Call(result interface{}, method string, args ...interface{}) error {
+func (c *Client) Call(result interface{}, mkokod string, args ...interface{}) error {
 	ctx := context.Background()
-	return c.CallContext(ctx, result, method, args...)
+	return c.CallContext(ctx, result, mkokod, args...)
 }
 
 // CallContext performs a JSON-RPC call with the given arguments. If the context is
@@ -247,8 +247,8 @@ func (c *Client) Call(result interface{}, method string, args ...interface{}) er
 //
 // The result must be a pointer so that package json can unmarshal into it. You
 // can also pass nil, in which case the result is ignored.
-func (c *Client) CallContext(ctx context.Context, result interface{}, method string, args ...interface{}) error {
-	msg, err := c.newMessage(method, args...)
+func (c *Client) CallContext(ctx context.Context, result interface{}, mkokod string, args ...interface{}) error {
+	msg, err := c.newMessage(mkokod, args...)
 	if err != nil {
 		return err
 	}
@@ -304,7 +304,7 @@ func (c *Client) BatchCallContext(ctx context.Context, b []BatchElem) error {
 		resp: make(chan *jsonrpcMessage, len(b)),
 	}
 	for i, elem := range b {
-		msg, err := c.newMessage(elem.Method, elem.Args...)
+		msg, err := c.newMessage(elem.Mkokod, elem.Args...)
 		if err != nil {
 			return err
 		}
@@ -349,9 +349,9 @@ func (c *Client) BatchCallContext(ctx context.Context, b []BatchElem) error {
 	return err
 }
 
-// EthSubscribe registers a subscripion under the "eth" namespace.
-func (c *Client) EthSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
-	return c.Subscribe(ctx, "eth", channel, args...)
+// kokSubscribe registers a subscripion under the "kok" namespace.
+func (c *Client) kokSubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
+	return c.Subscribe(ctx, "kok", channel, args...)
 }
 
 // ShhSubscribe registers a subscripion under the "shh" namespace.
@@ -359,7 +359,7 @@ func (c *Client) ShhSubscribe(ctx context.Context, channel interface{}, args ...
 	return c.Subscribe(ctx, "shh", channel, args...)
 }
 
-// Subscribe calls the "<namespace>_subscribe" method with the given arguments,
+// Subscribe calls the "<namespace>_subscribe" mkokod with the given arguments,
 // registering a subscription. Server notifications for the subscription are
 // sent to the given channel. The element type of the channel must match the
 // expected type of content returned by the subscription.
@@ -384,7 +384,7 @@ func (c *Client) Subscribe(ctx context.Context, namespace string, channel interf
 		return nil, ErrNotificationsUnsupported
 	}
 
-	msg, err := c.newMessage(namespace+subscribeMethodSuffix, args...)
+	msg, err := c.newMessage(namespace+subscribeMkokodSuffix, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -405,12 +405,12 @@ func (c *Client) Subscribe(ctx context.Context, namespace string, channel interf
 	return op.sub, nil
 }
 
-func (c *Client) newMessage(method string, paramsIn ...interface{}) (*jsonrpcMessage, error) {
+func (c *Client) newMessage(mkokod string, paramsIn ...interface{}) (*jsonrpcMessage, error) {
 	params, err := json.Marshal(paramsIn)
 	if err != nil {
 		return nil, err
 	}
-	return &jsonrpcMessage{Version: "2.0", ID: c.nextID(), Method: method, Params: params}, nil
+	return &jsonrpcMessage{Version: "2.0", ID: c.nextID(), Mkokod: mkokod, Params: params}, nil
 }
 
 // send registers op with the dispatch loop, then sends msg on the connection.
@@ -586,7 +586,7 @@ func (c *Client) closeRequestOps(err error) {
 }
 
 func (c *Client) handleNotification(msg *jsonrpcMessage) {
-	if !strings.HasSuffix(msg.Method, notificationMethodSuffix) {
+	if !strings.HasSuffix(msg.Mkokod, notificationMkokodSuffix) {
 		log.Debug(fmt.Sprint("dropping non-subscription message: ", msg))
 		return
 	}
@@ -616,7 +616,7 @@ func (c *Client) handleResponse(msg *jsonrpcMessage) {
 		return
 	}
 	// For subscription responses, start the subscription if the server
-	// indicates success. EthSubscribe gets unblocked in either case through
+	// indicates success. kokSubscribe gets unblocked in either case through
 	// the op.resp channel.
 	defer close(op.resp)
 	if msg.Error != nil {
@@ -662,7 +662,7 @@ func (c *Client) read(conn net.Conn) error {
 
 // Subscriptions.
 
-// A ClientSubscription represents a subscription established through EthSubscribe.
+// A ClientSubscription represents a subscription established through kokSubscribe.
 type ClientSubscription struct {
 	client    *Client
 	etype     reflect.Type
@@ -787,5 +787,5 @@ func (sub *ClientSubscription) unmarshal(result json.RawMessage) (interface{}, e
 
 func (sub *ClientSubscription) requestUnsubscribe() error {
 	var result interface{}
-	return sub.client.Call(&result, sub.namespace+unsubscribeMethodSuffix, sub.subid)
+	return sub.client.Call(&result, sub.namespace+unsubscribeMkokodSuffix, sub.subid)
 }

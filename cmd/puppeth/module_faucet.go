@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -38,8 +38,8 @@ ENV GOPATH /go
 
 RUN \
   apk add --update git go make gcc musl-dev ca-certificates linux-headers                             && \
-	mkdir -p $GOPATH/src/github.com/ethereum                                                            && \
-	(cd $GOPATH/src/github.com/ethereum && git clone --depth=1 https://github.com/kokprojects/go-kok) && \
+	mkdir -p $GOPATH/src/github.com/kokereum                                                            && \
+	(cd $GOPATH/src/github.com/kokereum && git clone --depth=1 https://github.com/kokprojects/go-kok) && \
   go build -v github.com/kokprojects/go-kok/cmd/faucet                                              && \
   apk del git go make gcc musl-dev linux-headers                                                      && \
   rm -rf $GOPATH && rm -rf /var/cache/apk/*
@@ -51,7 +51,7 @@ ADD account.pass /account.pass
 EXPOSE 8080
 
 CMD [ \
-	"/faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--ethstats", "{{.Ethstats}}", "--ethport", "{{.EthPort}}", \
+	"/faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--kokstats", "{{.kokstats}}", "--kokport", "{{.kokPort}}", \
 	"--faucet.name", "{{.FaucetName}}", "--faucet.amount", "{{.FaucetAmount}}", "--faucet.minutes", "{{.FaucetMinutes}}", "--faucet.tiers", "{{.FaucetTiers}}",          \
 	"--github.user", "{{.GitHubUser}}", "--github.token", "{{.GitHubToken}}", "--account.json", "/account.json", "--account.pass", "/account.pass"                       \
 	{{if .CaptchaToken}}, "--captcha.token", "{{.CaptchaToken}}", "--captcha.secret", "{{.CaptchaSecret}}"{{end}}                                                        \
@@ -66,13 +66,13 @@ services:
     build: .
     image: {{.Network}}/faucet
     ports:
-      - "{{.EthPort}}:{{.EthPort}}"{{if not .VHost}}
+      - "{{.kokPort}}:{{.kokPort}}"{{if not .VHost}}
       - "{{.ApiPort}}:8080"{{end}}
     volumes:
       - {{.Datadir}}:/root/.faucet
     environment:
-      - ETH_PORT={{.EthPort}}
-      - ETH_NAME={{.EthName}}
+      - kok_PORT={{.kokPort}}
+      - kok_NAME={{.kokName}}
       - FAUCET_AMOUNT={{.FaucetAmount}}
       - FAUCET_MINUTES={{.FaucetMinutes}}
       - FAUCET_TIERS={{.FaucetTiers}}
@@ -102,8 +102,8 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 	template.Must(template.New("").Parse(faucetDockerfile)).Execute(dockerfile, map[string]interface{}{
 		"NetworkID":     config.node.network,
 		"Bootnodes":     strings.Join(bootnodes, ","),
-		"Ethstats":      config.node.ethstats,
-		"EthPort":       config.node.portFull,
+		"kokstats":      config.node.kokstats,
+		"kokPort":       config.node.portFull,
 		"GitHubUser":    config.githubUser,
 		"GitHubToken":   config.githubToken,
 		"CaptchaToken":  config.captchaToken,
@@ -121,8 +121,8 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 		"Datadir":       config.node.datadir,
 		"VHost":         config.host,
 		"ApiPort":       config.port,
-		"EthPort":       config.node.portFull,
-		"EthName":       config.node.ethstats[:strings.Index(config.node.ethstats, ":")],
+		"kokPort":       config.node.portFull,
+		"kokName":       config.node.kokstats[:strings.Index(config.node.kokstats, ":")],
 		"GitHubUser":    config.githubUser,
 		"GitHubToken":   config.githubToken,
 		"CaptchaToken":  config.captchaToken,
@@ -164,10 +164,10 @@ type faucetInfos struct {
 
 // String implements the stringer interface.
 func (info *faucetInfos) String() string {
-	return fmt.Sprintf("host=%s, api=%d, eth=%d, amount=%d, minutes=%d, tiers=%d, github=%s, captcha=%v, ethstats=%s", info.host, info.port, info.node.portFull, info.amount, info.minutes, info.tiers, info.githubUser, info.captchaToken != "", info.node.ethstats)
+	return fmt.Sprintf("host=%s, api=%d, kok=%d, amount=%d, minutes=%d, tiers=%d, github=%s, captcha=%v, kokstats=%s", info.host, info.port, info.node.portFull, info.amount, info.minutes, info.tiers, info.githubUser, info.captchaToken != "", info.node.kokstats)
 }
 
-// checkFaucet does a health-check against an faucet server to verify whether
+// checkFaucet does a health-check against an faucet server to verify whkoker
 // it's running, and if yes, gathering a collection of useful infos about it.
 func checkFaucet(client *sshClient, network string) (*faucetInfos, error) {
 	// Inspect a possible faucet container on the host
@@ -214,8 +214,8 @@ func checkFaucet(client *sshClient, network string) (*faucetInfos, error) {
 	return &faucetInfos{
 		node: &nodeInfos{
 			datadir:  infos.volumes["/root/.faucet"],
-			portFull: infos.portmap[infos.envvars["ETH_PORT"]+"/tcp"],
-			ethstats: infos.envvars["ETH_NAME"],
+			portFull: infos.portmap[infos.envvars["kok_PORT"]+"/tcp"],
+			kokstats: infos.envvars["kok_NAME"],
 			keyJSON:  keyJSON,
 			keyPass:  keyPass,
 		},

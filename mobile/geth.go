@@ -1,23 +1,23 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Contains all the wrappers from the node package to support client side node
 // management on mobile platforms.
 
-package geth
+package gkok
 
 import (
 	"encoding/json"
@@ -25,10 +25,10 @@ import (
 	"path/filepath"
 
 	"github.com/kokprojects/go-kok/core"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/eth/downloader"
-	"github.com/kokprojects/go-kok/ethclient"
-	"github.com/kokprojects/go-kok/ethstats"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/kok/downloader"
+	"github.com/kokprojects/go-kok/kokclient"
+	"github.com/kokprojects/go-kok/kokstats"
 	"github.com/kokprojects/go-kok/les"
 	"github.com/kokprojects/go-kok/node"
 	"github.com/kokprojects/go-kok/p2p"
@@ -37,9 +37,9 @@ import (
 	whisper "github.com/kokprojects/go-kok/whisper/whisperv5"
 )
 
-// NodeConfig represents the collection of configuration values to fine tune the Geth
+// NodeConfig represents the collection of configuration values to fine tune the Gkok
 // node embedded into a mobile process. The available values are a subset of the
-// entire API provided by go-ethereum to reduce the maintenance surface and dev
+// entire API provided by go-kokereum to reduce the maintenance surface and dev
 // complexity.
 type NodeConfig struct {
 	// Bootstrap nodes used to establish connectivity with the rest of the network.
@@ -49,28 +49,28 @@ type NodeConfig struct {
 	// set to zero, then only the configured static and trusted peers can connect.
 	MaxPeers int
 
-	// EthereumEnabled specifies whether the node should run the Ethereum protocol.
-	EthereumEnabled bool
+	// kokereumEnabled specifies whkoker the node should run the kokereum protocol.
+	kokereumEnabled bool
 
-	// EthereumNetworkID is the network identifier used by the Ethereum protocol to
+	// kokereumNetworkID is the network identifier used by the kokereum protocol to
 	// decide if remote peers should be accepted or not.
-	EthereumNetworkID int64 // uint64 in truth, but Java can't handle that...
+	kokereumNetworkID int64 // uint64 in truth, but Java can't handle that...
 
-	// EthereumGenesis is the genesis JSON to use to seed the blockchain with. An
+	// kokereumGenesis is the genesis JSON to use to seed the blockchain with. An
 	// empty genesis state is equivalent to using the mainnet's state.
-	EthereumGenesis string
+	kokereumGenesis string
 
-	// EthereumDatabaseCache is the system memory in MB to allocate for database caching.
+	// kokereumDatabaseCache is the system memory in MB to allocate for database caching.
 	// A minimum of 16MB is always reserved.
-	EthereumDatabaseCache int
+	kokereumDatabaseCache int
 
-	// EthereumNetStats is a netstats connection string to use to report various
+	// kokereumNetStats is a netstats connection string to use to report various
 	// chain, transaction and node stats to a monitoring server.
 	//
 	// It has the form "nodename:secret@host:port"
-	EthereumNetStats string
+	kokereumNetStats string
 
-	// WhisperEnabled specifies whether the node should run the Whisper protocol.
+	// WhisperEnabled specifies whkoker the node should run the Whisper protocol.
 	WhisperEnabled bool
 }
 
@@ -79,9 +79,9 @@ type NodeConfig struct {
 var defaultNodeConfig = &NodeConfig{
 	BootstrapNodes:        FoundationBootnodes(),
 	MaxPeers:              25,
-	EthereumEnabled:       true,
-	EthereumNetworkID:     1,
-	EthereumDatabaseCache: 16,
+	kokereumEnabled:       true,
+	kokereumNetworkID:     1,
+	kokereumDatabaseCache: 16,
 }
 
 // NewNodeConfig creates a new node option set, initialized to the default values.
@@ -90,12 +90,12 @@ func NewNodeConfig() *NodeConfig {
 	return &config
 }
 
-// Node represents a Geth Ethereum node instance.
+// Node represents a Gkok kokereum node instance.
 type Node struct {
 	node *node.Node
 }
 
-// NewNode creates and configures a new Geth node.
+// NewNode creates and configures a new Gkok node.
 func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 	// If no or partial configurations were specified, use defaults
 	if config == nil {
@@ -129,32 +129,32 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 	}
 
 	var genesis *core.Genesis
-	if config.EthereumGenesis != "" {
+	if config.kokereumGenesis != "" {
 		// Parse the user supplied genesis spec if not mainnet
 		genesis = new(core.Genesis)
-		if err := json.Unmarshal([]byte(config.EthereumGenesis), genesis); err != nil {
+		if err := json.Unmarshal([]byte(config.kokereumGenesis), genesis); err != nil {
 			return nil, fmt.Errorf("invalid genesis spec: %v", err)
 		}
 	}
-	// Register the Ethereum protocol if requested
-	if config.EthereumEnabled {
-		ethConf := eth.DefaultConfig
-		ethConf.Genesis = genesis
-		ethConf.SyncMode = downloader.LightSync
-		ethConf.NetworkId = uint64(config.EthereumNetworkID)
-		ethConf.DatabaseCache = config.EthereumDatabaseCache
+	// Register the kokereum protocol if requested
+	if config.kokereumEnabled {
+		kokConf := kok.DefaultConfig
+		kokConf.Genesis = genesis
+		kokConf.SyncMode = downloader.LightSync
+		kokConf.NetworkId = uint64(config.kokereumNetworkID)
+		kokConf.DatabaseCache = config.kokereumDatabaseCache
 		if err := rawStack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
-			return les.New(ctx, &ethConf)
+			return les.New(ctx, &kokConf)
 		}); err != nil {
-			return nil, fmt.Errorf("ethereum init: %v", err)
+			return nil, fmt.Errorf("kokereum init: %v", err)
 		}
 		// If netstats reporting is requested, do it
-		if config.EthereumNetStats != "" {
+		if config.kokereumNetStats != "" {
 			if err := rawStack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
-				var lesServ *les.LightEthereum
+				var lesServ *les.Lightkokereum
 				ctx.Service(&lesServ)
 
-				return ethstats.New(config.EthereumNetStats, nil, lesServ)
+				return kokstats.New(config.kokereumNetStats, nil, lesServ)
 			}); err != nil {
 				return nil, fmt.Errorf("netstats init: %v", err)
 			}
@@ -182,13 +182,13 @@ func (n *Node) Stop() error {
 	return n.node.Stop()
 }
 
-// GetEthereumClient retrieves a client to access the Ethereum subsystem.
-func (n *Node) GetEthereumClient() (client *EthereumClient, _ error) {
+// GetkokereumClient retrieves a client to access the kokereum subsystem.
+func (n *Node) GetkokereumClient() (client *kokereumClient, _ error) {
 	rpc, err := n.node.Attach()
 	if err != nil {
 		return nil, err
 	}
-	return &EthereumClient{ethclient.NewClient(rpc)}, nil
+	return &kokereumClient{kokclient.NewClient(rpc)}, nil
 }
 
 // GetNodeInfo gathers and returns a collection of metadata known about the host.

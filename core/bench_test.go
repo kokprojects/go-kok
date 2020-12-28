@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -25,11 +25,11 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/common/math"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
 	"github.com/kokprojects/go-kok/crypto"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 )
 
@@ -105,7 +105,7 @@ func init() {
 	}
 }
 
-// genTxRing returns a block generator that sends ether in a ring
+// genTxRing returns a block generator that sends koker in a ring
 // among n accounts. This is creates n entries in the state database
 // and fills the blocks with many small transactions.
 func genTxRing(naccounts int) func(int, *BlockGen) {
@@ -148,16 +148,16 @@ func genUncles(i int, gen *BlockGen) {
 
 func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
 	// Create the database in memory or in a temporary directory.
-	var db ethdb.Database
+	var db kokdb.Database
 	if !disk {
-		db, _ = ethdb.NewMemDatabase()
+		db, _ = kokdb.NewMemDatabase()
 	} else {
-		dir, err := ioutil.TempDir("", "eth-core-bench")
+		dir, err := ioutil.TempDir("", "kok-core-bench")
 		if err != nil {
 			b.Fatalf("cannot create temporary directory: %v", err)
 		}
 		defer os.RemoveAll(dir)
-		db, err = ethdb.NewLDBDatabase(dir, 128, 128)
+		db, err = kokdb.NewLDBDatabase(dir, 128, 128)
 		if err != nil {
 			b.Fatalf("cannot create temporary database: %v", err)
 		}
@@ -175,7 +175,7 @@ func benchInsertChain(b *testing.B, disk bool, gen func(int, *BlockGen)) {
 
 	// Time the insertion of the new chain.
 	// State and blocks are stored in the same DB.
-	chainman, _ := NewBlockChain(db, gspec.Config, ethash.NewFaker(), vm.Config{})
+	chainman, _ := NewBlockChain(db, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer chainman.Stop()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -223,7 +223,7 @@ func BenchmarkChainWrite_full_500k(b *testing.B) {
 
 // makeChainForBench writes a given number of headers or empty blocks/receipts
 // into a database.
-func makeChainForBench(db ethdb.Database, full bool, count uint64) {
+func makeChainForBench(db kokdb.Database, full bool, count uint64) {
 	var hash common.Hash
 	for n := uint64(0); n < count; n++ {
 		header := &types.Header{
@@ -249,11 +249,11 @@ func makeChainForBench(db ethdb.Database, full bool, count uint64) {
 
 func benchWriteChain(b *testing.B, full bool, count uint64) {
 	for i := 0; i < b.N; i++ {
-		dir, err := ioutil.TempDir("", "eth-chain-bench")
+		dir, err := ioutil.TempDir("", "kok-chain-bench")
 		if err != nil {
 			b.Fatalf("cannot create temporary directory: %v", err)
 		}
-		db, err := ethdb.NewLDBDatabase(dir, 128, 1024)
+		db, err := kokdb.NewLDBDatabase(dir, 128, 1024)
 		if err != nil {
 			b.Fatalf("error opening database at %v: %v", dir, err)
 		}
@@ -264,13 +264,13 @@ func benchWriteChain(b *testing.B, full bool, count uint64) {
 }
 
 func benchReadChain(b *testing.B, full bool, count uint64) {
-	dir, err := ioutil.TempDir("", "eth-chain-bench")
+	dir, err := ioutil.TempDir("", "kok-chain-bench")
 	if err != nil {
 		b.Fatalf("cannot create temporary directory: %v", err)
 	}
 	defer os.RemoveAll(dir)
 
-	db, err := ethdb.NewLDBDatabase(dir, 128, 1024)
+	db, err := kokdb.NewLDBDatabase(dir, 128, 1024)
 	if err != nil {
 		b.Fatalf("error opening database at %v: %v", dir, err)
 	}
@@ -281,17 +281,17 @@ func benchReadChain(b *testing.B, full bool, count uint64) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		db, err := ethdb.NewLDBDatabase(dir, 128, 1024)
+		db, err := kokdb.NewLDBDatabase(dir, 128, 1024)
 		if err != nil {
 			b.Fatalf("error opening database at %v: %v", dir, err)
 		}
-		chain, err := NewBlockChain(db, params.TestChainConfig, ethash.NewFaker(), vm.Config{})
+		chain, err := NewBlockChain(db, params.TestChainConfig, kokash.NewFaker(), vm.Config{})
 		if err != nil {
 			b.Fatalf("error creating chain: %v", err)
 		}
 
 		for n := uint64(0); n < count; n++ {
-			header := chain.GetHeaderByNumber(n)
+			header := chain.GkokeaderByNumber(n)
 			if full {
 				hash := header.Hash()
 				GetBody(db, hash, n)

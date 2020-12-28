@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package light
 
@@ -26,7 +26,7 @@ import (
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
@@ -58,7 +58,7 @@ type TxPool struct {
 	mu           sync.RWMutex
 	chain        *LightChain
 	odr          OdrBackend
-	chainDb      ethdb.Database
+	chainDb      kokdb.Database
 	relay        TxRelayBackend
 	head         common.Hash
 	nonce        map[common.Address]uint64            // "pending" nonce
@@ -70,7 +70,7 @@ type TxPool struct {
 }
 
 // TxRelayBackend provides an interface to the mechanism that forwards transacions
-// to the ETH network. The implementations of the functions should be non-blocking.
+// to the kok network. The implementations of the functions should be non-blocking.
 //
 // Send instructs backend to forward new transactions
 // NewHead notifies backend about a new head after processed by the tx pool,
@@ -218,18 +218,18 @@ func (pool *TxPool) rollbackTxs(hash common.Hash, txc txStateChanges) {
 // possible to continue checking the missing blocks at the next chain head event
 func (pool *TxPool) reorgOnNewHead(ctx context.Context, newHeader *types.Header) (txStateChanges, error) {
 	txc := make(txStateChanges)
-	oldh := pool.chain.GetHeaderByHash(pool.head)
+	oldh := pool.chain.GkokeaderByHash(pool.head)
 	newh := newHeader
 	// find common ancestor, create list of rolled back and new block hashes
 	var oldHashes, newHashes []common.Hash
 	for oldh.Hash() != newh.Hash() {
 		if oldh.Number.Uint64() >= newh.Number.Uint64() {
 			oldHashes = append(oldHashes, oldh.Hash())
-			oldh = pool.chain.GetHeader(oldh.ParentHash, oldh.Number.Uint64()-1)
+			oldh = pool.chain.Gkokeader(oldh.ParentHash, oldh.Number.Uint64()-1)
 		}
 		if oldh.Number.Uint64() < newh.Number.Uint64() {
 			newHashes = append(newHashes, newh.Hash())
-			newh = pool.chain.GetHeader(newh.ParentHash, newh.Number.Uint64()-1)
+			newh = pool.chain.Gkokeader(newh.ParentHash, newh.Number.Uint64()-1)
 			if newh == nil {
 				// happens when CHT syncing, nothing to do
 				newh = oldh
@@ -336,7 +336,7 @@ func (pool *TxPool) Stats() (pending int) {
 	return
 }
 
-// validateTx checks whether a transaction is valid according to the consensus rules.
+// validateTx checks whkoker a transaction is valid according to the consensus rules.
 func (pool *TxPool) validateTx(ctx context.Context, tx *types.Transaction) error {
 	// Validate sender
 	var (
@@ -357,7 +357,7 @@ func (pool *TxPool) validateTx(ctx context.Context, tx *types.Transaction) error
 
 	// Check the transaction doesn't exceed the current
 	// block limit gas.
-	header := pool.chain.GetHeaderByHash(pool.head)
+	header := pool.chain.GkokeaderByHash(pool.head)
 	if header.GasLimit.Cmp(tx.Gas()) < 0 {
 		return core.ErrGasLimit
 	}

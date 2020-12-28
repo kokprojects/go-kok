@@ -1,20 +1,20 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light kokereum Subprotocol.
 package les
 
 import (
@@ -69,12 +69,12 @@ const (
 	GetCodeMsg         = 0x0a
 	CodeMsg            = 0x0b
 	SendTxMsg          = 0x0c
-	GetHeaderProofsMsg = 0x0d
+	GkokeaderProofsMsg = 0x0d
 	HeaderProofsMsg    = 0x0e
 	// Protocol messages belonging to LPV2
 	GetProofsV2Msg         = 0x0f
 	ProofsV2Msg            = 0x10
-	GetHelperTrieProofsMsg = 0x11
+	GkokelperTrieProofsMsg = 0x11
 	HelperTrieProofsMsg    = 0x12
 	SendTxV2Msg            = 0x13
 	GetTxStatusMsg         = 0x14

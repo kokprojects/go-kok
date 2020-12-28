@@ -1,34 +1,34 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 /*
-Package rpc provides access to the exported methods of an object across a network
+Package rpc provides access to the exported mkokods of an object across a network
 or other I/O connection. After creating a server instance objects can be registered,
-making it visible from the outside. Exported methods that follow specific
+making it visible from the outside. Exported mkokods that follow specific
 conventions can be called remotely. It also has support for the publish/subscribe
 pattern.
 
-Methods that satisfy the following criteria are made available for remote access:
+Mkokods that satisfy the following criteria are made available for remote access:
  - object must be exported
- - method must be exported
- - method returns 0, 1 (response or error) or 2 (response and error) values
- - method argument(s) must be exported or builtin types
- - method returned value(s) must be exported or builtin types
+ - mkokod must be exported
+ - mkokod returns 0, 1 (response or error) or 2 (response and error) values
+ - mkokod argument(s) must be exported or builtin types
+ - mkokod returned value(s) must be exported or builtin types
 
-An example method:
+An example mkokod:
  func (s *CalcService) Add(a, b int) (int, error)
 
 When the returned error isn't nil the returned integer is ignored and the error is
@@ -40,13 +40,13 @@ argument as pointer value.
 
  func (s *CalService) Add(a, b int, mod *int) (int, error)
 
-This RPC method can be called with 2 integers and a null value as third argument.
+This RPC mkokod can be called with 2 integers and a null value as third argument.
 In that case the mod argument will be nil. Or it can be called with 3 integers,
 in that case mod will be pointing to the given third argument. Since the optional
 argument is the last argument the RPC package will also accept 2 integers as
-arguments. It will pass the mod argument as nil to the RPC method.
+arguments. It will pass the mod argument as nil to the RPC mkokod.
 
-The server offers the ServeCodec method which accepts a ServerCodec instance. It will
+The server offers the ServeCodec mkokod which accepts a ServerCodec instance. It will
 read requests from the codec, process the request and sends the response back to the
 client using the codec. The server can execute requests concurrently. Responses
 can be sent back to the client out of order.
@@ -77,14 +77,14 @@ An example server which uses the JSON codec:
  }
 
 The package also supports the publish subscribe pattern through the use of subscriptions.
-A method that is considered eligible for notifications must satisfy the following criteria:
+A mkokod that is considered eligible for notifications must satisfy the following criteria:
  - object must be exported
- - method must be exported
- - first method argument type must be context.Context
- - method argument(s) must be exported or builtin types
- - method must return the tuple Subscription, error
+ - mkokod must be exported
+ - first mkokod argument type must be context.Context
+ - mkokod argument(s) must be exported or builtin types
+ - mkokod must return the tuple Subscription, error
 
-An example method:
+An example mkokod:
  func (s *BlockChainService) NewBlocks(ctx context.Context) (Subscription, error) {
  	...
  }

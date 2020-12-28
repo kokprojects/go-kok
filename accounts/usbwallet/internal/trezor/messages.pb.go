@@ -70,17 +70,17 @@ const (
 	MessageType_MessageType_SignIdentity             MessageType = 53
 	MessageType_MessageType_SignedIdentity           MessageType = 54
 	MessageType_MessageType_GetFeatures              MessageType = 55
-	MessageType_MessageType_EthereumGetAddress       MessageType = 56
-	MessageType_MessageType_EthereumAddress          MessageType = 57
-	MessageType_MessageType_EthereumSignTx           MessageType = 58
-	MessageType_MessageType_EthereumTxRequest        MessageType = 59
-	MessageType_MessageType_EthereumTxAck            MessageType = 60
+	MessageType_MessageType_kokereumGetAddress       MessageType = 56
+	MessageType_MessageType_kokereumAddress          MessageType = 57
+	MessageType_MessageType_kokereumSignTx           MessageType = 58
+	MessageType_MessageType_kokereumTxRequest        MessageType = 59
+	MessageType_MessageType_kokereumTxAck            MessageType = 60
 	MessageType_MessageType_GetECDHSessionKey        MessageType = 61
 	MessageType_MessageType_ECDHSessionKey           MessageType = 62
 	MessageType_MessageType_SetU2FCounter            MessageType = 63
-	MessageType_MessageType_EthereumSignMessage      MessageType = 64
-	MessageType_MessageType_EthereumVerifyMessage    MessageType = 65
-	MessageType_MessageType_EthereumMessageSignature MessageType = 66
+	MessageType_MessageType_kokereumSignMessage      MessageType = 64
+	MessageType_MessageType_kokereumVerifyMessage    MessageType = 65
+	MessageType_MessageType_kokereumMessageSignature MessageType = 66
 	MessageType_MessageType_DebugLinkDecision        MessageType = 100
 	MessageType_MessageType_DebugLinkGetState        MessageType = 101
 	MessageType_MessageType_DebugLinkState           MessageType = 102
@@ -146,17 +146,17 @@ var MessageType_name = map[int32]string{
 	53:  "MessageType_SignIdentity",
 	54:  "MessageType_SignedIdentity",
 	55:  "MessageType_GetFeatures",
-	56:  "MessageType_EthereumGetAddress",
-	57:  "MessageType_EthereumAddress",
-	58:  "MessageType_EthereumSignTx",
-	59:  "MessageType_EthereumTxRequest",
-	60:  "MessageType_EthereumTxAck",
+	56:  "MessageType_kokereumGetAddress",
+	57:  "MessageType_kokereumAddress",
+	58:  "MessageType_kokereumSignTx",
+	59:  "MessageType_kokereumTxRequest",
+	60:  "MessageType_kokereumTxAck",
 	61:  "MessageType_GetECDHSessionKey",
 	62:  "MessageType_ECDHSessionKey",
 	63:  "MessageType_SetU2FCounter",
-	64:  "MessageType_EthereumSignMessage",
-	65:  "MessageType_EthereumVerifyMessage",
-	66:  "MessageType_EthereumMessageSignature",
+	64:  "MessageType_kokereumSignMessage",
+	65:  "MessageType_kokereumVerifyMessage",
+	66:  "MessageType_kokereumMessageSignature",
 	100: "MessageType_DebugLinkDecision",
 	101: "MessageType_DebugLinkGetState",
 	102: "MessageType_DebugLinkState",
@@ -221,17 +221,17 @@ var MessageType_value = map[string]int32{
 	"MessageType_SignIdentity":             53,
 	"MessageType_SignedIdentity":           54,
 	"MessageType_GetFeatures":              55,
-	"MessageType_EthereumGetAddress":       56,
-	"MessageType_EthereumAddress":          57,
-	"MessageType_EthereumSignTx":           58,
-	"MessageType_EthereumTxRequest":        59,
-	"MessageType_EthereumTxAck":            60,
+	"MessageType_kokereumGetAddress":       56,
+	"MessageType_kokereumAddress":          57,
+	"MessageType_kokereumSignTx":           58,
+	"MessageType_kokereumTxRequest":        59,
+	"MessageType_kokereumTxAck":            60,
 	"MessageType_GetECDHSessionKey":        61,
 	"MessageType_ECDHSessionKey":           62,
 	"MessageType_SetU2FCounter":            63,
-	"MessageType_EthereumSignMessage":      64,
-	"MessageType_EthereumVerifyMessage":    65,
-	"MessageType_EthereumMessageSignature": 66,
+	"MessageType_kokereumSignMessage":      64,
+	"MessageType_kokereumVerifyMessage":    65,
+	"MessageType_kokereumMessageSignature": 66,
 	"MessageType_DebugLinkDecision":        100,
 	"MessageType_DebugLinkGetState":        101,
 	"MessageType_DebugLinkState":           102,
@@ -510,7 +510,7 @@ func (m *ApplySettings) GetUsePassphrase() bool {
 	return false
 }
 
-func (m *ApplySettings) GetHomescreen() []byte {
+func (m *ApplySettings) Gkokomescreen() []byte {
 	if m != nil {
 		return m.Homescreen
 	}
@@ -954,29 +954,29 @@ func (m *GetAddress) GetScriptType() InputScriptType {
 }
 
 // *
-// Request: Ask device for Ethereum address corresponding to address_n path
+// Request: Ask device for kokereum address corresponding to address_n path
 // @next PassphraseRequest
-// @next EthereumAddress
+// @next kokereumAddress
 // @next Failure
-type EthereumGetAddress struct {
+type kokereumGetAddress struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	ShowDisplay      *bool    `protobuf:"varint,2,opt,name=show_display,json=showDisplay" json:"show_display,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumGetAddress) Reset()                    { *m = EthereumGetAddress{} }
-func (m *EthereumGetAddress) String() string            { return proto.CompactTextString(m) }
-func (*EthereumGetAddress) ProtoMessage()               {}
-func (*EthereumGetAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{22} }
+func (m *kokereumGetAddress) Reset()                    { *m = kokereumGetAddress{} }
+func (m *kokereumGetAddress) String() string            { return proto.CompactTextString(m) }
+func (*kokereumGetAddress) ProtoMessage()               {}
+func (*kokereumGetAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{22} }
 
-func (m *EthereumGetAddress) GetAddressN() []uint32 {
+func (m *kokereumGetAddress) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumGetAddress) GetShowDisplay() bool {
+func (m *kokereumGetAddress) GetShowDisplay() bool {
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
@@ -1004,19 +1004,19 @@ func (m *Address) GetAddress() string {
 }
 
 // *
-// Response: Contains an Ethereum address derived from device private seed
-// @prev EthereumGetAddress
-type EthereumAddress struct {
+// Response: Contains an kokereum address derived from device private seed
+// @prev kokereumGetAddress
+type kokereumAddress struct {
 	Address          []byte `protobuf:"bytes,1,req,name=address" json:"address,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumAddress) Reset()                    { *m = EthereumAddress{} }
-func (m *EthereumAddress) String() string            { return proto.CompactTextString(m) }
-func (*EthereumAddress) ProtoMessage()               {}
-func (*EthereumAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{24} }
+func (m *kokereumAddress) Reset()                    { *m = kokereumAddress{} }
+func (m *kokereumAddress) String() string            { return proto.CompactTextString(m) }
+func (*kokereumAddress) ProtoMessage()               {}
+func (*kokereumAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{24} }
 
-func (m *EthereumAddress) GetAddress() []byte {
+func (m *kokereumAddress) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
@@ -1252,7 +1252,7 @@ type RecoveryDevice struct {
 	Language             *string `protobuf:"bytes,4,opt,name=language,def=english" json:"language,omitempty"`
 	Label                *string `protobuf:"bytes,5,opt,name=label" json:"label,omitempty"`
 	EnforceWordlist      *bool   `protobuf:"varint,6,opt,name=enforce_wordlist,json=enforceWordlist" json:"enforce_wordlist,omitempty"`
-	// 7 reserved for unused recovery method
+	// 7 reserved for unused recovery mkokod
 	Type             *uint32 `protobuf:"varint,8,opt,name=type" json:"type,omitempty"`
 	U2FCounter       *uint32 `protobuf:"varint,9,opt,name=u2f_counter,json=u2fCounter" json:"u2f_counter,omitempty"`
 	DryRun           *bool   `protobuf:"varint,10,opt,name=dry_run,json=dryRun" json:"dry_run,omitempty"`
@@ -1581,7 +1581,7 @@ func (m *EncryptedMessage) GetMessage() []byte {
 	return nil
 }
 
-func (m *EncryptedMessage) GetHmac() []byte {
+func (m *EncryptedMessage) Gkokmac() []byte {
 	if m != nil {
 		return m.Hmac
 	}
@@ -1626,7 +1626,7 @@ func (m *DecryptMessage) GetMessage() []byte {
 	return nil
 }
 
-func (m *DecryptMessage) GetHmac() []byte {
+func (m *DecryptMessage) Gkokmac() []byte {
 	if m != nil {
 		return m.Hmac
 	}
@@ -1872,7 +1872,7 @@ func (m *SignTx) GetLockTime() uint32 {
 
 // *
 // Request: Simplified transaction signing
-// This method doesn't support streaming, so there are hardware limits in number of inputs and outputs.
+// This mkokod doesn't support streaming, so there are hardware limits in number of inputs and outputs.
 // In case of success, the result is returned using TxRequest message.
 // @next PassphraseRequest
 // @next PinMatrixRequest
@@ -2006,9 +2006,9 @@ func (m *TxAck) GetTx() *TransactionType {
 // Note: the first at most 1024 bytes of data MUST be transmitted as part of this message.
 // @next PassphraseRequest
 // @next PinMatrixRequest
-// @next EthereumTxRequest
+// @next kokereumTxRequest
 // @next Failure
-type EthereumSignTx struct {
+type kokereumSignTx struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	Nonce            []byte   `protobuf:"bytes,2,opt,name=nonce" json:"nonce,omitempty"`
 	GasPrice         []byte   `protobuf:"bytes,3,opt,name=gas_price,json=gasPrice" json:"gas_price,omitempty"`
@@ -2021,68 +2021,68 @@ type EthereumSignTx struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumSignTx) Reset()                    { *m = EthereumSignTx{} }
-func (m *EthereumSignTx) String() string            { return proto.CompactTextString(m) }
-func (*EthereumSignTx) ProtoMessage()               {}
-func (*EthereumSignTx) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{49} }
+func (m *kokereumSignTx) Reset()                    { *m = kokereumSignTx{} }
+func (m *kokereumSignTx) String() string            { return proto.CompactTextString(m) }
+func (*kokereumSignTx) ProtoMessage()               {}
+func (*kokereumSignTx) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{49} }
 
-func (m *EthereumSignTx) GetAddressN() []uint32 {
+func (m *kokereumSignTx) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetNonce() []byte {
+func (m *kokereumSignTx) GetNonce() []byte {
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetGasPrice() []byte {
+func (m *kokereumSignTx) GetGasPrice() []byte {
 	if m != nil {
 		return m.GasPrice
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetGasLimit() []byte {
+func (m *kokereumSignTx) GetGasLimit() []byte {
 	if m != nil {
 		return m.GasLimit
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetTo() []byte {
+func (m *kokereumSignTx) GetTo() []byte {
 	if m != nil {
 		return m.To
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetValue() []byte {
+func (m *kokereumSignTx) GetValue() []byte {
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetDataInitialChunk() []byte {
+func (m *kokereumSignTx) GetDataInitialChunk() []byte {
 	if m != nil {
 		return m.DataInitialChunk
 	}
 	return nil
 }
 
-func (m *EthereumSignTx) GetDataLength() uint32 {
+func (m *kokereumSignTx) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *EthereumSignTx) GetChainId() uint32 {
+func (m *kokereumSignTx) GetChainId() uint32 {
 	if m != nil && m.ChainId != nil {
 		return *m.ChainId
 	}
@@ -2093,9 +2093,9 @@ func (m *EthereumSignTx) GetChainId() uint32 {
 // Response: Device asks for more data from transaction payload, or returns the signature.
 // If data_length is set, device awaits that many more bytes of payload.
 // Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
-// @prev EthereumSignTx
-// @next EthereumTxAck
-type EthereumTxRequest struct {
+// @prev kokereumSignTx
+// @next kokereumTxAck
+type kokereumTxRequest struct {
 	DataLength       *uint32 `protobuf:"varint,1,opt,name=data_length,json=dataLength" json:"data_length,omitempty"`
 	SignatureV       *uint32 `protobuf:"varint,2,opt,name=signature_v,json=signatureV" json:"signature_v,omitempty"`
 	SignatureR       []byte  `protobuf:"bytes,3,opt,name=signature_r,json=signatureR" json:"signature_r,omitempty"`
@@ -2103,33 +2103,33 @@ type EthereumTxRequest struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *EthereumTxRequest) Reset()                    { *m = EthereumTxRequest{} }
-func (m *EthereumTxRequest) String() string            { return proto.CompactTextString(m) }
-func (*EthereumTxRequest) ProtoMessage()               {}
-func (*EthereumTxRequest) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{50} }
+func (m *kokereumTxRequest) Reset()                    { *m = kokereumTxRequest{} }
+func (m *kokereumTxRequest) String() string            { return proto.CompactTextString(m) }
+func (*kokereumTxRequest) ProtoMessage()               {}
+func (*kokereumTxRequest) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{50} }
 
-func (m *EthereumTxRequest) GetDataLength() uint32 {
+func (m *kokereumTxRequest) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *EthereumTxRequest) GetSignatureV() uint32 {
+func (m *kokereumTxRequest) GetSignatureV() uint32 {
 	if m != nil && m.SignatureV != nil {
 		return *m.SignatureV
 	}
 	return 0
 }
 
-func (m *EthereumTxRequest) GetSignatureR() []byte {
+func (m *kokereumTxRequest) GetSignatureR() []byte {
 	if m != nil {
 		return m.SignatureR
 	}
 	return nil
 }
 
-func (m *EthereumTxRequest) GetSignatureS() []byte {
+func (m *kokereumTxRequest) GetSignatureS() []byte {
 	if m != nil {
 		return m.SignatureS
 	}
@@ -2138,19 +2138,19 @@ func (m *EthereumTxRequest) GetSignatureS() []byte {
 
 // *
 // Request: Transaction payload data.
-// @prev EthereumTxRequest
-// @next EthereumTxRequest
-type EthereumTxAck struct {
+// @prev kokereumTxRequest
+// @next kokereumTxRequest
+type kokereumTxAck struct {
 	DataChunk        []byte `protobuf:"bytes,1,opt,name=data_chunk,json=dataChunk" json:"data_chunk,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumTxAck) Reset()                    { *m = EthereumTxAck{} }
-func (m *EthereumTxAck) String() string            { return proto.CompactTextString(m) }
-func (*EthereumTxAck) ProtoMessage()               {}
-func (*EthereumTxAck) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{51} }
+func (m *kokereumTxAck) Reset()                    { *m = kokereumTxAck{} }
+func (m *kokereumTxAck) String() string            { return proto.CompactTextString(m) }
+func (*kokereumTxAck) ProtoMessage()               {}
+func (*kokereumTxAck) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{51} }
 
-func (m *EthereumTxAck) GetDataChunk() []byte {
+func (m *kokereumTxAck) GetDataChunk() []byte {
 	if m != nil {
 		return m.DataChunk
 	}
@@ -2159,27 +2159,27 @@ func (m *EthereumTxAck) GetDataChunk() []byte {
 
 // *
 // Request: Ask device to sign message
-// @next EthereumMessageSignature
+// @next kokereumMessageSignature
 // @next Failure
-type EthereumSignMessage struct {
+type kokereumSignMessage struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	Message          []byte   `protobuf:"bytes,2,req,name=message" json:"message,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *EthereumSignMessage) Reset()                    { *m = EthereumSignMessage{} }
-func (m *EthereumSignMessage) String() string            { return proto.CompactTextString(m) }
-func (*EthereumSignMessage) ProtoMessage()               {}
-func (*EthereumSignMessage) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{52} }
+func (m *kokereumSignMessage) Reset()                    { *m = kokereumSignMessage{} }
+func (m *kokereumSignMessage) String() string            { return proto.CompactTextString(m) }
+func (*kokereumSignMessage) ProtoMessage()               {}
+func (*kokereumSignMessage) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{52} }
 
-func (m *EthereumSignMessage) GetAddressN() []uint32 {
+func (m *kokereumSignMessage) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *EthereumSignMessage) GetMessage() []byte {
+func (m *kokereumSignMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
@@ -2190,33 +2190,33 @@ func (m *EthereumSignMessage) GetMessage() []byte {
 // Request: Ask device to verify message
 // @next Success
 // @next Failure
-type EthereumVerifyMessage struct {
+type kokereumVerifyMessage struct {
 	Address          []byte `protobuf:"bytes,1,opt,name=address" json:"address,omitempty"`
 	Signature        []byte `protobuf:"bytes,2,opt,name=signature" json:"signature,omitempty"`
 	Message          []byte `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumVerifyMessage) Reset()                    { *m = EthereumVerifyMessage{} }
-func (m *EthereumVerifyMessage) String() string            { return proto.CompactTextString(m) }
-func (*EthereumVerifyMessage) ProtoMessage()               {}
-func (*EthereumVerifyMessage) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{53} }
+func (m *kokereumVerifyMessage) Reset()                    { *m = kokereumVerifyMessage{} }
+func (m *kokereumVerifyMessage) String() string            { return proto.CompactTextString(m) }
+func (*kokereumVerifyMessage) ProtoMessage()               {}
+func (*kokereumVerifyMessage) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{53} }
 
-func (m *EthereumVerifyMessage) GetAddress() []byte {
+func (m *kokereumVerifyMessage) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *EthereumVerifyMessage) GetSignature() []byte {
+func (m *kokereumVerifyMessage) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *EthereumVerifyMessage) GetMessage() []byte {
+func (m *kokereumVerifyMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
@@ -2225,26 +2225,26 @@ func (m *EthereumVerifyMessage) GetMessage() []byte {
 
 // *
 // Response: Signed message
-// @prev EthereumSignMessage
-type EthereumMessageSignature struct {
+// @prev kokereumSignMessage
+type kokereumMessageSignature struct {
 	Address          []byte `protobuf:"bytes,1,opt,name=address" json:"address,omitempty"`
 	Signature        []byte `protobuf:"bytes,2,opt,name=signature" json:"signature,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *EthereumMessageSignature) Reset()                    { *m = EthereumMessageSignature{} }
-func (m *EthereumMessageSignature) String() string            { return proto.CompactTextString(m) }
-func (*EthereumMessageSignature) ProtoMessage()               {}
-func (*EthereumMessageSignature) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{54} }
+func (m *kokereumMessageSignature) Reset()                    { *m = kokereumMessageSignature{} }
+func (m *kokereumMessageSignature) String() string            { return proto.CompactTextString(m) }
+func (*kokereumMessageSignature) ProtoMessage()               {}
+func (*kokereumMessageSignature) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{54} }
 
-func (m *EthereumMessageSignature) GetAddress() []byte {
+func (m *kokereumMessageSignature) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *EthereumMessageSignature) GetSignature() []byte {
+func (m *kokereumMessageSignature) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
@@ -2481,7 +2481,7 @@ func (m *FirmwareUpload) GetPayload() []byte {
 	return nil
 }
 
-func (m *FirmwareUpload) GetHash() []byte {
+func (m *FirmwareUpload) Gkokash() []byte {
 	if m != nil {
 		return m.Hash
 	}
@@ -2806,9 +2806,9 @@ func init() {
 	proto.RegisterType((*GetPublicKey)(nil), "GetPublicKey")
 	proto.RegisterType((*PublicKey)(nil), "PublicKey")
 	proto.RegisterType((*GetAddress)(nil), "GetAddress")
-	proto.RegisterType((*EthereumGetAddress)(nil), "EthereumGetAddress")
+	proto.RegisterType((*kokereumGetAddress)(nil), "kokereumGetAddress")
 	proto.RegisterType((*Address)(nil), "Address")
-	proto.RegisterType((*EthereumAddress)(nil), "EthereumAddress")
+	proto.RegisterType((*kokereumAddress)(nil), "kokereumAddress")
 	proto.RegisterType((*WipeDevice)(nil), "WipeDevice")
 	proto.RegisterType((*LoadDevice)(nil), "LoadDevice")
 	proto.RegisterType((*ResetDevice)(nil), "ResetDevice")
@@ -2833,12 +2833,12 @@ func init() {
 	proto.RegisterType((*SimpleSignTx)(nil), "SimpleSignTx")
 	proto.RegisterType((*TxRequest)(nil), "TxRequest")
 	proto.RegisterType((*TxAck)(nil), "TxAck")
-	proto.RegisterType((*EthereumSignTx)(nil), "EthereumSignTx")
-	proto.RegisterType((*EthereumTxRequest)(nil), "EthereumTxRequest")
-	proto.RegisterType((*EthereumTxAck)(nil), "EthereumTxAck")
-	proto.RegisterType((*EthereumSignMessage)(nil), "EthereumSignMessage")
-	proto.RegisterType((*EthereumVerifyMessage)(nil), "EthereumVerifyMessage")
-	proto.RegisterType((*EthereumMessageSignature)(nil), "EthereumMessageSignature")
+	proto.RegisterType((*kokereumSignTx)(nil), "kokereumSignTx")
+	proto.RegisterType((*kokereumTxRequest)(nil), "kokereumTxRequest")
+	proto.RegisterType((*kokereumTxAck)(nil), "kokereumTxAck")
+	proto.RegisterType((*kokereumSignMessage)(nil), "kokereumSignMessage")
+	proto.RegisterType((*kokereumVerifyMessage)(nil), "kokereumVerifyMessage")
+	proto.RegisterType((*kokereumMessageSignature)(nil), "kokereumMessageSignature")
 	proto.RegisterType((*SignIdentity)(nil), "SignIdentity")
 	proto.RegisterType((*SignedIdentity)(nil), "SignedIdentity")
 	proto.RegisterType((*GetECDHSessionKey)(nil), "GetECDHSessionKey")

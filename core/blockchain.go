@@ -1,20 +1,20 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package core implements the Ethereum consensus protocol.
+// Package core implements the kokereum consensus protocol.
 package core
 
 import (
@@ -35,7 +35,7 @@ import (
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
 	"github.com/kokprojects/go-kok/crypto"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/metrics"
@@ -80,7 +80,7 @@ type BlockChain struct {
 	config *params.ChainConfig // chain & network configuration
 
 	hc            *HeaderChain
-	chainDb       ethdb.Database
+	chainDb       kokdb.Database
 	rmLogsFeed    event.Feed
 	chainFeed     event.Feed
 	chainSideFeed event.Feed
@@ -118,9 +118,9 @@ type BlockChain struct {
 }
 
 // NewBlockChain returns a fully initialised block chain using information
-// available in the database. It initialises the default Ethereum Validator and
+// available in the database. It initialises the default kokereum Validator and
 // Processor.
-func NewBlockChain(chainDb ethdb.Database, config *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config) (*BlockChain, error) {
+func NewBlockChain(chainDb kokdb.Database, config *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config) (*BlockChain, error) {
 	bodyCache, _ := lru.New(bodyCacheLimit)
 	bodyRLPCache, _ := lru.New(bodyCacheLimit)
 	blockCache, _ := lru.New(blockCacheLimit)
@@ -157,13 +157,13 @@ func NewBlockChain(chainDb ethdb.Database, config *params.ChainConfig, engine co
 	}
 	// Check the current state of the block hashes and make sure that we do not have any of the bad blocks in our chain
 	for hash := range BadHashes {
-		if header := bc.GetHeaderByHash(hash); header != nil {
+		if header := bc.GkokeaderByHash(hash); header != nil {
 			// get the canonical block corresponding to the offending header's number
-			headerByNumber := bc.GetHeaderByNumber(header.Number.Uint64())
+			headerByNumber := bc.GkokeaderByNumber(header.Number.Uint64())
 			// make sure the headerByNumber (if present) is in our current canonical chain
 			if headerByNumber != nil && headerByNumber.Hash() == header.Hash() {
 				log.Error("Found bad hash, rewinding chain", "number", header.Number, "hash", header.ParentHash)
-				bc.SetHead(header.Number.Uint64() - 1)
+				bc.Skokead(header.Number.Uint64() - 1)
 				log.Error("Chain rewind was successful, resuming normal operation")
 			}
 		}
@@ -177,11 +177,11 @@ func (bc *BlockChain) getProcInterrupt() bool {
 	return atomic.LoadInt32(&bc.procInterrupt) == 1
 }
 
-// loadLastState loads the last known chain state from the database. This method
+// loadLastState loads the last known chain state from the database. This mkokod
 // assumes that the chain manager mutex is held.
 func (bc *BlockChain) loadLastState() error {
 	// Restore the last known head block
-	head := GetHeadBlockHash(bc.chainDb)
+	head := GkokeadBlockHash(bc.chainDb)
 	if head == (common.Hash{}) {
 		// Corrupt or empty database, init from scratch
 		log.Warn("Empty database, resetting chain")
@@ -205,8 +205,8 @@ func (bc *BlockChain) loadLastState() error {
 
 	// Restore the last known head header
 	currentHeader := bc.currentBlock.Header()
-	if head := GetHeadHeaderHash(bc.chainDb); head != (common.Hash{}) {
-		if header := bc.GetHeaderByHash(head); header != nil {
+	if head := GkokeadHeaderHash(bc.chainDb); head != (common.Hash{}) {
+		if header := bc.GkokeaderByHash(head); header != nil {
 			currentHeader = header
 		}
 	}
@@ -214,7 +214,7 @@ func (bc *BlockChain) loadLastState() error {
 
 	// Restore the last known head fast block
 	bc.currentFastBlock = bc.currentBlock
-	if head := GetHeadFastBlockHash(bc.chainDb); head != (common.Hash{}) {
+	if head := GkokeadFastBlockHash(bc.chainDb); head != (common.Hash{}) {
 		if block := bc.GetBlockByHash(head); block != nil {
 			bc.currentFastBlock = block
 		}
@@ -232,11 +232,11 @@ func (bc *BlockChain) loadLastState() error {
 	return nil
 }
 
-// SetHead rewinds the local chain to a new head. In the case of headers, everything
+// Skokead rewinds the local chain to a new head. In the case of headers, everything
 // above the new head will be deleted and the new one set. In the case of blocks
 // though, the head may be further rewound if block bodies are missing (non-archive
 // nodes after a fast sync).
-func (bc *BlockChain) SetHead(head uint64) error {
+func (bc *BlockChain) Skokead(head uint64) error {
 	log.Warn("Rewinding blockchain", "target", head)
 
 	bc.mu.Lock()
@@ -246,7 +246,7 @@ func (bc *BlockChain) SetHead(head uint64) error {
 	delFn := func(hash common.Hash, num uint64) {
 		DeleteBody(bc.chainDb, hash, num)
 	}
-	bc.hc.SetHead(head, delFn)
+	bc.hc.Skokead(head, delFn)
 	currentHeader := bc.hc.CurrentHeader()
 
 	// Clear out any stale content from the caches
@@ -395,7 +395,7 @@ func (bc *BlockChain) Reset() error {
 // specified genesis state.
 func (bc *BlockChain) ResetWithGenesisBlock(genesis *types.Block) error {
 	// Dump the entire block chain and purge the caches
-	if err := bc.SetHead(0); err != nil {
+	if err := bc.Skokead(0); err != nil {
 		return err
 	}
 	bc.mu.Lock()
@@ -447,7 +447,7 @@ func (bc *BlockChain) ExportN(w io.Writer, first uint64, last uint64) error {
 	return nil
 }
 
-// insert injects a new head block into the current block chain. This method
+// insert injects a new head block into the current block chain. This mkokod
 // assumes that the block is indeed a true head. It will also reset the head
 // header and the head fast sync block to this very same block if they are older
 // or if they are on a different side chain.
@@ -569,7 +569,7 @@ func (bc *BlockChain) GetBlockByNumber(number uint64) *types.Block {
 }
 
 // GetBlocksFromHash returns the block corresponding to hash and up to n-1 ancestors.
-// [deprecated by eth/62]
+// [deprecated by kok/62]
 func (bc *BlockChain) GetBlocksFromHash(hash common.Hash, n int) (blocks []*types.Block) {
 	number := bc.hc.GetBlockNumber(hash)
 	for i := 0; i < n; i++ {
@@ -647,7 +647,7 @@ func (bc *BlockChain) Rollback(chain []common.Hash) {
 
 		currentHeader := bc.hc.CurrentHeader()
 		if currentHeader.Hash() == hash {
-			bc.hc.SetCurrentHeader(bc.GetHeader(currentHeader.ParentHash, currentHeader.Number.Uint64()-1))
+			bc.hc.SetCurrentHeader(bc.Gkokeader(currentHeader.ParentHash, currentHeader.Number.Uint64()-1))
 		}
 		if bc.currentFastBlock.Hash() == hash {
 			bc.currentFastBlock = bc.GetBlock(bc.currentFastBlock.ParentHash(), bc.currentFastBlock.NumberU64()-1)
@@ -745,7 +745,7 @@ func (bc *BlockChain) InsertReceiptChain(blockChain types.Blocks, receiptChain [
 		}
 		stats.processed++
 
-		if batch.ValueSize() >= ethdb.IdealBatchSize {
+		if batch.ValueSize() >= kokdb.IdealBatchSize {
 			if err := batch.Write(); err != nil {
 				return 0, err
 			}
@@ -871,7 +871,7 @@ func (bc *BlockChain) InsertChain(chain types.Blocks) (int, error) {
 }
 
 // insertChain will execute the actual chain insertion and event aggregation. The
-// only reason this method exists as a separate one is to make locking cleaner
+// only reason this mkokod exists as a separate one is to make locking cleaner
 // with deferred statements.
 func (bc *BlockChain) insertChain(chain types.Blocks) (int, []interface{}, []*types.Log, error) {
 	// Do a sanity check that the provided chain is actually ordered and linked
@@ -1270,7 +1270,7 @@ Error: %v
 // chain, possibly creating a reorg. If an error is returned, it will return the
 // index number of the failing header as well an error describing what went wrong.
 //
-// The verify parameter can be used to fine tune whether nonce verification
+// The verify parameter can be used to fine tune whkoker nonce verification
 // should be done or not. The reason behind the optional check is because some
 // of the header retrieval mechanisms already need to verify nonces, as well as
 // because nonces can be verified sparsely, not needing to check each.
@@ -1302,7 +1302,7 @@ func (bc *BlockChain) InsertHeaderChain(chain []*types.Header, checkFreq int) (i
 // already known. If the total difficulty of the newly inserted header becomes
 // greater than the current known TD, the canonical chain is re-routed.
 //
-// Note: This method is not concurrent-safe with inserting blocks simultaneously
+// Note: This mkokod is not concurrent-safe with inserting blocks simultaneously
 // into the chain, as side effects caused by reorganisations cannot be emulated
 // without the real blocks. Hence, writing headers directly should only be done
 // in two scenarios: pure-header mode of operation (light clients), or properly
@@ -1339,16 +1339,16 @@ func (bc *BlockChain) GetTdByHash(hash common.Hash) *big.Int {
 	return bc.hc.GetTdByHash(hash)
 }
 
-// GetHeader retrieves a block header from the database by hash and number,
+// Gkokeader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (bc *BlockChain) GetHeader(hash common.Hash, number uint64) *types.Header {
-	return bc.hc.GetHeader(hash, number)
+func (bc *BlockChain) Gkokeader(hash common.Hash, number uint64) *types.Header {
+	return bc.hc.Gkokeader(hash, number)
 }
 
-// GetHeaderByHash retrieves a block header from the database by hash, caching it if
+// GkokeaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (bc *BlockChain) GetHeaderByHash(hash common.Hash) *types.Header {
-	return bc.hc.GetHeaderByHash(hash)
+func (bc *BlockChain) GkokeaderByHash(hash common.Hash) *types.Header {
+	return bc.hc.GkokeaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
@@ -1363,10 +1363,10 @@ func (bc *BlockChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []com
 	return bc.hc.GetBlockHashesFromHash(hash, max)
 }
 
-// GetHeaderByNumber retrieves a block header from the database by number,
+// GkokeaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (bc *BlockChain) GetHeaderByNumber(number uint64) *types.Header {
-	return bc.hc.GetHeaderByNumber(number)
+func (bc *BlockChain) GkokeaderByNumber(number uint64) *types.Header {
+	return bc.hc.GkokeaderByNumber(number)
 }
 
 // Config retrieves the blockchain's chain configuration.

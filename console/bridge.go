@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package console
 
@@ -29,10 +29,10 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
-// bridge is a collection of JavaScript utility methods to bride the .js runtime
-// environment and the Go RPC connection backing the remote method calls.
+// bridge is a collection of JavaScript utility mkokods to bride the .js runtime
+// environment and the Go RPC connection backing the remote mkokod calls.
 type bridge struct {
-	client   *rpc.Client  // RPC client to execute Ethereum requests through
+	client   *rpc.Client  // RPC client to execute kokereum requests through
 	prompter UserPrompter // Input prompter to allow interactive user feedback
 	printer  io.Writer    // Output writer to serialize any display strings to
 }
@@ -46,9 +46,9 @@ func newBridge(client *rpc.Client, prompter UserPrompter, printer io.Writer) *br
 	}
 }
 
-// NewAccount is a wrapper around the personal.newAccount RPC method that uses a
+// NewAccount is a wrapper around the personal.newAccount RPC mkokod that uses a
 // non-echoing password prompt to acquire the passphrase and executes the original
-// RPC method (saved in jeth.newAccount) with it to actually execute the RPC call.
+// RPC mkokod (saved in jkok.newAccount) with it to actually execute the RPC call.
 func (b *bridge) NewAccount(call otto.FunctionCall) (response otto.Value) {
 	var (
 		password string
@@ -77,7 +77,7 @@ func (b *bridge) NewAccount(call otto.FunctionCall) (response otto.Value) {
 		throwJSException("expected 0 or 1 string argument")
 	}
 	// Password acquired, execute the call and return
-	ret, err := call.Otto.Call("jeth.newAccount", nil, password)
+	ret, err := call.Otto.Call("jkok.newAccount", nil, password)
 	if err != nil {
 		throwJSException(err.Error())
 	}
@@ -100,7 +100,7 @@ func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) {
 		passwd = call.Argument(1)
 	}
 	// Open the wallet and return if successful in itself
-	val, err := call.Otto.Call("jeth.openWallet", nil, wallet, passwd)
+	val, err := call.Otto.Call("jkok.openWallet", nil, wallet, passwd)
 	if err == nil {
 		return val
 	}
@@ -121,15 +121,15 @@ func (b *bridge) OpenWallet(call otto.FunctionCall) (response otto.Value) {
 	} else {
 		passwd, _ = otto.ToValue(input)
 	}
-	if val, err = call.Otto.Call("jeth.openWallet", nil, wallet, passwd); err != nil {
+	if val, err = call.Otto.Call("jkok.openWallet", nil, wallet, passwd); err != nil {
 		throwJSException(err.Error())
 	}
 	return val
 }
 
-// UnlockAccount is a wrapper around the personal.unlockAccount RPC method that
+// UnlockAccount is a wrapper around the personal.unlockAccount RPC mkokod that
 // uses a non-echoing password prompt to acquire the passphrase and executes the
-// original RPC method (saved in jeth.unlockAccount) with it to actually execute
+// original RPC mkokod (saved in jkok.unlockAccount) with it to actually execute
 // the RPC call.
 func (b *bridge) UnlockAccount(call otto.FunctionCall) (response otto.Value) {
 	// Make sure we have an account specified to unlock
@@ -163,16 +163,16 @@ func (b *bridge) UnlockAccount(call otto.FunctionCall) (response otto.Value) {
 		duration = call.Argument(2)
 	}
 	// Send the request to the backend and return
-	val, err := call.Otto.Call("jeth.unlockAccount", nil, account, passwd, duration)
+	val, err := call.Otto.Call("jkok.unlockAccount", nil, account, passwd, duration)
 	if err != nil {
 		throwJSException(err.Error())
 	}
 	return val
 }
 
-// Sign is a wrapper around the personal.sign RPC method that uses a non-echoing password
-// prompt to acquire the passphrase and executes the original RPC method (saved in
-// jeth.sign) with it to actually execute the RPC call.
+// Sign is a wrapper around the personal.sign RPC mkokod that uses a non-echoing password
+// prompt to acquire the passphrase and executes the original RPC mkokod (saved in
+// jkok.sign) with it to actually execute the RPC call.
 func (b *bridge) Sign(call otto.FunctionCall) (response otto.Value) {
 	var (
 		message = call.Argument(0)
@@ -201,7 +201,7 @@ func (b *bridge) Sign(call otto.FunctionCall) (response otto.Value) {
 	}
 
 	// Send the request to the backend and return
-	val, err := call.Otto.Call("jeth.sign", nil, message, account, passwd)
+	val, err := call.Otto.Call("jkok.sign", nil, message, account, passwd)
 	if err != nil {
 		throwJSException(err.Error())
 	}
@@ -247,7 +247,7 @@ func (b *bridge) SleepBlocks(call otto.FunctionCall) (response otto.Value) {
 	// go through the console, this will allow web3 to call the appropriate
 	// callbacks if a delayed response or notification is received.
 	blockNumber := func() int64 {
-		result, err := call.Otto.Run("eth.blockNumber")
+		result, err := call.Otto.Run("kok.blockNumber")
 		if err != nil {
 			throwJSException(err.Error())
 		}
@@ -272,11 +272,11 @@ func (b *bridge) SleepBlocks(call otto.FunctionCall) (response otto.Value) {
 
 type jsonrpcCall struct {
 	Id     int64
-	Method string
+	Mkokod string
 	Params []interface{}
 }
 
-// Send implements the web3 provider "send" method.
+// Send implements the web3 provider "send" mkokod.
 func (b *bridge) Send(call otto.FunctionCall) (response otto.Value) {
 	// Remarshal the request into a Go value.
 	JSON, _ := call.Otto.Object("JSON")
@@ -306,7 +306,7 @@ func (b *bridge) Send(call otto.FunctionCall) (response otto.Value) {
 		resp, _ := call.Otto.Object(`({"jsonrpc":"2.0"})`)
 		resp.Set("id", req.Id)
 		var result json.RawMessage
-		err = b.client.Call(&result, req.Method, req.Params...)
+		err = b.client.Call(&result, req.Mkokod, req.Params...)
 		switch err := err.(type) {
 		case nil:
 			if result == nil {

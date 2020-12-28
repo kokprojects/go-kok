@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -38,7 +38,7 @@ func (w *wizard) networkStats(tips bool) {
 
 	// Iterate over all the specified hosts and check their status
 	stats := tablewriter.NewWriter(os.Stdout)
-	stats.SetHeader([]string{"Server", "IP", "Status", "Service", "Details"})
+	stats.Skokeader([]string{"Server", "IP", "Status", "Service", "Details"})
 	stats.SetColWidth(100)
 
 	for server, pubkey := range w.conf.Servers {
@@ -66,14 +66,14 @@ func (w *wizard) networkStats(tips bool) {
 		} else {
 			services["nginx"] = infos.String()
 		}
-		logger.Debug("Checking for ethstats availability")
-		if infos, err := checkEthstats(client, w.network); err != nil {
+		logger.Debug("Checking for kokstats availability")
+		if infos, err := checkkokstats(client, w.network); err != nil {
 			if err != ErrServiceUnknown {
-				services["ethstats"] = err.Error()
+				services["kokstats"] = err.Error()
 			}
 		} else {
-			services["ethstats"] = infos.String()
-			protips.ethstats = infos.config
+			services["kokstats"] = infos.String()
+			protips.kokstats = infos.config
 		}
 		logger.Debug("Checking for bootnode availability")
 		if infos, err := checkNode(client, w.network, true); err != nil {
@@ -138,8 +138,8 @@ func (w *wizard) networkStats(tips bool) {
 			protips.network = genesis.Config.ChainId.Int64()
 		}
 	}
-	if protips.ethstats != "" {
-		w.conf.ethstats = protips.ethstats
+	if protips.kokstats != "" {
+		w.conf.kokstats = protips.kokstats
 	}
 	w.conf.bootFull = protips.bootFull
 	w.conf.bootLight = protips.bootLight
@@ -159,7 +159,7 @@ type protips struct {
 	network   int64
 	bootFull  []string
 	bootLight []string
-	ethstats  string
+	kokstats  string
 }
 
 // print analyzes the network information available and prints a collection of
@@ -168,16 +168,16 @@ func (p *protips) print(network string) {
 	// If a known genesis block is available, display it and prepend an init command
 	fullinit, lightinit := "", ""
 	if p.genesis != "" {
-		fullinit = fmt.Sprintf("geth --datadir=$HOME/.%s init %s.json && ", network, network)
-		lightinit = fmt.Sprintf("geth --datadir=$HOME/.%s --light init %s.json && ", network, network)
+		fullinit = fmt.Sprintf("gkok --datadir=$HOME/.%s init %s.json && ", network, network)
+		lightinit = fmt.Sprintf("gkok --datadir=$HOME/.%s --light init %s.json && ", network, network)
 	}
-	// If an ethstats server is available, add the ethstats flag
+	// If an kokstats server is available, add the kokstats flag
 	statsflag := ""
-	if p.ethstats != "" {
-		if strings.Contains(p.ethstats, " ") {
-			statsflag = fmt.Sprintf(` --ethstats="yournode:%s"`, p.ethstats)
+	if p.kokstats != "" {
+		if strings.Contains(p.kokstats, " ") {
+			statsflag = fmt.Sprintf(` --kokstats="yournode:%s"`, p.kokstats)
 		} else {
-			statsflag = fmt.Sprintf(` --ethstats=yournode:%s`, p.ethstats)
+			statsflag = fmt.Sprintf(` --kokstats=yournode:%s`, p.kokstats)
 		}
 	}
 	// If bootnodes have been specified, add the bootnode flag
@@ -193,16 +193,16 @@ func (p *protips) print(network string) {
 	var tasks, tips []string
 
 	tasks = append(tasks, "Run an archive node with historical data")
-	tips = append(tips, fmt.Sprintf("%sgeth --networkid=%d --datadir=$HOME/.%s --cache=1024%s%s", fullinit, p.network, network, statsflag, bootflagFull))
+	tips = append(tips, fmt.Sprintf("%sgkok --networkid=%d --datadir=$HOME/.%s --cache=1024%s%s", fullinit, p.network, network, statsflag, bootflagFull))
 
 	tasks = append(tasks, "Run a full node with recent data only")
-	tips = append(tips, fmt.Sprintf("%sgeth --networkid=%d --datadir=$HOME/.%s --cache=512 --fast%s%s", fullinit, p.network, network, statsflag, bootflagFull))
+	tips = append(tips, fmt.Sprintf("%sgkok --networkid=%d --datadir=$HOME/.%s --cache=512 --fast%s%s", fullinit, p.network, network, statsflag, bootflagFull))
 
 	tasks = append(tasks, "Run a light node with on demand retrievals")
-	tips = append(tips, fmt.Sprintf("%sgeth --networkid=%d --datadir=$HOME/.%s --light%s%s", lightinit, p.network, network, statsflag, bootflagLight))
+	tips = append(tips, fmt.Sprintf("%sgkok --networkid=%d --datadir=$HOME/.%s --light%s%s", lightinit, p.network, network, statsflag, bootflagLight))
 
 	tasks = append(tasks, "Run an embedded node with constrained memory")
-	tips = append(tips, fmt.Sprintf("%sgeth --networkid=%d --datadir=$HOME/.%s --cache=32 --light%s%s", lightinit, p.network, network, statsflag, bootflagLight))
+	tips = append(tips, fmt.Sprintf("%sgkok --networkid=%d --datadir=$HOME/.%s --cache=32 --light%s%s", lightinit, p.network, network, statsflag, bootflagLight))
 
 	// If the tips are short, display in a table
 	short := true
@@ -215,7 +215,7 @@ func (p *protips) print(network string) {
 	fmt.Println()
 	if short {
 		howto := tablewriter.NewWriter(os.Stdout)
-		howto.SetHeader([]string{"Fun tasks for you", "Tips on how to"})
+		howto.Skokeader([]string{"Fun tasks for you", "Tips on how to"})
 		howto.SetColWidth(100)
 
 		for i := 0; i < len(tasks); i++ {

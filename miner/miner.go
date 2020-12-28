@@ -1,20 +1,20 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package miner implements Ethereum block creation and mining.
+// Package miner implements kokereum block creation and mining.
 package miner
 
 import (
@@ -27,19 +27,19 @@ import (
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/eth/downloader"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kok/downloader"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
 )
 
-// Backend wraps all methods required for mining.
+// Backend wraps all mkokods required for mining.
 type Backend interface {
 	AccountManager() *accounts.Manager
 	BlockChain() *core.BlockChain
 	TxPool() *core.TxPool
-	ChainDb() ethdb.Database
+	ChainDb() kokdb.Database
 }
 
 // Miner creates blocks and searches for proof-of-work values.
@@ -50,19 +50,19 @@ type Miner struct {
 
 	coinbase common.Address
 	mining   int32
-	eth      Backend
+	kok      Backend
 	engine   consensus.Engine
 
-	canStart    int32 // can start indicates whether we can start the mining operation
-	shouldStart int32 // should start indicates whether we should start after sync
+	canStart    int32 // can start indicates whkoker we can start the mining operation
+	shouldStart int32 // should start indicates whkoker we should start after sync
 }
 
-func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine) *Miner {
+func New(kok Backend, config *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine) *Miner {
 	miner := &Miner{
-		eth:      eth,
+		kok:      kok,
 		mux:      mux,
 		engine:   engine,
-		worker:   newWorker(config, engine, common.Address{}, eth, mux),
+		worker:   newWorker(config, engine, common.Address{}, kok, mux),
 		canStart: 1,
 	}
 	go miner.update()
@@ -148,7 +148,7 @@ func (self *Miner) Pending() (*types.Block, *state.StateDB) {
 //
 // Note, to access both the pending block and the pending state
 // simultaneously, please use Pending(), as the pending state can
-// change between multiple method calls
+// change between multiple mkokod calls
 func (self *Miner) PendingBlock() *types.Block {
 	return self.worker.pendingBlock()
 }

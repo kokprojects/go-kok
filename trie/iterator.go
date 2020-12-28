@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package trie
 
@@ -75,7 +75,7 @@ type NodeIterator interface {
 
 	// Leaf returns true iff the current node is a leaf node.
 	// LeafBlob, LeafKey return the contents and key of the leaf node. These
-	// method panic if the iterator is not positioned at a leaf.
+	// mkokod panic if the iterator is not positioned at a leaf.
 	// Callers must not retain references to their return value after calling Next
 	Leaf() bool
 	LeafBlob() []byte
@@ -171,8 +171,8 @@ func (it *nodeIterator) Error() error {
 	return it.err
 }
 
-// Next moves the iterator to the next node, returning whether there are any
-// further nodes. In case of an internal error this method returns false and
+// Next moves the iterator to the next node, returning whkoker there are any
+// further nodes. In case of an internal error this mkokod returns false and
 // sets the Error field to the encountered failure. If `descend` is false,
 // skips iterating over any subnodes of the current node.
 func (it *nodeIterator) Next(descend bool) bool {
@@ -547,7 +547,7 @@ func newPrefixIterator(trie *Trie, prefix []byte) NodeIterator {
 	}
 }
 
-// hasPrefix return whether the nodeIterator has common prefix
+// hasPrefix return whkoker the nodeIterator has common prefix
 func (it *prefixIterator) hasPrefix() bool {
 	return bytes.HasPrefix(it.nodeIterator.Path(), it.prefix)
 }
@@ -594,8 +594,8 @@ func (it *prefixIterator) Path() []byte {
 	return nil
 }
 
-// Next moves the iterator to the next node, returning whether there are any
-// further nodes which has common prefix. In case of an internal error this method
+// Next moves the iterator to the next node, returning whkoker there are any
+// further nodes which has common prefix. In case of an internal error this mkokod
 // returns false and sets the Error field to the encountered failure.
 // If `descend` is false, skips iterating over any subnodes of the current node.
 func (it *prefixIterator) Next(descend bool) bool {

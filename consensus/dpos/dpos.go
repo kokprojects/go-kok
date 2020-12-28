@@ -17,7 +17,7 @@ import (
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/crypto"
 	"github.com/kokprojects/go-kok/crypto/sha3"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
 	"github.com/kokprojects/go-kok/rlp"
@@ -83,7 +83,7 @@ var (
 
 type Dpos struct {
 	config *params.DposConfig // Consensus engine configuration parameters
-	db     ethdb.Database     // Database to store and retrieve snapshot checkpoints
+	db     kokdb.Database     // Database to store and retrieve snapshot checkpoints
 
 	signer               common.Address
 	signFn               SignerFn
@@ -101,7 +101,7 @@ type SignerFn func(accounts.Account, []byte) ([]byte, error)
 // signing. It is the hash of the entire header apart from the 65 byte signature
 // contained at the end of the extra data.
 //
-// Note, the method requires the extra data to be at least 65 bytes, otherwise it
+// Note, the mkokod requires the extra data to be at least 65 bytes, otherwise it
 // panics. This is done to avoid accidentally using both forms (signature present
 // or not), which could be abused to produce different hashes for the same header.
 func sigHash(header *types.Header) (hash common.Hash) {
@@ -130,7 +130,7 @@ func sigHash(header *types.Header) (hash common.Hash) {
 	return hash
 }
 
-func New(config *params.DposConfig, db ethdb.Database) *Dpos {
+func New(config *params.DposConfig, db kokdb.Database) *Dpos {
 	signatures, _ := lru.NewARC(inmemorySignatures)
 	return &Dpos{
 		config:     config,
@@ -184,7 +184,7 @@ func (d *Dpos) verifyHeader(chain consensus.ChainReader, header *types.Header, p
 	if len(parents) > 0 {
 		parent = parents[len(parents)-1]
 	} else {
-		parent = chain.GetHeader(header.ParentHash, number-1)
+		parent = chain.Gkokeader(header.ParentHash, number-1)
 	}
 	if parent == nil || parent.Number.Uint64() != number-1 || parent.Hash() != header.ParentHash {
 		return consensus.ErrUnknownAncestor
@@ -221,7 +221,7 @@ func (d *Dpos) VerifyUncles(chain consensus.ChainReader, block *types.Block) err
 	return nil
 }
 
-// VerifySeal implements consensus.Engine, checking whether the signature contained
+// VerifySeal implements consensus.Engine, checking whkoker the signature contained
 // in the header satisfies the consensus protocol requirements.
 func (d *Dpos) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
 	return d.verifySeal(chain, header, nil)
@@ -237,7 +237,7 @@ func (d *Dpos) verifySeal(chain consensus.ChainReader, header *types.Header, par
 	if len(parents) > 0 {
 		parent = parents[len(parents)-1]
 	} else {
-		parent = chain.GetHeader(header.ParentHash, number-1)
+		parent = chain.Gkokeader(header.ParentHash, number-1)
 	}
 	dposContext, err := types.NewDposContextFromProto(d.db, parent.DposContext)
 	if err != nil {
@@ -272,7 +272,7 @@ func (d *Dpos) updateConfirmedBlockHeader(chain consensus.ChainReader) error {
 	if d.confirmedBlockHeader == nil {
 		header, err := d.loadConfirmedBlockHeader(chain)
 		if err != nil {
-			header = chain.GetHeaderByNumber(0)
+			header = chain.GkokeaderByNumber(0)
 			if header == nil {
 				return err
 			}
@@ -306,7 +306,7 @@ func (d *Dpos) updateConfirmedBlockHeader(chain consensus.ChainReader) error {
 			log.Debug("dpos set confirmed block header success", "currentHeader", curHeader.Number.String())
 			return nil
 		}
-		curHeader = chain.GetHeaderByHash(curHeader.ParentHash)
+		curHeader = chain.GkokeaderByHash(curHeader.ParentHash)
 		if curHeader == nil {
 			return ErrNilBlockHeader
 		}
@@ -319,7 +319,7 @@ func (s *Dpos) loadConfirmedBlockHeader(chain consensus.ChainReader) (*types.Hea
 	if err != nil {
 		return nil, err
 	}
-	header := chain.GetHeaderByHash(common.BytesToHash(key))
+	header := chain.GkokeaderByHash(common.BytesToHash(key))
 	if header == nil {
 		return nil, ErrNilBlockHeader
 	}
@@ -327,7 +327,7 @@ func (s *Dpos) loadConfirmedBlockHeader(chain consensus.ChainReader) (*types.Hea
 }
 
 // store inserts the snapshot into the database.
-func (s *Dpos) storeConfirmedBlockHeader(db ethdb.Database) error {
+func (s *Dpos) storeConfirmedBlockHeader(db kokdb.Database) error {
 	return db.Put(confirmedBlockHead, s.confirmedBlockHeader.Hash().Bytes())
 }
 
@@ -339,7 +339,7 @@ func (d *Dpos) Prepare(chain consensus.ChainReader, header *types.Header) error 
 	}
 	header.Extra = header.Extra[:extraVanity]
 	header.Extra = append(header.Extra, make([]byte, extraSeal)...)
-	parent := chain.GetHeader(header.ParentHash, number-1)
+	parent := chain.Gkokeader(header.ParentHash, number-1)
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
@@ -365,18 +365,18 @@ func (d *Dpos) Finalize(chain consensus.ChainReader, header *types.Header, state
 	//AccumulateRewards(chain.Config(), state, header, uncles)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 
-	parent := chain.GetHeaderByHash(header.ParentHash)
+	parent := chain.GkokeaderByHash(header.ParentHash)
 	epochContext := &EpochContext{
 		statedb:     state,
 		DposContext: dposContext,
 		TimeStamp:   header.Time.Int64(),
 	}
 	if timeOfFirstBlock == 0 {
-		if firstBlockHeader := chain.GetHeaderByNumber(1); firstBlockHeader != nil {
+		if firstBlockHeader := chain.GkokeaderByNumber(1); firstBlockHeader != nil {
 			timeOfFirstBlock = firstBlockHeader.Time.Int64()
 		}
 	}
-	genesis := chain.GetHeaderByNumber(0)
+	genesis := chain.GkokeaderByNumber(0)
 	err := epochContext.tryElect(genesis, parent)
 	if err != nil {
 		return nil, fmt.Errorf("got error when elect next epoch, err: %s", err)
@@ -469,7 +469,7 @@ func (d *Dpos) Authorize(signer common.Address, signFn SignerFn) {
 	d.mu.Unlock()
 }
 
-// ecrecover extracts the Ethereum account address from a signed header.
+// ecrecover extracts the kokereum account address from a signed header.
 func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, error) {
 	// If the signature's already cached, return that
 	hash := header.Hash()
@@ -481,7 +481,7 @@ func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, er
 		return common.Address{}, errMissingSignature
 	}
 	signature := header.Extra[len(header.Extra)-extraSeal:]
-	// Recover the public key and the Ethereum address
+	// Recover the public key and the kokereum address
 	pubkey, err := crypto.Ecrecover(sigHash(header).Bytes(), signature)
 	if err != nil {
 		return common.Address{}, err

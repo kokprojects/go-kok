@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package miner
 
@@ -32,7 +32,7 @@ import (
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
@@ -98,10 +98,10 @@ type worker struct {
 
 	recv chan *Result
 
-	eth     Backend
+	kok     Backend
 	chain   *core.BlockChain
 	proc    core.Validator
-	chainDb ethdb.Database
+	chainDb kokdb.Database
 
 	coinbase common.Address
 	extra    []byte
@@ -122,28 +122,28 @@ type worker struct {
 	stopper chan struct{}
 }
 
-func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase common.Address, eth Backend, mux *event.TypeMux) *worker {
+func newWorker(config *params.ChainConfig, engine consensus.Engine, coinbase common.Address, kok Backend, mux *event.TypeMux) *worker {
 	worker := &worker{
 		config:         config,
 		engine:         engine,
-		eth:            eth,
+		kok:            kok,
 		mux:            mux,
 		txCh:           make(chan core.TxPreEvent, txChanSize),
 		chainHeadCh:    make(chan core.ChainHeadEvent, chainHeadChanSize),
-		chainDb:        eth.ChainDb(),
+		chainDb:        kok.ChainDb(),
 		recv:           make(chan *Result, resultQueueSize),
-		chain:          eth.BlockChain(),
-		proc:           eth.BlockChain().Validator(),
+		chain:          kok.BlockChain(),
+		proc:           kok.BlockChain().Validator(),
 		possibleUncles: make(map[common.Hash]*types.Block),
 		coinbase:       coinbase,
-		unconfirmed:    newUnconfirmedBlocks(eth.BlockChain(), miningLogAtDepth),
+		unconfirmed:    newUnconfirmedBlocks(kok.BlockChain(), miningLogAtDepth),
 		quitCh:         make(chan struct{}, 1),
 		stopper:        make(chan struct{}, 1),
 	}
 	// Subscribe TxPreEvent for tx pool
-	worker.txSub = eth.TxPool().SubscribeTxPreEvent(worker.txCh)
+	worker.txSub = kok.TxPool().SubscribeTxPreEvent(worker.txCh)
 	// Subscribe events for blockchain
-	worker.chainHeadSub = eth.BlockChain().SubscribeChainHeadEvent(worker.chainHeadCh)
+	worker.chainHeadSub = kok.BlockChain().SubscribeChainHeadEvent(worker.chainHeadCh)
 
 	go worker.update()
 	go worker.wait()
@@ -422,12 +422,12 @@ func (self *worker) createNewWork() (*Work, error) {
 	if err := self.engine.Prepare(self.chain, header); err != nil {
 		return nil, fmt.Errorf("got error when preparing header, err: %s", err)
 	}
-	// If we are care about TheDAO hard-fork check whether to override the extra-data or not
+	// If we are care about TheDAO hard-fork check whkoker to override the extra-data or not
 	if daoBlock := self.config.DAOForkBlock; daoBlock != nil {
-		// Check whether the block is among the fork extra-override range
+		// Check whkoker the block is among the fork extra-override range
 		limit := new(big.Int).Add(daoBlock, params.DAOForkExtraRange)
 		if header.Number.Cmp(daoBlock) >= 0 && header.Number.Cmp(limit) < 0 {
-			// Depending whether we support or oppose the fork, override differently
+			// Depending whkoker we support or oppose the fork, override differently
 			if self.config.DAOForkSupport {
 				header.Extra = common.CopyBytes(params.DAOForkBlockExtra)
 			} else if bytes.Equal(header.Extra, params.DAOForkBlockExtra) {
@@ -446,7 +446,7 @@ func (self *worker) createNewWork() (*Work, error) {
 	if self.config.DAOForkSupport && self.config.DAOForkBlock != nil && self.config.DAOForkBlock.Cmp(header.Number) == 0 {
 		misc.ApplyDAOHardFork(work.state)
 	}
-	pending, err := self.eth.TxPool().Pending()
+	pending, err := self.kok.TxPool().Pending()
 	if err != nil {
 		return nil, fmt.Errorf("got error when fetch pending transactions, err: %s", err)
 	}
@@ -522,7 +522,7 @@ func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsB
 		//
 		// We use the eip155 signer regardless of the current hf.
 		from, _ := types.Sender(env.signer, tx)
-		// Check whether the tx is replay protected. If we're not in the EIP155 hf
+		// Check whkoker the tx is replay protected. If we're not in the EIP155 hf
 		// phase, start ignoring the sender until we do.
 		if tx.Protected() && !env.config.IsEIP155(env.header.Number) {
 			log.Trace("Ignoring reply protected transaction", "hash", tx.Hash(), "eip155", env.config.EIP155Block)

@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package math
 
@@ -78,19 +78,19 @@ func MustParseUint64(s string) uint64 {
 	return v
 }
 
-// NOTE: The following methods need to be optimised using either bit checking or asm
+// NOTE: The following mkokods need to be optimised using either bit checking or asm
 
-// SafeSub returns subtraction result and whether overflow occurred.
+// SafeSub returns subtraction result and whkoker overflow occurred.
 func SafeSub(x, y uint64) (uint64, bool) {
 	return x - y, x < y
 }
 
-// SafeAdd returns the result and whether overflow occurred.
+// SafeAdd returns the result and whkoker overflow occurred.
 func SafeAdd(x, y uint64) (uint64, bool) {
 	return x + y, y > MaxUint64-x
 }
 
-// SafeMul returns multiplication result and whether overflow occurred.
+// SafeMul returns multiplication result and whkoker overflow occurred.
 func SafeMul(x, y uint64) (uint64, bool) {
 	if x == 0 || y == 0 {
 		return 0, false

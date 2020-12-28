@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package light
 
@@ -22,10 +22,10 @@ import (
 	"testing"
 
 	"github.com/kokprojects/go-kok/common"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 )
 
@@ -36,7 +36,7 @@ var (
 )
 
 // makeHeaderChain creates a deterministic chain of headers rooted at parent.
-func makeHeaderChain(parent *types.Header, n int, db ethdb.Database, seed int) []*types.Header {
+func makeHeaderChain(parent *types.Header, n int, db kokdb.Database, seed int) []*types.Header {
 	blocks, _ := core.GenerateChain(params.TestChainConfig, types.NewBlockWithHeader(parent), db, n, func(i int, b *core.BlockGen) {
 		b.SetCoinbase(common.Address{0: byte(seed), 19: byte(i)})
 	})
@@ -50,11 +50,11 @@ func makeHeaderChain(parent *types.Header, n int, db ethdb.Database, seed int) [
 // newCanonical creates a chain database, and injects a deterministic canonical
 // chain. Depending on the full flag, if creates either a full block chain or a
 // header only chain.
-func newCanonical(n int) (ethdb.Database, *LightChain, error) {
-	db, _ := ethdb.NewMemDatabase()
+func newCanonical(n int) (kokdb.Database, *LightChain, error) {
+	db, _ := kokdb.NewMemDatabase()
 	gspec := core.Genesis{Config: params.TestChainConfig}
 	genesis := gspec.MustCommit(db)
-	blockchain, _ := NewLightChain(&dummyOdr{db: db}, gspec.Config, ethash.NewFaker())
+	blockchain, _ := NewLightChain(&dummyOdr{db: db}, gspec.Config, kokash.NewFaker())
 
 	// Create and inject the requested chain
 	if n == 0 {
@@ -68,13 +68,13 @@ func newCanonical(n int) (ethdb.Database, *LightChain, error) {
 
 // newTestLightChain creates a LightChain that doesn't validate anything.
 func newTestLightChain() *LightChain {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	gspec := &core.Genesis{
 		Difficulty: big.NewInt(1),
 		Config:     params.TestChainConfig,
 	}
 	gspec.MustCommit(db)
-	lc, err := NewLightChain(&dummyOdr{db: db}, gspec.Config, ethash.NewFullFaker())
+	lc, err := NewLightChain(&dummyOdr{db: db}, gspec.Config, kokash.NewFullFaker())
 	if err != nil {
 		panic(err)
 	}
@@ -90,8 +90,8 @@ func testFork(t *testing.T, LightChain *LightChain, i, n int, comparator func(td
 	}
 	// Assert the chains have the same header/block at #i
 	var hash1, hash2 common.Hash
-	hash1 = LightChain.GetHeaderByNumber(uint64(i)).Hash()
-	hash2 = LightChain2.GetHeaderByNumber(uint64(i)).Hash()
+	hash1 = LightChain.GkokeaderByNumber(uint64(i)).Hash()
+	hash2 = LightChain2.GkokeaderByNumber(uint64(i)).Hash()
 	if hash1 != hash2 {
 		t.Errorf("chain content mismatch at %d: have hash %v, want hash %v", i, hash2, hash1)
 	}
@@ -264,10 +264,10 @@ func makeHeaderChainWithDiff(genesis *types.Block, d []int, seed byte) []*types.
 
 type dummyOdr struct {
 	OdrBackend
-	db ethdb.Database
+	db kokdb.Database
 }
 
-func (odr *dummyOdr) Database() ethdb.Database {
+func (odr *dummyOdr) Database() kokdb.Database {
 	return odr.db
 }
 
@@ -295,7 +295,7 @@ func testReorg(t *testing.T, first, second []int, td int64) {
 	bc.InsertHeaderChain(makeHeaderChainWithDiff(bc.genesisBlock, second, 22), 1)
 	// Check that the chain is valid number and link wise
 	prev := bc.CurrentHeader()
-	for header := bc.GetHeaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.GetHeaderByNumber(header.Number.Uint64()-1) {
+	for header := bc.GkokeaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.GkokeaderByNumber(header.Number.Uint64()-1) {
 		if prev.ParentHash != header.Hash() {
 			t.Errorf("parent header hash mismatch: have %x, want %x", prev.ParentHash, header.Hash())
 		}
@@ -338,7 +338,7 @@ func TestReorgBadHeaderHashes(t *testing.T) {
 	defer func() { delete(core.BadHashes, headers[3].Hash()) }()
 
 	// Create a new LightChain and check that it rolled back the state.
-	ncm, err := NewLightChain(&dummyOdr{db: bc.chainDb}, params.TestChainConfig, ethash.NewFaker())
+	ncm, err := NewLightChain(&dummyOdr{db: bc.chainDb}, params.TestChainConfig, kokash.NewFaker())
 	if err != nil {
 		t.Fatalf("failed to create new chain manager: %v", err)
 	}

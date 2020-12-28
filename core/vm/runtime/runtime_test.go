@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package runtime
 
@@ -25,7 +25,7 @@ import (
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/vm"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 )
 
 func TestDefaults(t *testing.T) {
@@ -48,7 +48,7 @@ func TestDefaults(t *testing.T) {
 	if cfg.Value == nil {
 		t.Error("expected time to be non nil")
 	}
-	if cfg.GetHashFn == nil {
+	if cfg.GkokashFn == nil {
 		t.Error("expected time to be non nil")
 	}
 	if cfg.BlockNumber == nil {
@@ -94,7 +94,7 @@ func TestExecute(t *testing.T) {
 }
 
 func TestCall(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	state, _ := state.New(common.Hash{}, state.NewDatabase(db))
 	address := common.HexToAddress("0x0a")
 	state.SetCode(address, []byte{

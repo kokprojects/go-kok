@@ -16,7 +16,7 @@
 */
 /**
  * @file contract.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2014
  */
 
@@ -29,7 +29,7 @@ var AllEvents = require('./allevents');
 /**
  * Should be called to encode constructor params
  *
- * @method encodeConstructorParams
+ * @mkokod encodeConstructorParams
  * @param {Array} abi
  * @param {Array} constructor params
  */
@@ -48,7 +48,7 @@ var encodeConstructorParams = function (abi, params) {
 /**
  * Should be called to add functions to contract object
  *
- * @method addFunctionsToContract
+ * @mkokod addFunctionsToContract
  * @param {Contract} contract
  * @param {Array} abi
  */
@@ -56,7 +56,7 @@ var addFunctionsToContract = function (contract) {
     contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(contract._eth, json, contract.address);
+        return new SolidityFunction(contract._kok, json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -65,7 +65,7 @@ var addFunctionsToContract = function (contract) {
 /**
  * Should be called to add events to contract object
  *
- * @method addEventsToContract
+ * @mkokod addEventsToContract
  * @param {Contract} contract
  * @param {Array} abi
  */
@@ -74,11 +74,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._eth._requestManager, events, contract.address);
+    var All = new AllEvents(contract._kok._requestManager, events, contract.address);
     All.attachToContract(contract);
 
     events.map(function (json) {
-        return new SolidityEvent(contract._eth._requestManager, json, contract.address);
+        return new SolidityEvent(contract._kok._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -88,7 +88,7 @@ var addEventsToContract = function (contract) {
 /**
  * Should be called to check if the contract gets properly deployed on the blockchain.
  *
- * @method checkForContractAddress
+ * @mkokod checkForContractAddress
  * @param {Object} contract
  * @param {Function} callback
  * @returns {Undefined}
@@ -98,7 +98,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._eth.filter('latest', function(e){
+    var filter = contract._kok.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -116,10 +116,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._kok.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && receipt.blockHash && !callbackFired) {
 
-                        contract._eth.getCode(receipt.contractAddress, function(e, code){
+                        contract._kok.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
@@ -134,7 +134,7 @@ var checkForContractAddress = function(contract, callback){
 
                                 contract.address = receipt.contractAddress;
 
-                                // attach events and methods again after we have
+                                // attach events and mkokods again after we have
                                 addFunctionsToContract(contract);
                                 addEventsToContract(contract);
 
@@ -159,17 +159,17 @@ var checkForContractAddress = function(contract, callback){
 /**
  * Should be called to create new ContractFactory instance
  *
- * @method ContractFactory
+ * @mkokod ContractFactory
  * @param {Array} abi
  */
-var TemplateFactory = function (eth, abi) {
-    this.eth = eth;
+var TemplateFactory = function (kok, abi) {
+    this.kok = kok;
     this.abi = abi;
 
     /**
      * Should be called to create new contract on a blockchain
      *
-     * @method new
+     * @mkokod new
      * @param {Any} contract constructor param1 (optional)
      * @param {Any} contract constructor param2 (optional)
      * @param {Object} contract transaction object (required)
@@ -179,7 +179,7 @@ var TemplateFactory = function (eth, abi) {
     this.new = function () {
         /*jshint maxcomplexity: 7 */
 
-        var contract = new Template(this.eth, this.abi);
+        var contract = new Template(this.kok, this.abi);
 
         // parse arguments
         var options = {}; // required!
@@ -211,7 +211,7 @@ var TemplateFactory = function (eth, abi) {
         if (callback) {
 
             // wait for the contract address and check if the code was deployed
-            this.eth.sendTransaction(options, function (err, hash) {
+            this.kok.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
                 } else {
@@ -225,7 +225,7 @@ var TemplateFactory = function (eth, abi) {
                 }
             });
         } else {
-            var hash = this.eth.sendTransaction(options);
+            var hash = this.kok.sendTransaction(options);
             // add the transaction hash
             contract.transactionHash = hash;
             checkForContractAddress(contract);
@@ -241,14 +241,14 @@ var TemplateFactory = function (eth, abi) {
 /**
  * Should be called to get access to existing contract on a blockchain
  *
- * @method at
+ * @mkokod at
  * @param {Address} contract address (required)
  * @param {Function} callback {optional)
  * @returns {Contract} returns contract if no callback was passed,
  * otherwise calls callback function (err, contract)
  */
 TemplateFactory.prototype.at = function (address, callback) {
-    var contract = new Template(this.eth, this.abi, address);
+    var contract = new Template(this.kok, this.abi, address);
 
     // this functions are not part of prototype,
     // because we dont want to spoil the interface
@@ -295,7 +295,7 @@ TemplateFactory.prototype.initParameters = function (types, parameters) {
 /**
  * Gets the data, which is data to deploy plus constructor params
  *
- * @method getData
+ * @mkokod getData
  */
 TemplateFactory.prototype.getData = function () {
     var options = {}; // required!
@@ -315,12 +315,12 @@ TemplateFactory.prototype.getData = function () {
 /**
  * Should be called to create new contract instance
  *
- * @method Contract
+ * @mkokod Contract
  * @param {Array} abi
  * @param {Address} contract address
  */
-var Template = function (eth, abi, address) {
-    this._eth = eth;
+var Template = function (kok, abi, address) {
+    this._kok = kok;
     this.transactionHash = null;
     this.address = address;
     this.abi = abi;

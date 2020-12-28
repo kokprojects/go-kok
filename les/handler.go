@@ -1,20 +1,20 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light kokereum Subprotocol.
 package les
 
 import (
@@ -32,9 +32,9 @@ import (
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/eth/downloader"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/kok/downloader"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/light"
 	"github.com/kokprojects/go-kok/log"
@@ -50,7 +50,7 @@ const (
 	softResponseLimit = 2 * 1024 * 1024 // Target maximum size of returned blocks, headers or node data.
 	estHeaderRlpSize  = 500             // Approximate size of an RLP encoded block header
 
-	ethVersion = 63 // equivalent eth version for the downloader
+	kokVersion = 63 // equivalent kok version for the downloader
 
 	MaxHeaderFetch           = 192 // Amount of block headers to be fetched per retrieval request
 	MaxBodyFetch             = 32  // Amount of block bodies to be fetched per retrieval request
@@ -74,14 +74,14 @@ func errResp(code errCode, format string, v ...interface{}) error {
 
 type BlockChain interface {
 	HasHeader(hash common.Hash, number uint64) bool
-	GetHeader(hash common.Hash, number uint64) *types.Header
-	GetHeaderByHash(hash common.Hash) *types.Header
+	Gkokeader(hash common.Hash, number uint64) *types.Header
+	GkokeaderByHash(hash common.Hash) *types.Header
 	CurrentHeader() *types.Header
 	GetTdByHash(hash common.Hash) *big.Int
 	InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error)
 	Rollback(chain []common.Hash)
 	Status() (td *big.Int, currentBlock common.Hash, genesisBlock common.Hash)
-	GetHeaderByNumber(number uint64) *types.Header
+	GkokeaderByNumber(number uint64) *types.Header
 	GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash
 	LastBlockHash() common.Hash
 	Genesis() *types.Block
@@ -100,7 +100,7 @@ type ProtocolManager struct {
 	networkId   uint64
 	chainConfig *params.ChainConfig
 	blockchain  BlockChain
-	chainDb     ethdb.Database
+	chainDb     kokdb.Database
 	odr         *LesOdr
 	server      *LesServer
 	serverPool  *serverPool
@@ -126,9 +126,9 @@ type ProtocolManager struct {
 	wg *sync.WaitGroup
 }
 
-// NewProtocolManager returns a new ethereum sub protocol manager. The Ethereum sub protocol manages peers capable
-// with the ethereum network.
-func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protocolVersions []uint, networkId uint64, mux *event.TypeMux, engine consensus.Engine, peers *peerSet, blockchain BlockChain, txpool txPool, chainDb ethdb.Database, odr *LesOdr, txrelay *LesTxRelay, quitSync chan struct{}, wg *sync.WaitGroup) (*ProtocolManager, error) {
+// NewProtocolManager returns a new kokereum sub protocol manager. The kokereum sub protocol manages peers capable
+// with the kokereum network.
+func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protocolVersions []uint, networkId uint64, mux *event.TypeMux, engine consensus.Engine, peers *peerSet, blockchain BlockChain, txpool txPool, chainDb kokdb.Database, odr *LesOdr, txrelay *LesTxRelay, quitSync chan struct{}, wg *sync.WaitGroup) (*ProtocolManager, error) {
 	// Create the protocol manager with the base fields
 	manager := &ProtocolManager{
 		lightSync:   lightSync,
@@ -232,7 +232,7 @@ func (pm *ProtocolManager) Start() {
 func (pm *ProtocolManager) Stop() {
 	// Showing a log message. During download / process this could actually
 	// take between 5 to 10 seconds and therefor feedback is required.
-	log.Info("Stopping light Ethereum protocol")
+	log.Info("Stopping light kokereum protocol")
 
 	// Quit the sync loop.
 	// After this send has completed, no new peers will be accepted.
@@ -249,7 +249,7 @@ func (pm *ProtocolManager) Stop() {
 	// Wait for any process action
 	pm.wg.Wait()
 
-	log.Info("Light Ethereum protocol stopped")
+	log.Info("Light kokereum protocol stopped")
 }
 
 func (pm *ProtocolManager) newPeer(pv int, nv uint64, p *p2p.Peer, rw p2p.MsgReadWriter) *peer {
@@ -259,13 +259,13 @@ func (pm *ProtocolManager) newPeer(pv int, nv uint64, p *p2p.Peer, rw p2p.MsgRea
 // handle is the callback invoked to manage the life cycle of a les peer. When
 // this function terminates, the peer is disconnected.
 func (pm *ProtocolManager) handle(p *peer) error {
-	p.Log().Debug("Light Ethereum peer connected", "name", p.Name())
+	p.Log().Debug("Light kokereum peer connected", "name", p.Name())
 
 	// Execute the LES handshake
 	td, head, genesis := pm.blockchain.Status()
 	headNum := core.GetBlockNumber(pm.chainDb, head)
 	if err := p.Handshake(td, head, headNum, genesis, pm.server); err != nil {
-		p.Log().Debug("Light Ethereum handshake failed", "err", err)
+		p.Log().Debug("Light kokereum handshake failed", "err", err)
 		return err
 	}
 	if rw, ok := p.rw.(*meteredMsgReadWriter); ok {
@@ -273,7 +273,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	}
 	// Register the peer locally
 	if err := pm.peers.Register(p); err != nil {
-		p.Log().Error("Light Ethereum peer registration failed", "err", err)
+		p.Log().Error("Light kokereum peer registration failed", "err", err)
 		return err
 	}
 	defer func() {
@@ -313,13 +313,13 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	// main loop. handle incoming messages.
 	for {
 		if err := pm.handleMsg(p); err != nil {
-			p.Log().Debug("Light Ethereum message handling failed", "err", err)
+			p.Log().Debug("Light kokereum message handling failed", "err", err)
 			return err
 		}
 	}
 }
 
-var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, GetHeaderProofsMsg, GetProofsV2Msg, GetHelperTrieProofsMsg}
+var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, GkokeaderProofsMsg, GetProofsV2Msg, GkokelperTrieProofsMsg}
 
 // handleMsg is invoked whenever an inbound message is received from a remote
 // peer. The remote connection is torn down upon returning any error.
@@ -329,7 +329,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 	if err != nil {
 		return err
 	}
-	p.Log().Trace("Light Ethereum message arrived", "code", msg.Code, "bytes", msg.Size)
+	p.Log().Trace("Light kokereum message arrived", "code", msg.Code, "bytes", msg.Size)
 
 	costs := p.fcCosts[msg.Code]
 	reject := func(reqCnt, maxCnt uint64) bool {
@@ -416,9 +416,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the next header satisfying the query
 			var origin *types.Header
 			if hashMode {
-				origin = pm.blockchain.GetHeaderByHash(query.Origin.Hash)
+				origin = pm.blockchain.GkokeaderByHash(query.Origin.Hash)
 			} else {
-				origin = pm.blockchain.GetHeaderByNumber(query.Origin.Number)
+				origin = pm.blockchain.GkokeaderByNumber(query.Origin.Number)
 			}
 			if origin == nil {
 				break
@@ -432,7 +432,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			case query.Origin.Hash != (common.Hash{}) && query.Reverse:
 				// Hash based traversal towards the genesis block
 				for i := 0; i < int(query.Skip)+1; i++ {
-					if header := pm.blockchain.GetHeader(query.Origin.Hash, number); header != nil {
+					if header := pm.blockchain.Gkokeader(query.Origin.Hash, number); header != nil {
 						query.Origin.Hash = header.ParentHash
 						number--
 					} else {
@@ -442,7 +442,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				}
 			case query.Origin.Hash != (common.Hash{}) && !query.Reverse:
 				// Hash based traversal towards the leaf block
-				if header := pm.blockchain.GetHeaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
+				if header := pm.blockchain.GkokeaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
 					if pm.blockchain.GetBlockHashesFromHash(header.Hash(), query.Skip+1)[query.Skip] == query.Origin.Hash {
 						query.Origin.Hash = header.Hash()
 					} else {
@@ -568,7 +568,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		for _, req := range req.Reqs {
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.Gkokeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if trie, _ := trie.New(header.Root, pm.chainDb); trie != nil {
 					sdata := trie.Get(req.AccKey)
 					var acc state.Account
@@ -634,7 +634,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the requested block's receipts, skipping if unknown to us
 			results := core.GetBlockReceipts(pm.chainDb, hash, core.GetBlockNumber(pm.chainDb, hash))
 			if results == nil {
-				if header := pm.blockchain.GetHeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
+				if header := pm.blockchain.GkokeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
 					continue
 				}
 			}
@@ -695,7 +695,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.Gkokeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if tr, _ := trie.New(header.Root, pm.chainDb); tr != nil {
 					if len(req.AccKey) > 0 {
 						sdata := tr.Get(req.AccKey)
@@ -746,7 +746,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			if tr == nil || req.BHash != lastBHash {
-				if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+				if header := core.Gkokeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 					tr, _ = trie.New(header.Root, pm.chainDb)
 				} else {
 					tr = nil
@@ -820,7 +820,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			Obj:     resp.Data,
 		}
 
-	case GetHeaderProofsMsg:
+	case GkokeaderProofsMsg:
 		p.Log().Trace("Received headers proof request")
 		// Decode the retrieval message
 		var req struct {
@@ -839,13 +839,13 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if reject(uint64(reqCnt), MaxHelperTrieProofsFetch) {
 			return errResp(ErrRequestRejected, "")
 		}
-		trieDb := ethdb.NewTable(pm.chainDb, light.ChtTablePrefix)
+		trieDb := kokdb.NewTable(pm.chainDb, light.ChtTablePrefix)
 		for _, req := range req.Reqs {
 			if bytes >= softResponseLimit {
 				break
 			}
 
-			if header := pm.blockchain.GetHeaderByNumber(req.BlockNum); header != nil {
+			if header := pm.blockchain.GkokeaderByNumber(req.BlockNum); header != nil {
 				sectionHead := core.GetCanonicalHash(pm.chainDb, (req.ChtNum+1)*light.ChtV1Frequency-1)
 				if root := light.GetChtRoot(pm.chainDb, req.ChtNum, sectionHead); root != (common.Hash{}) {
 					if tr, _ := trie.New(root, trieDb); tr != nil {
@@ -863,7 +863,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		pm.server.fcCostStats.update(msg.Code, uint64(reqCnt), rcost)
 		return p.SendHeaderProofs(req.ReqID, bv, proofs)
 
-	case GetHelperTrieProofsMsg:
+	case GkokelperTrieProofsMsg:
 		p.Log().Trace("Received helper trie proof request")
 		// Decode the retrieval message
 		var req struct {
@@ -898,9 +898,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			}
 			if tr == nil || req.HelperTrieType != lastType || req.TrieIdx != lastIdx {
 				var prefix string
-				root, prefix = pm.getHelperTrie(req.HelperTrieType, req.TrieIdx)
+				root, prefix = pm.gkokelperTrie(req.HelperTrieType, req.TrieIdx)
 				if root != (common.Hash{}) {
-					if t, err := trie.New(root, ethdb.NewTable(pm.chainDb, prefix)); err == nil {
+					if t, err := trie.New(root, kokdb.NewTable(pm.chainDb, prefix)); err == nil {
 						tr = t
 					}
 				}
@@ -919,7 +919,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 					tr.Prove(req.Key, req.FromLevel, nodes)
 				}
 				if req.AuxReq != 0 {
-					data := pm.getHelperTrieAuxData(req)
+					data := pm.gkokelperTrieAuxData(req)
 					auxData = append(auxData, data)
 					auxBytes += len(data)
 				}
@@ -1080,8 +1080,8 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 	return nil
 }
 
-// getHelperTrie returns the post-processed trie root for the given trie ID and section index
-func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, string) {
+// gkokelperTrie returns the post-processed trie root for the given trie ID and section index
+func (pm *ProtocolManager) gkokelperTrie(id uint, idx uint64) (common.Hash, string) {
 	switch id {
 	case htCanonical:
 		sectionHead := core.GetCanonicalHash(pm.chainDb, (idx+1)*light.ChtFrequency-1)
@@ -1093,15 +1093,15 @@ func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, stri
 	return common.Hash{}, ""
 }
 
-// getHelperTrieAuxData returns requested auxiliary data for the given HelperTrie request
-func (pm *ProtocolManager) getHelperTrieAuxData(req HelperTrieReq) []byte {
+// gkokelperTrieAuxData returns requested auxiliary data for the given HelperTrie request
+func (pm *ProtocolManager) gkokelperTrieAuxData(req HelperTrieReq) []byte {
 	if req.HelperTrieType == htCanonical && req.AuxReq == auxHeader {
 		if len(req.Key) != 8 {
 			return nil
 		}
 		blockNum := binary.BigEndian.Uint64(req.Key)
 		hash := core.GetCanonicalHash(pm.chainDb, blockNum)
-		return core.GetHeaderRLP(pm.chainDb, hash, blockNum)
+		return core.GkokeaderRLP(pm.chainDb, hash, blockNum)
 	}
 	return nil
 }
@@ -1124,8 +1124,8 @@ func (pm *ProtocolManager) txStatus(hashes []common.Hash) []txStatus {
 }
 
 // NodeInfo retrieves some protocol metadata about the running host node.
-func (self *ProtocolManager) NodeInfo() *eth.EthNodeInfo {
-	return &eth.EthNodeInfo{
+func (self *ProtocolManager) NodeInfo() *kok.kokNodeInfo {
+	return &kok.kokNodeInfo{
 		Network:    self.networkId,
 		Difficulty: self.blockchain.GetTdByHash(self.blockchain.LastBlockHash()),
 		Genesis:    self.blockchain.Genesis().Hash(),
@@ -1199,7 +1199,7 @@ func (d *downloaderPeerNotify) registerPeer(p *peer) {
 		manager: pm,
 		peer:    p,
 	}
-	pm.downloader.RegisterLightPeer(p.id, ethVersion, pc)
+	pm.downloader.RegisterLightPeer(p.id, kokVersion, pc)
 }
 
 func (d *downloaderPeerNotify) unregisterPeer(p *peer) {

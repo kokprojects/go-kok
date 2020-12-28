@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -46,9 +46,9 @@ var (
 )
 
 // containerInfos is a heavily reduced version of the huge inspection dataset
-// returned from docker inspect, parsed into a form easily usable by puppeth.
+// returned from docker inspect, parsed into a form easily usable by puppkok.
 type containerInfos struct {
-	running bool              // Flag whether the container is running currently
+	running bool              // Flag whkoker the container is running currently
 	envvars map[string]string // Collection of environmental variables set on the container
 	portmap map[string]int    // Port mapping from internal port/proto combos to host binds
 	volumes map[string]string // Volume mount points from container to host directories
@@ -56,7 +56,7 @@ type containerInfos struct {
 
 // inspectContainer runs docker inspect against a running container
 func inspectContainer(client *sshClient, container string) (*containerInfos, error) {
-	// Check whether there's a container running for the service
+	// Check whkoker there's a container running for the service
 	out, err := client.Run(fmt.Sprintf("docker inspect %s", container))
 	if err != nil {
 		return nil, ErrServiceUnknown
@@ -83,7 +83,7 @@ func inspectContainer(client *sshClient, container string) (*containerInfos, err
 	}
 	inspect := inspects[0]
 
-	// Infos retrieved, parse the above into something meaningful
+	// Infos retrieved, parse the above into somkoking meaningful
 	infos := &containerInfos{
 		running: inspect.State.Running,
 		envvars: make(map[string]string),

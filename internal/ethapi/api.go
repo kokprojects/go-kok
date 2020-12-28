@@ -1,20 +1,20 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package ethapi
+package kokapi
 
 import (
 	"context"
@@ -47,24 +47,24 @@ const (
 	defaultGasPrice = 50 * params.Shannon
 )
 
-// PublicEthereumAPI provides an API to access Ethereum related information.
-// It offers only methods that operate on public data that is freely available to anyone.
-type PublicEthereumAPI struct {
+// PublickokereumAPI provides an API to access kokereum related information.
+// It offers only mkokods that operate on public data that is freely available to anyone.
+type PublickokereumAPI struct {
 	b Backend
 }
 
-// NewPublicEthereumAPI creates a new Ethereum protocol API.
-func NewPublicEthereumAPI(b Backend) *PublicEthereumAPI {
-	return &PublicEthereumAPI{b}
+// NewPublickokereumAPI creates a new kokereum protocol API.
+func NewPublickokereumAPI(b Backend) *PublickokereumAPI {
+	return &PublickokereumAPI{b}
 }
 
 // GasPrice returns a suggestion for a gas price.
-func (s *PublicEthereumAPI) GasPrice(ctx context.Context) (*big.Int, error) {
+func (s *PublickokereumAPI) GasPrice(ctx context.Context) (*big.Int, error) {
 	return s.b.SuggestPrice(ctx)
 }
 
-// ProtocolVersion returns the current Ethereum protocol version this node supports
-func (s *PublicEthereumAPI) ProtocolVersion() hexutil.Uint {
+// ProtocolVersion returns the current kokereum protocol version this node supports
+func (s *PublickokereumAPI) ProtocolVersion() hexutil.Uint {
 	return hexutil.Uint(s.b.ProtocolVersion())
 }
 
@@ -75,7 +75,7 @@ func (s *PublicEthereumAPI) ProtocolVersion() hexutil.Uint {
 // - highestBlock:  block number of the highest block header this node has received from peers
 // - pulledStates:  number of state entries processed until now
 // - knownStates:   number of known state entries that still need to be pulled
-func (s *PublicEthereumAPI) Syncing() (interface{}, error) {
+func (s *PublickokereumAPI) Syncing() (interface{}, error) {
 	progress := s.b.Downloader().Progress()
 
 	// Return not syncing if the synchronisation already completed
@@ -174,7 +174,7 @@ func (s *PublicTxPoolAPI) Inspect() map[string]map[string]map[string]string {
 }
 
 // PublicAccountAPI provides an API to access accounts managed by this node.
-// It offers only methods that can retrieve accounts.
+// It offers only mkokods that can retrieve accounts.
 type PublicAccountAPI struct {
 	am *accounts.Manager
 }
@@ -196,7 +196,7 @@ func (s *PublicAccountAPI) Accounts() []common.Address {
 }
 
 // PrivateAccountAPI provides an API to access accounts managed by this node.
-// It offers methods to create, (un)lock en list accounts. Some methods accept
+// It offers mkokods to create, (un)lock en list accounts. Some mkokods accept
 // passwords and are therefore considered private by default.
 type PrivateAccountAPI struct {
 	am        *accounts.Manager
@@ -254,7 +254,7 @@ func (s *PrivateAccountAPI) ListWallets() []rawWallet {
 
 // OpenWallet initiates a hardware wallet opening procedure, establishing a USB
 // connection and attempting to authenticate via the provided passphrase. Note,
-// the method may return an extra challenge requiring a second open (e.g. the
+// the mkokod may return an extra challenge requiring a second open (e.g. the
 // Trezor PIN matrix challenge).
 func (s *PrivateAccountAPI) OpenWallet(url string, passphrase *string) error {
 	wallet, err := s.am.Wallet(url)
@@ -373,16 +373,16 @@ func (s *PrivateAccountAPI) SendTransaction(ctx context.Context, args SendTxArgs
 // safely used to calculate a signature from.
 //
 // The hash is calulcated as
-//   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
+//   keccak256("\x19kokereum Signed Message:\n"${message length}${message}).
 //
 // This gives context to the signed message and prevents signing of transactions.
 func signHash(data []byte) []byte {
-	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
+	msg := fmt.Sprintf("\x19kokereum Signed Message:\n%d%s", len(data), data)
 	return crypto.Keccak256([]byte(msg))
 }
 
-// Sign calculates an Ethereum ECDSA signature for:
-// keccack256("\x19Ethereum Signed Message:\n" + len(message) + message))
+// Sign calculates an kokereum ECDSA signature for:
+// keccack256("\x19kokereum Signed Message:\n" + len(message) + message))
 //
 // Note, the produced signature conforms to the secp256k1 curve R, S and V values,
 // where the V value will be 27 or 28 for legacy reasons.
@@ -408,9 +408,9 @@ func (s *PrivateAccountAPI) Sign(ctx context.Context, data hexutil.Bytes, addr c
 }
 
 // EcRecover returns the address for the account that was used to create the signature.
-// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
+// Note, this function is compatible with kok_sign and personal_sign. As such it recovers
 // the address of:
-// hash = keccak256("\x19Ethereum Signed Message:\n"${message length}${message})
+// hash = keccak256("\x19kokereum Signed Message:\n"${message length}${message})
 // addr = ecrecover(hash, signature)
 //
 // Note, the signature must conform to the secp256k1 curve R, S and V values, where
@@ -422,7 +422,7 @@ func (s *PrivateAccountAPI) EcRecover(ctx context.Context, data, sig hexutil.Byt
 		return common.Address{}, fmt.Errorf("signature must be 65 bytes long")
 	}
 	if sig[64] != 27 && sig[64] != 28 {
-		return common.Address{}, fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
+		return common.Address{}, fmt.Errorf("invalid kokereum signature (V is not 27 or 28)")
 	}
 	sig[64] -= 27 // Transform yellow paper V from 27/28 to 0/1
 
@@ -435,19 +435,19 @@ func (s *PrivateAccountAPI) EcRecover(ctx context.Context, data, sig hexutil.Byt
 	return recoveredAddr, nil
 }
 
-// SignAndSendTransaction was renamed to SendTransaction. This method is deprecated
+// SignAndSendTransaction was renamed to SendTransaction. This mkokod is deprecated
 // and will be removed in the future. It primary goal is to give clients time to update.
 func (s *PrivateAccountAPI) SignAndSendTransaction(ctx context.Context, args SendTxArgs, passwd string) (common.Hash, error) {
 	return s.SendTransaction(ctx, args, passwd)
 }
 
-// PublicBlockChainAPI provides an API to access the Ethereum blockchain.
-// It offers only methods that operate on public data that is freely available to anyone.
+// PublicBlockChainAPI provides an API to access the kokereum blockchain.
+// It offers only mkokods that operate on public data that is freely available to anyone.
 type PublicBlockChainAPI struct {
 	b Backend
 }
 
-// NewPublicBlockChainAPI creates a new Ethereum blockchain API.
+// NewPublicBlockChainAPI creates a new kokereum blockchain API.
 func NewPublicBlockChainAPI(b Backend) *PublicBlockChainAPI {
 	return &PublicBlockChainAPI{b}
 }
@@ -1018,13 +1018,13 @@ func newRPCTransactionFromBlockHash(b *types.Block, hash common.Hash) *RPCTransa
 	return nil
 }
 
-// PublicTransactionPoolAPI exposes methods for the RPC interface
+// PublicTransactionPoolAPI exposes mkokods for the RPC interface
 type PublicTransactionPoolAPI struct {
 	b         Backend
 	nonceLock *AddrLocker
 }
 
-// NewPublicTransactionPoolAPI creates a new RPC service with methods specific for the transaction pool.
+// NewPublicTransactionPoolAPI creates a new RPC service with mkokods specific for the transaction pool.
 func NewPublicTransactionPoolAPI(b Backend, nonceLock *AddrLocker) *PublicTransactionPoolAPI {
 	return &PublicTransactionPoolAPI{b, nonceLock}
 }
@@ -1314,14 +1314,14 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 }
 
 // Sign calculates an ECDSA signature for:
-// keccack256("\x19Ethereum Signed Message:\n" + len(message) + message).
+// keccack256("\x19kokereum Signed Message:\n" + len(message) + message).
 //
 // Note, the produced signature conforms to the secp256k1 curve R, S and V values,
 // where the V value will be 27 or 28 for legacy reasons.
 //
 // The account associated with addr must be unlocked.
 //
-// https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
+// https://github.com/kokereum/wiki/wiki/JSON-RPC#kok_sign
 func (s *PublicTransactionPoolAPI) Sign(addr common.Address, data hexutil.Bytes) (hexutil.Bytes, error) {
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: addr}
@@ -1434,14 +1434,14 @@ func (s *PublicTransactionPoolAPI) Resend(ctx context.Context, sendArgs SendTxAr
 	return common.Hash{}, fmt.Errorf("Transaction %#x not found", matchTx.Hash())
 }
 
-// PublicDebugAPI is the collection of Ethereum APIs exposed over the public
+// PublicDebugAPI is the collection of kokereum APIs exposed over the public
 // debugging endpoint.
 type PublicDebugAPI struct {
 	b Backend
 }
 
-// NewPublicDebugAPI creates a new API definition for the public debug methods
-// of the Ethereum service.
+// NewPublicDebugAPI creates a new API definition for the public debug mkokods
+// of the kokereum service.
 func NewPublicDebugAPI(b Backend) *PublicDebugAPI {
 	return &PublicDebugAPI{b: b}
 }
@@ -1468,14 +1468,14 @@ func (api *PublicDebugAPI) PrintBlock(ctx context.Context, number uint64) (strin
 	return block.String(), nil
 }
 
-// PrivateDebugAPI is the collection of Ethereum APIs exposed over the private
+// PrivateDebugAPI is the collection of kokereum APIs exposed over the private
 // debugging endpoint.
 type PrivateDebugAPI struct {
 	b Backend
 }
 
-// NewPrivateDebugAPI creates a new API definition for the private debug methods
-// of the Ethereum service.
+// NewPrivateDebugAPI creates a new API definition for the private debug mkokods
+// of the kokereum service.
 func NewPrivateDebugAPI(b Backend) *PrivateDebugAPI {
 	return &PrivateDebugAPI{b: b}
 }
@@ -1514,12 +1514,12 @@ func (api *PrivateDebugAPI) ChaindbCompact() error {
 	return nil
 }
 
-// SetHead rewinds the head of the blockchain to a previous block.
-func (api *PrivateDebugAPI) SetHead(number hexutil.Uint64) {
-	api.b.SetHead(uint64(number))
+// Skokead rewinds the head of the blockchain to a previous block.
+func (api *PrivateDebugAPI) Skokead(number hexutil.Uint64) {
+	api.b.Skokead(uint64(number))
 }
 
-// PublicNetAPI offers network related RPC methods
+// PublicNetAPI offers network related RPC mkokods
 type PublicNetAPI struct {
 	net            *p2p.Server
 	networkVersion uint64
@@ -1540,7 +1540,7 @@ func (s *PublicNetAPI) PeerCount() hexutil.Uint {
 	return hexutil.Uint(s.net.PeerCount())
 }
 
-// Version returns the current ethereum protocol version.
+// Version returns the current kokereum protocol version.
 func (s *PublicNetAPI) Version() string {
 	return fmt.Sprintf("%d", s.networkVersion)
 }

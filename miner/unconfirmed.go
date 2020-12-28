@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package miner
 
@@ -25,11 +25,11 @@ import (
 	"github.com/kokprojects/go-kok/log"
 )
 
-// headerRetriever is used by the unconfirmed block set to verify whether a previously
+// headerRetriever is used by the unconfirmed block set to verify whkoker a previously
 // mined block is part of the canonical chain or not.
 type headerRetriever interface {
-	// GetHeaderByNumber retrieves the canonical header associated with a block number.
-	GetHeaderByNumber(number uint64) *types.Header
+	// GkokeaderByNumber retrieves the canonical header associated with a block number.
+	GkokeaderByNumber(number uint64) *types.Header
 }
 
 // unconfirmedBlock is a small collection of metadata about a locally mined block
@@ -96,7 +96,7 @@ func (set *unconfirmedBlocks) Shift(height uint64) {
 			break
 		}
 		// Block seems to exceed depth allowance, check for canonical status
-		header := set.chain.GetHeaderByNumber(next.index)
+		header := set.chain.GkokeaderByNumber(next.index)
 		switch {
 		case header == nil:
 			log.Warn("Failed to retrieve header of mined block", "number", next.index, "hash", next.hash)

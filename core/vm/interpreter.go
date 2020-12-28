@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package vm
 
@@ -49,7 +49,7 @@ type Config struct {
 	JumpTable [256]operation
 }
 
-// Interpreter is used to run Ethereum based contracts and will utilise the
+// Interpreter is used to run kokereum based contracts and will utilise the
 // passed evmironment to query external sources for state information.
 // The Interpreter will run the byte code VM or JIT VM based on the passed
 // configuration.
@@ -59,13 +59,13 @@ type Interpreter struct {
 	gasTable params.GasTable
 	intPool  *intPool
 
-	readOnly   bool   // Whether to throw on stateful modifications
+	readOnly   bool   // Whkoker to throw on stateful modifications
 	returnData []byte // Last CALL's return data for subsequent reuse
 }
 
 // NewInterpreter returns a new instance of the Interpreter.
 func NewInterpreter(evm *EVM, cfg Config) *Interpreter {
-	// We use the STOP instruction whether to see
+	// We use the STOP instruction whkoker to see
 	// the jump table was initialised. If it was not
 	// we'll set the default jump table.
 	if !cfg.JumpTable[STOP].valid {
@@ -200,7 +200,7 @@ func (in *Interpreter) Run(snapshot int, contract *Contract, input []byte) (ret 
 
 		if !in.cfg.DisableGasMetering {
 			// consume the gas and return an error if not enough gas is available.
-			// cost is explicitly set so that the capture state defer method cas get the proper cost
+			// cost is explicitly set so that the capture state defer mkokod cas get the proper cost
 			cost, err = operation.gasCost(in.gasTable, in.evm, contract, stack, mem, memorySize)
 			if err != nil || !contract.UseGas(cost) {
 				return nil, ErrOutOfGas

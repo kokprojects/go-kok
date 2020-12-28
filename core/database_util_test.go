@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -24,30 +24,30 @@ import (
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/crypto/sha3"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/rlp"
 )
 
 // Tests block header storage and retrieval operations.
 func TestHeaderStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	// Create a test header to move around the database and make sure it's really new
 	dposCtx, _ := types.NewDposContext(db)
 	header := &types.Header{Number: big.NewInt(42), Extra: []byte("test header"), DposContext: dposCtx.ToProto()}
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := Gkokeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	// Write and verify the header in the database
 	if err := WriteHeader(db, header); err != nil {
 		t.Fatalf("Failed to write header into database: %v", err)
 	}
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := Gkokeader(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != header.Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, header)
 	}
-	if entry := GetHeaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := GkokeaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header RLP not found")
 	} else {
 		hasher := sha3.NewKeccak256()
@@ -59,14 +59,14 @@ func TestHeaderStorage(t *testing.T) {
 	}
 	// Delete the header and verify the execution
 	DeleteHeader(db, header.Hash(), header.Number.Uint64())
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := Gkokeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 }
 
 // Tests block body storage and retrieval operations.
 func TestBodyStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	// Create a test body to move around the database and make sure it's really new
 	dposCtx, _ := types.NewDposContext(db)
@@ -107,7 +107,7 @@ func TestBodyStorage(t *testing.T) {
 
 // Tests block storage and retrieval operations.
 func TestBlockStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	// Create a test block to move around the database and make sure it's really new
 	block := types.NewBlockWithHeader(&types.Header{
@@ -119,7 +119,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent block returned: %v", entry)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := Gkokeader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -134,7 +134,7 @@ func TestBlockStorage(t *testing.T) {
 	} else if entry.Hash() != block.Hash() {
 		t.Fatalf("Retrieved block mismatch: have %v, want %v", entry, block)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry == nil {
+	if entry := Gkokeader(db, block.Hash(), block.NumberU64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != block.Header().Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, block.Header())
@@ -149,7 +149,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted block returned: %v", entry)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := Gkokeader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -159,7 +159,7 @@ func TestBlockStorage(t *testing.T) {
 
 // Tests that partial block contents don't get reassembled into full blocks.
 func TestPartialBlockStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	block := types.NewBlockWithHeader(&types.Header{
 		Extra:       []byte("test block"),
 		UncleHash:   types.EmptyUncleHash,
@@ -200,7 +200,7 @@ func TestPartialBlockStorage(t *testing.T) {
 
 // Tests block total difficulty storage and retrieval operations.
 func TestTdStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	// Create a test TD to move around the database and make sure it's really new
 	hash, td := common.Hash{}, big.NewInt(314)
@@ -225,7 +225,7 @@ func TestTdStorage(t *testing.T) {
 
 // Tests that canonical numbers can be mapped to hashes and retrieved.
 func TestCanonicalMappingStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	// Create a test canonical number and assinged hash to move around
 	hash, number := common.Hash{0: 0xff}, uint64(314)
@@ -250,20 +250,20 @@ func TestCanonicalMappingStorage(t *testing.T) {
 
 // Tests that head headers and head blocks can be assigned, individually.
 func TestHeadStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	blockHead := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block header")})
 	blockFull := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block full")})
 	blockFast := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block fast")})
 
 	// Check that no head entries are in a pristine database
-	if entry := GetHeadHeaderHash(db); entry != (common.Hash{}) {
+	if entry := GkokeadHeaderHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non head header entry returned: %v", entry)
 	}
-	if entry := GetHeadBlockHash(db); entry != (common.Hash{}) {
+	if entry := GkokeadBlockHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non head block entry returned: %v", entry)
 	}
-	if entry := GetHeadFastBlockHash(db); entry != (common.Hash{}) {
+	if entry := GkokeadFastBlockHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non fast head block entry returned: %v", entry)
 	}
 	// Assign separate entries for the head header and block
@@ -277,20 +277,20 @@ func TestHeadStorage(t *testing.T) {
 		t.Fatalf("Failed to write fast head block hash: %v", err)
 	}
 	// Check that both heads are present, and different (i.e. two heads maintained)
-	if entry := GetHeadHeaderHash(db); entry != blockHead.Hash() {
+	if entry := GkokeadHeaderHash(db); entry != blockHead.Hash() {
 		t.Fatalf("Head header hash mismatch: have %v, want %v", entry, blockHead.Hash())
 	}
-	if entry := GetHeadBlockHash(db); entry != blockFull.Hash() {
+	if entry := GkokeadBlockHash(db); entry != blockFull.Hash() {
 		t.Fatalf("Head block hash mismatch: have %v, want %v", entry, blockFull.Hash())
 	}
-	if entry := GetHeadFastBlockHash(db); entry != blockFast.Hash() {
+	if entry := GkokeadFastBlockHash(db); entry != blockFast.Hash() {
 		t.Fatalf("Fast head block hash mismatch: have %v, want %v", entry, blockFast.Hash())
 	}
 }
 
 // Tests that positional lookup metadata can be stored and retrieved.
 func TestLookupStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	tx1 := types.NewTransaction(types.Binary, 1, common.BytesToAddress([]byte{0x11}), big.NewInt(111), big.NewInt(1111), big.NewInt(11111), []byte{0x11, 0x11, 0x11})
 	tx2 := types.NewTransaction(types.Binary, 2, common.BytesToAddress([]byte{0x22}), big.NewInt(222), big.NewInt(2222), big.NewInt(22222), []byte{0x22, 0x22, 0x22})
@@ -335,7 +335,7 @@ func TestLookupStorage(t *testing.T) {
 
 // Tests that receipts associated with a single block can be stored and retrieved.
 func TestBlockReceiptStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 
 	receipt1 := &types.Receipt{
 		Status:            types.ReceiptStatusFailed,

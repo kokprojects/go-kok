@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -25,26 +25,26 @@ import (
 	"time"
 
 	"github.com/kokprojects/go-kok/common"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
 	"github.com/kokprojects/go-kok/crypto"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 )
 
 // newTestBlockChain creates a blockchain without validation.
 func newTestBlockChain(fake bool) *BlockChain {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	gspec := &Genesis{
 		Config:     params.TestChainConfig,
 		Difficulty: big.NewInt(1),
 	}
 	gspec.MustCommit(db)
-	engine := ethash.NewFullFaker()
+	engine := kokash.NewFullFaker()
 	if !fake {
-		engine = ethash.NewTester()
+		engine = kokash.NewTester()
 	}
 	blockchain, err := NewBlockChain(db, gspec.Config, engine, vm.Config{})
 	if err != nil {
@@ -69,8 +69,8 @@ func testFork(t *testing.T, blockchain *BlockChain, i, n int, full bool, compara
 		hash1 = blockchain.GetBlockByNumber(uint64(i)).Hash()
 		hash2 = blockchain2.GetBlockByNumber(uint64(i)).Hash()
 	} else {
-		hash1 = blockchain.GetHeaderByNumber(uint64(i)).Hash()
-		hash2 = blockchain2.GetHeaderByNumber(uint64(i)).Hash()
+		hash1 = blockchain.GkokeaderByNumber(uint64(i)).Hash()
+		hash2 = blockchain2.GkokeaderByNumber(uint64(i)).Hash()
 	}
 	if hash1 != hash2 {
 		t.Errorf("chain content mismatch at %d: have hash %v, want hash %v", i, hash2, hash1)
@@ -188,7 +188,7 @@ func TestLastBlock(t *testing.T) {
 
 	block := makeBlockChain(bchain.CurrentBlock(), 1, bchain.chainDb, 0)[0]
 	bchain.insert(block)
-	if block.Hash() != GetHeadBlockHash(bchain.chainDb) {
+	if block.Hash() != GkokeadBlockHash(bchain.chainDb) {
 		t.Errorf("Write/Get HeadBlockHash failed")
 	}
 }
@@ -421,7 +421,7 @@ func testReorg(t *testing.T, first, second []int, td int64, full bool) {
 		}
 	} else {
 		prev := bc.CurrentHeader()
-		for header := bc.GetHeaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.GetHeaderByNumber(header.Number.Uint64()-1) {
+		for header := bc.GkokeaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.GkokeaderByNumber(header.Number.Uint64()-1) {
 			if prev.ParentHash != header.Hash() {
 				t.Errorf("parent header hash mismatch: have %x, want %x", prev.ParentHash, header.Hash())
 			}
@@ -498,7 +498,7 @@ func testReorgBadHashes(t *testing.T, full bool) {
 	}
 
 	// Create a new BlockChain and check that it rolled back the state.
-	ncm, err := NewBlockChain(bc.chainDb, bc.config, ethash.NewFaker(), vm.Config{})
+	ncm, err := NewBlockChain(bc.chainDb, bc.config, kokash.NewFaker(), vm.Config{})
 	if err != nil {
 		t.Fatalf("failed to create new chain manager: %v", err)
 	}
@@ -543,7 +543,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 			failAt = rand.Int() % len(blocks)
 			failNum = blocks[failAt].NumberU64()
 
-			blockchain.engine = ethash.NewFakeFailer(failNum)
+			blockchain.engine = kokash.NewFakeFailer(failNum)
 			failRes, err = blockchain.InsertChain(blocks)
 		} else {
 			headers := makeHeaderChain(blockchain.CurrentHeader(), i, db, 0)
@@ -551,7 +551,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 			failAt = rand.Int() % len(headers)
 			failNum = headers[failAt].Number.Uint64()
 
-			blockchain.engine = ethash.NewFakeFailer(failNum)
+			blockchain.engine = kokash.NewFakeFailer(failNum)
 			blockchain.hc.engine = blockchain.engine
 			failRes, err = blockchain.InsertHeaderChain(headers, 1)
 		}
@@ -566,7 +566,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 					t.Errorf("test %d: invalid block in chain: %v", i, block)
 				}
 			} else {
-				if header := blockchain.GetHeaderByNumber(failNum + uint64(j)); header != nil {
+				if header := blockchain.GkokeaderByNumber(failNum + uint64(j)); header != nil {
 					t.Errorf("test %d: invalid header in chain: %v", i, header)
 				}
 			}
@@ -579,7 +579,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 func TestFastVsFullChains(t *testing.T) {
 	// Configure and generate a sample block chain
 	var (
-		gendb, _ = ethdb.NewMemDatabase()
+		gendb, _ = kokdb.NewMemDatabase()
 		key, _   = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 		address  = crypto.PubkeyToAddress(key.PublicKey)
 		funds    = big.NewInt(1000000000)
@@ -609,18 +609,18 @@ func TestFastVsFullChains(t *testing.T) {
 		}
 	})
 	// Import the chain as an archive node for the comparison baseline
-	archiveDb, _ := ethdb.NewMemDatabase()
+	archiveDb, _ := kokdb.NewMemDatabase()
 	gspec.MustCommit(archiveDb)
-	archive, _ := NewBlockChain(archiveDb, gspec.Config, ethash.NewFaker(), vm.Config{})
+	archive, _ := NewBlockChain(archiveDb, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer archive.Stop()
 
 	if n, err := archive.InsertChain(blocks); err != nil {
 		t.Fatalf("failed to process block %d: %v", n, err)
 	}
 	// Fast import the chain as a non-archive node to test
-	fastDb, _ := ethdb.NewMemDatabase()
+	fastDb, _ := kokdb.NewMemDatabase()
 	gspec.MustCommit(fastDb)
-	fast, _ := NewBlockChain(fastDb, gspec.Config, ethash.NewFaker(), vm.Config{})
+	fast, _ := NewBlockChain(fastDb, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer fast.Stop()
 
 	headers := make([]*types.Header, len(blocks))
@@ -640,7 +640,7 @@ func TestFastVsFullChains(t *testing.T) {
 		if ftd, atd := fast.GetTdByHash(hash), archive.GetTdByHash(hash); ftd.Cmp(atd) != 0 {
 			t.Errorf("block #%d [%x]: td mismatch: have %v, want %v", num, hash, ftd, atd)
 		}
-		if fheader, aheader := fast.GetHeaderByHash(hash), archive.GetHeaderByHash(hash); fheader.Hash() != aheader.Hash() {
+		if fheader, aheader := fast.GkokeaderByHash(hash), archive.GkokeaderByHash(hash); fheader.Hash() != aheader.Hash() {
 			t.Errorf("block #%d [%x]: header mismatch: have %v, want %v", num, hash, fheader, aheader)
 		}
 		if fblock, ablock := fast.GetBlockByHash(hash), archive.GetBlockByHash(hash); fblock.Hash() != ablock.Hash() {
@@ -662,12 +662,12 @@ func TestFastVsFullChains(t *testing.T) {
 	}
 }
 
-// Tests that various import methods move the chain head pointers to the correct
+// Tests that various import mkokods move the chain head pointers to the correct
 // positions.
 func TestLightVsFastVsFullChainHeads(t *testing.T) {
 	// Configure and generate a sample block chain
 	var (
-		gendb, _ = ethdb.NewMemDatabase()
+		gendb, _ = kokdb.NewMemDatabase()
 		key, _   = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 		address  = crypto.PubkeyToAddress(key.PublicKey)
 		funds    = big.NewInt(1000000000)
@@ -682,7 +682,7 @@ func TestLightVsFastVsFullChainHeads(t *testing.T) {
 	for _, block := range blocks[height/2:] {
 		remove = append(remove, block.Hash())
 	}
-	// Create a small assertion method to check the three heads
+	// Create a small assertion mkokod to check the three heads
 	assert := func(t *testing.T, kind string, chain *BlockChain, header uint64, fast uint64, block uint64) {
 		if num := chain.CurrentBlock().NumberU64(); num != block {
 			t.Errorf("%s head block mismatch: have #%v, want #%v", kind, num, block)
@@ -695,10 +695,10 @@ func TestLightVsFastVsFullChainHeads(t *testing.T) {
 		}
 	}
 	// Import the chain as an archive node and ensure all pointers are updated
-	archiveDb, _ := ethdb.NewMemDatabase()
+	archiveDb, _ := kokdb.NewMemDatabase()
 	gspec.MustCommit(archiveDb)
 
-	archive, _ := NewBlockChain(archiveDb, gspec.Config, ethash.NewFaker(), vm.Config{})
+	archive, _ := NewBlockChain(archiveDb, gspec.Config, kokash.NewFaker(), vm.Config{})
 	if n, err := archive.InsertChain(blocks); err != nil {
 		t.Fatalf("failed to process block %d: %v", n, err)
 	}
@@ -709,9 +709,9 @@ func TestLightVsFastVsFullChainHeads(t *testing.T) {
 	assert(t, "archive", archive, height/2, height/2, height/2)
 
 	// Import the chain as a non-archive node and ensure all pointers are updated
-	fastDb, _ := ethdb.NewMemDatabase()
+	fastDb, _ := kokdb.NewMemDatabase()
 	gspec.MustCommit(fastDb)
-	fast, _ := NewBlockChain(fastDb, gspec.Config, ethash.NewFaker(), vm.Config{})
+	fast, _ := NewBlockChain(fastDb, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer fast.Stop()
 
 	headers := make([]*types.Header, len(blocks))
@@ -729,10 +729,10 @@ func TestLightVsFastVsFullChainHeads(t *testing.T) {
 	assert(t, "fast", fast, height/2, height/2, 0)
 
 	// Import the chain as a light node and ensure all pointers are updated
-	lightDb, _ := ethdb.NewMemDatabase()
+	lightDb, _ := kokdb.NewMemDatabase()
 	gspec.MustCommit(lightDb)
 
-	light, _ := NewBlockChain(lightDb, gspec.Config, ethash.NewFaker(), vm.Config{})
+	light, _ := NewBlockChain(lightDb, gspec.Config, kokash.NewFaker(), vm.Config{})
 	if n, err := light.InsertHeaderChain(headers, 1); err != nil {
 		t.Fatalf("failed to insert header %d: %v", n, err)
 	}
@@ -752,7 +752,7 @@ func TestChainTxReorgs(t *testing.T) {
 		addr1   = crypto.PubkeyToAddress(key1.PublicKey)
 		addr2   = crypto.PubkeyToAddress(key2.PublicKey)
 		addr3   = crypto.PubkeyToAddress(key3.PublicKey)
-		db, _   = ethdb.NewMemDatabase()
+		db, _   = kokdb.NewMemDatabase()
 		gspec   = &Genesis{
 			Config:   params.TestChainConfig,
 			GasLimit: 3141592,
@@ -801,7 +801,7 @@ func TestChainTxReorgs(t *testing.T) {
 		}
 	})
 	// Import the chain. This runs all block validation rules.
-	blockchain, _ := NewBlockChain(db, gspec.Config, ethash.NewFaker(), vm.Config{})
+	blockchain, _ := NewBlockChain(db, gspec.Config, kokash.NewFaker(), vm.Config{})
 	if i, err := blockchain.InsertChain(chain); err != nil {
 		t.Fatalf("failed to insert original chain[%d]: %v", i, err)
 	}
@@ -864,7 +864,7 @@ func TestLogReorgs(t *testing.T) {
 	var (
 		key1, _ = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 		addr1   = crypto.PubkeyToAddress(key1.PublicKey)
-		db, _   = ethdb.NewMemDatabase()
+		db, _   = kokdb.NewMemDatabase()
 		// this code generates a log
 		code    = common.Hex2Bytes("60606040525b7f24ec1d3ff24c2f6ff210738839dbc339cd45a5294d85c79361016243157aae7b60405180905060405180910390a15b600a8060416000396000f360606040526008565b00")
 		gspec   = &Genesis{Config: params.TestChainConfig, Alloc: GenesisAlloc{addr1: {Balance: big.NewInt(10000000000000)}}}
@@ -872,7 +872,7 @@ func TestLogReorgs(t *testing.T) {
 		signer  = types.NewEIP155Signer(gspec.Config.ChainId)
 	)
 
-	blockchain, _ := NewBlockChain(db, gspec.Config, ethash.NewFaker(), vm.Config{})
+	blockchain, _ := NewBlockChain(db, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer blockchain.Stop()
 
 	rmLogsCh := make(chan RemovedLogsEvent)
@@ -950,7 +950,7 @@ func TestCanonicalBlockRetrieval(t *testing.T) {
 func TestEIP155Transition(t *testing.T) {
 	// Configure and generate a sample block chain
 	var (
-		db, _      = ethdb.NewMemDatabase()
+		db, _      = kokdb.NewMemDatabase()
 		key, _     = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 		address    = crypto.PubkeyToAddress(key.PublicKey)
 		funds      = big.NewInt(1000000000)
@@ -962,7 +962,7 @@ func TestEIP155Transition(t *testing.T) {
 		genesis = gspec.MustCommit(db)
 	)
 
-	blockchain, _ := NewBlockChain(db, gspec.Config, ethash.NewFaker(), vm.Config{})
+	blockchain, _ := NewBlockChain(db, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer blockchain.Stop()
 
 	blocks, _ := GenerateChain(gspec.Config, genesis, db, 4, func(i int, block *BlockGen) {
@@ -1054,7 +1054,7 @@ func TestEIP155Transition(t *testing.T) {
 func TestEIP161AccountRemoval(t *testing.T) {
 	// Configure and generate a sample block chain
 	var (
-		db, _   = ethdb.NewMemDatabase()
+		db, _   = kokdb.NewMemDatabase()
 		key, _  = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
 		address = crypto.PubkeyToAddress(key.PublicKey)
 		funds   = big.NewInt(1000000000)
@@ -1070,7 +1070,7 @@ func TestEIP161AccountRemoval(t *testing.T) {
 		}
 		genesis = gspec.MustCommit(db)
 	)
-	blockchain, _ := NewBlockChain(db, gspec.Config, ethash.NewFaker(), vm.Config{})
+	blockchain, _ := NewBlockChain(db, gspec.Config, kokash.NewFaker(), vm.Config{})
 	defer blockchain.Stop()
 
 	blocks, _ := GenerateChain(gspec.Config, genesis, db, 3, func(i int, block *BlockGen) {

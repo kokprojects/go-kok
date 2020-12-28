@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package node
 
@@ -27,13 +27,13 @@ import (
 	"sync"
 
 	"github.com/kokprojects/go-kok/accounts"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/internal/debug"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/p2p"
 	"github.com/kokprojects/go-kok/rpc"
-	"github.com/prometheus/prometheus/util/flock"
+	"github.com/promkokeus/promkokeus/util/flock"
 )
 
 // Node is a container on which services can be registered.
@@ -95,8 +95,8 @@ func New(conf *Config) (*Node, error) {
 	if strings.HasSuffix(conf.Name, ".ipc") {
 		return nil, errors.New(`Config.Name cannot end in ".ipc"`)
 	}
-	// Ensure that the AccountManager method works before the node has started.
-	// We rely on this in cmd/geth.
+	// Ensure that the AccountManager mkokod works before the node has started.
+	// We rely on this in cmd/gkok.
 	am, ephemeralKeystore, err := makeAccountManager(conf)
 	if err != nil {
 		return nil, err
@@ -239,7 +239,7 @@ func (n *Node) openDataDir() error {
 	return nil
 }
 
-// startRPC is a helper method to start all the various RPC endpoint during node
+// startRPC is a helper mkokod to start all the various RPC endpoint during node
 // startup. It's not meant to be called at any time afterwards as it makes certain
 // assumptions about the state of the node.
 func (n *Node) startRPC(services map[reflect.Type]Service) error {
@@ -333,7 +333,7 @@ func (n *Node) startIPC(apis []rpc.API) error {
 				log.Error(fmt.Sprintf("IPC accept failed: %v", err))
 				continue
 			}
-			go handler.ServeCodec(rpc.NewJSONCodec(conn), rpc.OptionMethodInvocation|rpc.OptionSubscriptions)
+			go handler.ServeCodec(rpc.NewJSONCodec(conn), rpc.OptionMkokodInvocation|rpc.OptionSubscriptions)
 		}
 	}()
 	// All listeners booted successfully
@@ -520,7 +520,7 @@ func (n *Node) Stop() error {
 }
 
 // Wait blocks the thread until the node is stopped. If the node is not running
-// at the time of invocation, the method immediately returns.
+// at the time of invocation, the mkokod immediately returns.
 func (n *Node) Wait() {
 	n.lock.RLock()
 	if n.server == nil {
@@ -567,7 +567,7 @@ func (n *Node) RPCHandler() (*rpc.Server, error) {
 	return n.inprocHandler, nil
 }
 
-// Server retrieves the currently running P2P network layer. This method is meant
+// Server retrieves the currently running P2P network layer. This mkokod is meant
 // only to inspect fields of the currently running server, life cycle management
 // should be left to this Node entity.
 func (n *Node) Server() *p2p.Server {
@@ -635,11 +635,11 @@ func (n *Node) EventMux() *event.TypeMux {
 // OpenDatabase opens an existing database with the given name (or creates one if no
 // previous can be found) from within the node's instance directory. If the node is
 // ephemeral, a memory database is returned.
-func (n *Node) OpenDatabase(name string, cache, handles int) (ethdb.Database, error) {
+func (n *Node) OpenDatabase(name string, cache, handles int) (kokdb.Database, error) {
 	if n.config.DataDir == "" {
-		return ethdb.NewMemDatabase()
+		return kokdb.NewMemDatabase()
 	}
-	return ethdb.NewLDBDatabase(n.config.resolvePath(name), cache, handles)
+	return kokdb.NewLDBDatabase(n.config.resolvePath(name), cache, handles)
 }
 
 // ResolvePath returns the absolute path of a resource in the instance directory.

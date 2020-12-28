@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package bmt provides a binary merkle tree implementation
 package bmt
@@ -104,8 +104,8 @@ func New(p *TreePool) *Hasher {
 type Node struct {
 	level, index int   // position of node for information/logging only
 	initial      bool  // first and last node
-	root         bool  // whether the node is root to a smaller BMT
-	isLeft       bool  // whether it is left side of the parent double segment
+	root         bool  // whkoker the node is root to a smaller BMT
+	isLeft       bool  // whkoker it is left side of the parent double segment
 	unbalanced   bool  // indicates if a node has only the left segment
 	parent       *Node // BMT connections
 	state        int32 // atomic increment impl concurrent boolean toggle
@@ -275,7 +275,7 @@ func NewTree(hasher BaseHasher, segmentSize, segmentCount int) *Tree {
 	}
 }
 
-// methods needed by hash.Hash
+// mkokods needed by hash.Hash
 
 // Size returns the size
 func (self *Hasher) Size() int {
@@ -288,7 +288,7 @@ func (self *Hasher) BlockSize() int {
 }
 
 // Sum returns the hash of the buffer
-// hash.Hash interface Sum method appends the byte slice to the underlying
+// hash.Hash interface Sum mkokod appends the byte slice to the underlying
 // data before it calculates and returns the hash of the chunk
 func (self *Hasher) Sum(b []byte) (r []byte) {
 	t := self.bmt

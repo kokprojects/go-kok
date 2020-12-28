@@ -619,7 +619,7 @@ module.exports = SolidityTypeBytes;
 */
 /**
  * @file coder.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -648,9 +648,9 @@ var SolidityCoder = function (types) {
 };
 
 /**
- * This method should be used to transform type to SolidityType
+ * This mkokod should be used to transform type to SolidityType
  *
- * @method _requireType
+ * @mkokod _requireType
  * @param {String} type
  * @returns {SolidityType}
  * @throws {Error} throws if no matching type is found
@@ -670,7 +670,7 @@ SolidityCoder.prototype._requireType = function (type) {
 /**
  * Should be used to encode plain param
  *
- * @method encodeParam
+ * @mkokod encodeParam
  * @param {String} type
  * @param {Object} plain param
  * @return {String} encoded plain param
@@ -682,7 +682,7 @@ SolidityCoder.prototype.encodeParam = function (type, param) {
 /**
  * Should be used to encode list of params
  *
- * @method encodeParams
+ * @mkokod encodeParams
  * @param {Array} types
  * @param {Array} params
  * @return {String} encoded list of params
@@ -801,7 +801,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
 /**
  * Should be used to decode bytes to plain param
  *
- * @method decodeParam
+ * @mkokod decodeParam
  * @param {String} type
  * @param {String} bytes
  * @return {Object} plain param
@@ -813,7 +813,7 @@ SolidityCoder.prototype.decodeParam = function (type, bytes) {
 /**
  * Should be used to decode list of params
  *
- * @method decodeParam
+ * @mkokod decodeParam
  * @param {Array} types
  * @param {String} bytes
  * @return {Array} array of plain params
@@ -906,7 +906,7 @@ module.exports = SolidityTypeDynamicBytes;
 */
 /**
  * @file formatters.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -921,12 +921,12 @@ var SolidityParam = require('./param');
  * If value is negative, return it's two's complement
  * If the value is floating point, round it down
  *
- * @method formatInputInt
+ * @mkokod formatInputInt
  * @param {String|Number|BigNumber} value that needs to be formatted
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
+    BigNumber.config(c.kok_BIGNUMBER_ROUNDING_MODE);
     var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
@@ -934,7 +934,7 @@ var formatInputInt = function (value) {
 /**
  * Formats input bytes
  *
- * @method formatInputBytes
+ * @mkokod formatInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
@@ -948,7 +948,7 @@ var formatInputBytes = function (value) {
 /**
  * Formats input bytes
  *
- * @method formatDynamicInputBytes
+ * @mkokod formatDynamicInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
@@ -963,7 +963,7 @@ var formatInputDynamicBytes = function (value) {
 /**
  * Formats input value to byte representation of string
  *
- * @method formatInputString
+ * @mkokod formatInputString
  * @param {String}
  * @returns {SolidityParam}
  */
@@ -978,7 +978,7 @@ var formatInputString = function (value) {
 /**
  * Formats input value to byte representation of bool
  *
- * @method formatInputBool
+ * @mkokod formatInputBool
  * @param {Boolean}
  * @returns {SolidityParam}
  */
@@ -991,7 +991,7 @@ var formatInputBool = function (value) {
  * Formats input value to byte representation of real
  * Values are multiplied by 2^m and encoded as integers
  *
- * @method formatInputReal
+ * @mkokod formatInputReal
  * @param {String|Number|BigNumber}
  * @returns {SolidityParam}
  */
@@ -1002,7 +1002,7 @@ var formatInputReal = function (value) {
 /**
  * Check if input value is negative
  *
- * @method signedIsNegative
+ * @mkokod signedIsNegative
  * @param {String} value is hex format
  * @returns {Boolean} true if it is negative, otherwise false
  */
@@ -1013,7 +1013,7 @@ var signedIsNegative = function (value) {
 /**
  * Formats right-aligned output bytes to int
  *
- * @method formatOutputInt
+ * @mkokod formatOutputInt
  * @param {SolidityParam} param
  * @returns {BigNumber} right-aligned output bytes formatted to big number
  */
@@ -1031,7 +1031,7 @@ var formatOutputInt = function (param) {
 /**
  * Formats right-aligned output bytes to uint
  *
- * @method formatOutputUInt
+ * @mkokod formatOutputUInt
  * @param {SolidityParam}
  * @returns {BigNumeber} right-aligned output bytes formatted to uint
  */
@@ -1043,7 +1043,7 @@ var formatOutputUInt = function (param) {
 /**
  * Formats right-aligned output bytes to real
  *
- * @method formatOutputReal
+ * @mkokod formatOutputReal
  * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to real
  */
@@ -1054,7 +1054,7 @@ var formatOutputReal = function (param) {
 /**
  * Formats right-aligned output bytes to ureal
  *
- * @method formatOutputUReal
+ * @mkokod formatOutputUReal
  * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to ureal
  */
@@ -1065,7 +1065,7 @@ var formatOutputUReal = function (param) {
 /**
  * Should be used to format output bool
  *
- * @method formatOutputBool
+ * @mkokod formatOutputBool
  * @param {SolidityParam}
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
@@ -1076,7 +1076,7 @@ var formatOutputBool = function (param) {
 /**
  * Should be used to format output bytes
  *
- * @method formatOutputBytes
+ * @mkokod formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
  * @param {String} name type name
  * @returns {String} hex string
@@ -1090,7 +1090,7 @@ var formatOutputBytes = function (param, name) {
 /**
  * Should be used to format output bytes
  *
- * @method formatOutputDynamicBytes
+ * @mkokod formatOutputDynamicBytes
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} hex string
  */
@@ -1102,7 +1102,7 @@ var formatOutputDynamicBytes = function (param) {
 /**
  * Should be used to format output string
  *
- * @method formatOutputString
+ * @mkokod formatOutputString
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
@@ -1114,7 +1114,7 @@ var formatOutputString = function (param) {
 /**
  * Should be used to format output address
  *
- * @method formatOutputAddress
+ * @mkokod formatOutputAddress
  * @param {SolidityParam} right-aligned input bytes
  * @returns {String} address
  */
@@ -1194,7 +1194,7 @@ module.exports = SolidityTypeInt;
 */
 /** 
  * @file param.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -1210,9 +1210,9 @@ var SolidityParam = function (value, offset) {
 };
 
 /**
- * This method should be used to get length of params's dynamic part
+ * This mkokod should be used to get length of params's dynamic part
  * 
- * @method dynamicPartLength
+ * @mkokod dynamicPartLength
  * @returns {Number} length of dynamic part (in bytes)
  */
 SolidityParam.prototype.dynamicPartLength = function () {
@@ -1220,9 +1220,9 @@ SolidityParam.prototype.dynamicPartLength = function () {
 };
 
 /**
- * This method should be used to create copy of solidity param with different offset
+ * This mkokod should be used to create copy of solidity param with different offset
  *
- * @method withOffset
+ * @mkokod withOffset
  * @param {Number} offset length in bytes
  * @returns {SolidityParam} new solidity param with applied offset
  */
@@ -1231,10 +1231,10 @@ SolidityParam.prototype.withOffset = function (offset) {
 };
 
 /**
- * This method should be used to combine solidity params together
+ * This mkokod should be used to combine solidity params togkoker
  * eg. when appending an array
  *
- * @method combine
+ * @mkokod combine
  * @param {SolidityParam} param with which we should combine
  * @param {SolidityParam} result of combination
  */
@@ -1243,10 +1243,10 @@ SolidityParam.prototype.combine = function (param) {
 };
 
 /**
- * This method should be called to check if param has dynamic size.
+ * This mkokod should be called to check if param has dynamic size.
  * If it has, it returns true, otherwise false
  *
- * @method isDynamic
+ * @mkokod isDynamic
  * @returns {Boolean}
  */
 SolidityParam.prototype.isDynamic = function () {
@@ -1254,9 +1254,9 @@ SolidityParam.prototype.isDynamic = function () {
 };
 
 /**
- * This method should be called to transform offset to bytes
+ * This mkokod should be called to transform offset to bytes
  *
- * @method offsetAsBytes
+ * @mkokod offsetAsBytes
  * @returns {String} bytes representation of offset
  */
 SolidityParam.prototype.offsetAsBytes = function () {
@@ -1264,9 +1264,9 @@ SolidityParam.prototype.offsetAsBytes = function () {
 };
 
 /**
- * This method should be called to get static part of param
+ * This mkokod should be called to get static part of param
  *
- * @method staticPart
+ * @mkokod staticPart
  * @returns {String} offset if it is a dynamic param, otherwise value
  */
 SolidityParam.prototype.staticPart = function () {
@@ -1277,9 +1277,9 @@ SolidityParam.prototype.staticPart = function () {
 };
 
 /**
- * This method should be called to get dynamic part of param
+ * This mkokod should be called to get dynamic part of param
  *
- * @method dynamicPart
+ * @mkokod dynamicPart
  * @returns {String} returns a value if it is a dynamic param, otherwise empty string
  */
 SolidityParam.prototype.dynamicPart = function () {
@@ -1287,9 +1287,9 @@ SolidityParam.prototype.dynamicPart = function () {
 };
 
 /**
- * This method should be called to encode param
+ * This mkokod should be called to encode param
  *
- * @method encode
+ * @mkokod encode
  * @returns {String}
  */
 SolidityParam.prototype.encode = function () {
@@ -1297,9 +1297,9 @@ SolidityParam.prototype.encode = function () {
 };
 
 /**
- * This method should be called to encode array of params
+ * This mkokod should be called to encode array of params
  *
- * @method encodeList
+ * @mkokod encodeList
  * @param {Array[SolidityParam]} params
  * @returns {String}
  */
@@ -1400,18 +1400,18 @@ var SolidityType = function (config) {
 /**
  * Should be used to determine if this SolidityType do match given name
  *
- * @method isType
+ * @mkokod isType
  * @param {String} name
  * @return {Bool} true if type match this SolidityType, otherwise false
  */
 SolidityType.prototype.isType = function (name) {
-    throw "this method should be overrwritten for type " + name;
+    throw "this mkokod should be overrwritten for type " + name;
 };
 
 /**
  * Should be used to determine what is the length of static part in given type
  *
- * @method staticPartLength
+ * @mkokod staticPartLength
  * @param {String} name
  * @return {Number} length of static part in bytes
  */
@@ -1434,7 +1434,7 @@ SolidityType.prototype.staticPartLength = function (name) {
  * "type[]" => true
  * "type[4]" => false
  *
- * @method isDynamicArray
+ * @mkokod isDynamicArray
  * @param {String} name
  * @return {Bool} true if the type is dynamic array
  */
@@ -1449,7 +1449,7 @@ SolidityType.prototype.isDynamicArray = function (name) {
  * "type[]" => false
  * "type[4]" => true
  *
- * @method isStaticArray
+ * @mkokod isStaticArray
  * @param {String} name
  * @return {Bool} true if the type is static array
  */
@@ -1468,7 +1468,7 @@ SolidityType.prototype.isStaticArray = function (name) {
  * "int[1]" => 1
  * "int[]" => 1
  *
- * @method staticArrayLength
+ * @mkokod staticArrayLength
  * @param {String} name
  * @return {Number} static array length
  */
@@ -1489,7 +1489,7 @@ SolidityType.prototype.staticArrayLength = function (name) {
  * "int" => "int"
  * "int[]" => "int"
  *
- * @method nestedName
+ * @mkokod nestedName
  * @param {String} name
  * @return {String} nested name
  */
@@ -1507,7 +1507,7 @@ SolidityType.prototype.nestedName = function (name) {
  * Should return true if type has dynamic size by default
  * such types are "string", "bytes"
  *
- * @method isDynamicType
+ * @mkokod isDynamicType
  * @param {String} name
  * @return {Bool} true if is dynamic, otherwise false
  */
@@ -1522,7 +1522,7 @@ SolidityType.prototype.isDynamicType = function () {
  * "int[] => ["[]"]
  * "int" => null
  *
- * @method nestedTypes
+ * @mkokod nestedTypes
  * @param {String} name
  * @return {Array} array of nested types
  */
@@ -1534,7 +1534,7 @@ SolidityType.prototype.nestedTypes = function (name) {
 /**
  * Should be used to encode the value
  *
- * @method encode
+ * @mkokod encode
  * @param {Object} value
  * @param {String} name
  * @return {String} encoded value
@@ -1579,7 +1579,7 @@ SolidityType.prototype.encode = function (value, name) {
 /**
  * Should be used to decode value from bytes
  *
- * @method decode
+ * @mkokod decode
  * @param {String} bytes
  * @param {Number} offset in bytes
  * @param {String} name type name
@@ -1740,7 +1740,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 */
 /** @file config.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -1758,45 +1758,45 @@ if (typeof XMLHttpRequest === 'undefined') {
  */
 
 
-/// required to define ETH_BIGNUMBER_ROUNDING_MODE
+/// required to define kok_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var ETH_UNITS = [
+var kok_UNITS = [
     'wei',
     'kwei',
     'Mwei',
     'Gwei',
     'szabo',
     'finney',
-    'femtoether',
-    'picoether',
-    'nanoether',
-    'microether',
-    'milliether',
+    'femtokoker',
+    'picokoker',
+    'nanokoker',
+    'microkoker',
+    'millikoker',
     'nano',
     'micro',
     'milli',
-    'ether',
+    'koker',
     'grand',
-    'Mether',
-    'Gether',
-    'Tether',
-    'Pether',
-    'Eether',
-    'Zether',
-    'Yether',
-    'Nether',
-    'Dether',
-    'Vether',
-    'Uether'
+    'Mkoker',
+    'Gkoker',
+    'Tkoker',
+    'Pkoker',
+    'Ekoker',
+    'Zkoker',
+    'Ykoker',
+    'Nkoker',
+    'Dkoker',
+    'Vkoker',
+    'Ukoker'
 ];
 
 module.exports = {
-    ETH_PADDING: 32,
-    ETH_SIGNATURE_LENGTH: 4,
-    ETH_UNITS: ETH_UNITS,
-    ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    ETH_POLLING_TIMEOUT: 1000/2,
+    kok_PADDING: 32,
+    kok_SIGNATURE_LENGTH: 4,
+    kok_UNITS: kok_UNITS,
+    kok_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
+    kok_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -1821,7 +1821,7 @@ module.exports = {
 */
 /** 
  * @file sha3.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -1861,7 +1861,7 @@ module.exports = function (value, options) {
 */
 /**
  * @file utils.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -1884,39 +1884,39 @@ var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
 
 var unitMap = {
-    'noether':      '0',
+    'nokoker':      '0',
     'wei':          '1',
     'kwei':         '1000',
     'Kwei':         '1000',
     'babbage':      '1000',
-    'femtoether':   '1000',
+    'femtokoker':   '1000',
     'mwei':         '1000000',
     'Mwei':         '1000000',
     'lovelace':     '1000000',
-    'picoether':    '1000000',
+    'picokoker':    '1000000',
     'gwei':         '1000000000',
     'Gwei':         '1000000000',
     'shannon':      '1000000000',
-    'nanoether':    '1000000000',
+    'nanokoker':    '1000000000',
     'nano':         '1000000000',
     'szabo':        '1000000000000',
-    'microether':   '1000000000000',
+    'microkoker':   '1000000000000',
     'micro':        '1000000000000',
     'finney':       '1000000000000000',
-    'milliether':    '1000000000000000',
+    'millikoker':    '1000000000000000',
     'milli':         '1000000000000000',
-    'ether':        '1000000000000000000',
-    'kether':       '1000000000000000000000',
+    'koker':        '1000000000000000000',
+    'kkoker':       '1000000000000000000000',
     'grand':        '1000000000000000000000',
-    'mether':       '1000000000000000000000000',
-    'gether':       '1000000000000000000000000000',
-    'tether':       '1000000000000000000000000000000'
+    'mkoker':       '1000000000000000000000000',
+    'gkoker':       '1000000000000000000000000000',
+    'tkoker':       '1000000000000000000000000000000'
 };
 
 /**
  * Should be called to pad string to expected length
  *
- * @method padLeft
+ * @mkokod padLeft
  * @param {String} string to be padded
  * @param {Number} characters that result string should have
  * @param {String} sign, by default 0
@@ -1929,7 +1929,7 @@ var padLeft = function (string, chars, sign) {
 /**
  * Should be called to pad string to expected length
  *
- * @method padRight
+ * @mkokod padRight
  * @param {String} string to be padded
  * @param {Number} characters that result string should have
  * @param {String} sign, by default 0
@@ -1942,7 +1942,7 @@ var padRight = function (string, chars, sign) {
 /**
  * Should be called to get utf8 from it's hex representation
  *
- * @method toUtf8
+ * @mkokod toUtf8
  * @param {String} string in hex
  * @returns {String} ascii string representation of hex value
  */
@@ -1966,7 +1966,7 @@ var toUtf8 = function(hex) {
 /**
  * Should be called to get ascii from it's hex representation
  *
- * @method toAscii
+ * @mkokod toAscii
  * @param {String} string in hex
  * @returns {String} ascii string representation of hex value
  */
@@ -1988,7 +1988,7 @@ var toAscii = function(hex) {
 /**
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
- * @method fromUtf8
+ * @mkokod fromUtf8
  * @param {String} string
  * @param {Number} optional padding
  * @returns {String} hex representation of input string
@@ -2010,7 +2010,7 @@ var fromUtf8 = function(str) {
 /**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  *
- * @method fromAscii
+ * @mkokod fromAscii
  * @param {String} string
  * @param {Number} optional padding
  * @returns {String} hex representation of input string
@@ -2029,7 +2029,7 @@ var fromAscii = function(str) {
 /**
  * Should be used to create full function/event name from json abi
  *
- * @method transformToFullName
+ * @mkokod transformToFullName
  * @param {Object} json-abi
  * @return {String} full fnction/event name
  */
@@ -2045,7 +2045,7 @@ var transformToFullName = function (json) {
 /**
  * Should be called to get display name of contract function
  *
- * @method extractDisplayName
+ * @mkokod extractDisplayName
  * @param {String} name of function/event
  * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
  */
@@ -2064,7 +2064,7 @@ var extractTypeName = function (name) {
 /**
  * Converts value to it's decimal representation in string
  *
- * @method toDecimal
+ * @mkokod toDecimal
  * @param {String|Number|BigNumber}
  * @return {String}
  */
@@ -2075,7 +2075,7 @@ var toDecimal = function (value) {
 /**
  * Converts value to it's hex representation
  *
- * @method fromDecimal
+ * @mkokod fromDecimal
  * @param {String|Number|BigNumber}
  * @return {String}
  */
@@ -2091,7 +2091,7 @@ var fromDecimal = function (value) {
  *
  * And even stringifys objects before.
  *
- * @method toHex
+ * @mkokod toHex
  * @param {String|Number|BigNumber|Object}
  * @return {String}
  */
@@ -2123,13 +2123,13 @@ var toHex = function (val) {
 /**
  * Returns value of unit in Wei
  *
- * @method getValueOfUnit
- * @param {String} unit the unit to convert to, default ether
+ * @mkokod getValueOfUnit
+ * @param {String} unit the unit to convert to, default koker
  * @returns {BigNumber} value of the unit (in Wei)
  * @throws error if the unit is not correct:w
  */
 var getValueOfUnit = function (unit) {
-    unit = unit ? unit.toLowerCase() : 'ether';
+    unit = unit ? unit.toLowerCase() : 'koker';
     var unitValue = unitMap[unit];
     if (unitValue === undefined) {
         throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(unitMap, null, 2));
@@ -2138,24 +2138,24 @@ var getValueOfUnit = function (unit) {
 };
 
 /**
- * Takes a number of wei and converts it to any other ether unit.
+ * Takes a number of wei and converts it to any other koker unit.
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     babbage
- * - mwei       picoether      lovelace
- * - gwei       nanoether      shannon      nano
- * - --         microether     szabo        micro
- * - --         milliether     finney       milli
- * - ether      --             --
- * - kether                    --           grand
- * - mether
- * - gether
- * - tether
+ * - kwei       femtokoker     babbage
+ * - mwei       picokoker      lovelace
+ * - gwei       nanokoker      shannon      nano
+ * - --         microkoker     szabo        micro
+ * - --         millikoker     finney       milli
+ * - koker      --             --
+ * - kkoker                    --           grand
+ * - mkoker
+ * - gkoker
+ * - tkoker
  *
- * @method fromWei
+ * @mkokod fromWei
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
- * @param {String} unit the unit to convert to, default ether
+ * @param {String} unit the unit to convert to, default koker
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var fromWei = function(number, unit) {
@@ -2169,21 +2169,21 @@ var fromWei = function(number, unit) {
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     babbage
- * - mwei       picoether      lovelace
- * - gwei       nanoether      shannon      nano
- * - --         microether     szabo        micro
- * - --         microether     szabo        micro
- * - --         milliether     finney       milli
- * - ether      --             --
- * - kether                    --           grand
- * - mether
- * - gether
- * - tether
+ * - kwei       femtokoker     babbage
+ * - mwei       picokoker      lovelace
+ * - gwei       nanokoker      shannon      nano
+ * - --         microkoker     szabo        micro
+ * - --         microkoker     szabo        micro
+ * - --         millikoker     finney       milli
+ * - koker      --             --
+ * - kkoker                    --           grand
+ * - mkoker
+ * - gkoker
+ * - tkoker
  *
- * @method toWei
+ * @mkokod toWei
  * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
- * @param {String} unit the unit to convert from, default ether
+ * @param {String} unit the unit to convert from, default koker
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var toWei = function(number, unit) {
@@ -2195,7 +2195,7 @@ var toWei = function(number, unit) {
 /**
  * Takes an input and transforms it into an bignumber
  *
- * @method toBigNumber
+ * @mkokod toBigNumber
  * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
  * @return {BigNumber} BigNumber
 */
@@ -2215,7 +2215,7 @@ var toBigNumber = function(number) {
 /**
  * Takes and input transforms it into bignumber and if it is negative value, into two's complement
  *
- * @method toTwosComplement
+ * @mkokod toTwosComplement
  * @param {Number|String|BigNumber}
  * @return {BigNumber}
  */
@@ -2230,7 +2230,7 @@ var toTwosComplement = function (number) {
 /**
  * Checks if the given string is strictly an address
  *
- * @method isStrictAddress
+ * @mkokod isStrictAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
@@ -2241,7 +2241,7 @@ var isStrictAddress = function (address) {
 /**
  * Checks if the given string is an address
  *
- * @method isAddress
+ * @mkokod isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
@@ -2261,7 +2261,7 @@ var isAddress = function (address) {
 /**
  * Checks if the given string is a checksummed address
  *
- * @method isChecksumAddress
+ * @mkokod isChecksumAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
@@ -2284,7 +2284,7 @@ var isChecksumAddress = function (address) {
 /**
  * Makes a checksum address
  *
- * @method toChecksumAddress
+ * @mkokod toChecksumAddress
  * @param {String} address the given HEX adress
  * @return {String}
 */
@@ -2309,7 +2309,7 @@ var toChecksumAddress = function (address) {
 /**
  * Transforms given string to valid 20 bytes-length addres with 0x prefix
  *
- * @method toAddress
+ * @mkokod toAddress
  * @param {String} address
  * @return {String} formatted address
  */
@@ -2328,7 +2328,7 @@ var toAddress = function (address) {
 /**
  * Returns true if object is BigNumber, otherwise false
  *
- * @method isBigNumber
+ * @mkokod isBigNumber
  * @param {Object}
  * @return {Boolean}
  */
@@ -2340,7 +2340,7 @@ var isBigNumber = function (object) {
 /**
  * Returns true if object is string, otherwise false
  *
- * @method isString
+ * @mkokod isString
  * @param {Object}
  * @return {Boolean}
  */
@@ -2352,7 +2352,7 @@ var isString = function (object) {
 /**
  * Returns true if object is function, otherwise false
  *
- * @method isFunction
+ * @mkokod isFunction
  * @param {Object}
  * @return {Boolean}
  */
@@ -2363,7 +2363,7 @@ var isFunction = function (object) {
 /**
  * Returns true if object is Objet, otherwise false
  *
- * @method isObject
+ * @mkokod isObject
  * @param {Object}
  * @return {Boolean}
  */
@@ -2374,7 +2374,7 @@ var isObject = function (object) {
 /**
  * Returns true if object is boolean, otherwise false
  *
- * @method isBoolean
+ * @mkokod isBoolean
  * @param {Object}
  * @return {Boolean}
  */
@@ -2385,7 +2385,7 @@ var isBoolean = function (object) {
 /**
  * Returns true if object is array, otherwise false
  *
- * @method isArray
+ * @mkokod isArray
  * @param {Object}
  * @return {Boolean}
  */
@@ -2396,7 +2396,7 @@ var isArray = function (object) {
 /**
  * Returns true if given string is valid json object
  *
- * @method isJson
+ * @mkokod isJson
  * @param {String}
  * @return {Boolean}
  */
@@ -2409,9 +2409,9 @@ var isJson = function (str) {
 };
 
 /**
- * Returns true if given string is a valid Ethereum block header bloom.
+ * Returns true if given string is a valid kokereum block header bloom.
  *
- * @method isBloom
+ * @mkokod isBloom
  * @param {String} hex encoded bloom filter
  * @return {Boolean}
  */
@@ -2427,7 +2427,7 @@ var isBloom = function (bloom) {
 /**
  * Returns true if given string is a valid log topic.
  *
- * @method isTopic
+ * @mkokod isTopic
  * @param {String} hex encoded topic
  * @return {Boolean}
  */
@@ -2498,22 +2498,22 @@ module.exports={
 /**
  * @file web3.js
  * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
+ *   Jeffrey Wilcke <jeff@kokdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
+ *   Marian Oancea <marian@kokdev.com>
+ *   Fabian Vogelsteller <fabian@kokdev.com>
+ *   Gav Wood <g@kokdev.com>
  * @date 2014
  */
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
-var Eth = require('./web3/methods/eth');
-var DB = require('./web3/methods/db');
-var Shh = require('./web3/methods/shh');
-var Net = require('./web3/methods/net');
-var Personal = require('./web3/methods/personal');
-var Swarm = require('./web3/methods/swarm');
+var kok = require('./web3/mkokods/kok');
+var DB = require('./web3/mkokods/db');
+var Shh = require('./web3/mkokods/shh');
+var Net = require('./web3/mkokods/net');
+var Personal = require('./web3/mkokods/personal');
+var Swarm = require('./web3/mkokods/swarm');
 var Settings = require('./web3/settings');
 var version = require('./version.json');
 var utils = require('./utils/utils');
@@ -2530,7 +2530,7 @@ var BigNumber = require('bignumber.js');
 function Web3 (provider) {
     this._requestManager = new RequestManager(provider);
     this.currentProvider = provider;
-    this.eth = new Eth(this);
+    this.kok = new kok(this);
     this.db = new DB(this);
     this.shh = new Shh(this);
     this.net = new Net(this);
@@ -2609,8 +2609,8 @@ var properties = function () {
             inputFormatter: utils.toDecimal
         }),
         new Property({
-            name: 'version.ethereum',
-            getter: 'eth_protocolVersion',
+            name: 'version.kokereum',
+            getter: 'kok_protocolVersion',
             inputFormatter: utils.toDecimal
         }),
         new Property({
@@ -2632,7 +2632,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/methods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/mkokods/db":37,"./web3/mkokods/kok":38,"./web3/mkokods/net":39,"./web3/mkokods/personal":40,"./web3/mkokods/shh":41,"./web3/mkokods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2651,7 +2651,7 @@ module.exports = Web3;
 */
 /**
  * @file allevents.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2014
  */
 
@@ -2660,7 +2660,7 @@ var SolidityEvent = require('./event');
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 var Filter = require('./filter');
-var watches = require('./methods/watches');
+var watches = require('./mkokods/watches');
 
 var AllSolidityEvents = function (requestManager, json, address) {
     this._requestManager = requestManager;
@@ -2711,7 +2711,7 @@ AllSolidityEvents.prototype.execute = function (options, callback) {
 
     var o = this.encode(options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
+    return new Filter(o, 'kok', this._requestManager, watches.kok(), formatter, callback);
 };
 
 AllSolidityEvents.prototype.attachToContract = function (contract) {
@@ -2722,7 +2722,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":43}],24:[function(require,module,exports){
+},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./mkokods/watches":43}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2741,7 +2741,7 @@ module.exports = AllSolidityEvents;
 */
 /** 
  * @file batch.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -2756,7 +2756,7 @@ var Batch = function (web3) {
 /**
  * Should be called to add create new request to batch request
  *
- * @method add
+ * @mkokod add
  * @param {Object} jsonrpc requet object
  */
 Batch.prototype.add = function (request) {
@@ -2766,7 +2766,7 @@ Batch.prototype.add = function (request) {
 /**
  * Should be called to execute batch request
  *
- * @method execute
+ * @mkokod execute
  */
 Batch.prototype.execute = function () {
     var requests = this.requests;
@@ -2809,7 +2809,7 @@ module.exports = Batch;
 */
 /**
  * @file contract.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2014
  */
 
@@ -2822,7 +2822,7 @@ var AllEvents = require('./allevents');
 /**
  * Should be called to encode constructor params
  *
- * @method encodeConstructorParams
+ * @mkokod encodeConstructorParams
  * @param {Array} abi
  * @param {Array} constructor params
  */
@@ -2841,7 +2841,7 @@ var encodeConstructorParams = function (abi, params) {
 /**
  * Should be called to add functions to contract object
  *
- * @method addFunctionsToContract
+ * @mkokod addFunctionsToContract
  * @param {Contract} contract
  * @param {Array} abi
  */
@@ -2849,7 +2849,7 @@ var addFunctionsToContract = function (contract) {
     contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(contract._eth, json, contract.address);
+        return new SolidityFunction(contract._kok, json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -2858,7 +2858,7 @@ var addFunctionsToContract = function (contract) {
 /**
  * Should be called to add events to contract object
  *
- * @method addEventsToContract
+ * @mkokod addEventsToContract
  * @param {Contract} contract
  * @param {Array} abi
  */
@@ -2867,11 +2867,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._eth._requestManager, events, contract.address);
+    var All = new AllEvents(contract._kok._requestManager, events, contract.address);
     All.attachToContract(contract);
 
     events.map(function (json) {
-        return new SolidityEvent(contract._eth._requestManager, json, contract.address);
+        return new SolidityEvent(contract._kok._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2881,7 +2881,7 @@ var addEventsToContract = function (contract) {
 /**
  * Should be called to check if the contract gets properly deployed on the blockchain.
  *
- * @method checkForContractAddress
+ * @mkokod checkForContractAddress
  * @param {Object} contract
  * @param {Function} callback
  * @returns {Undefined}
@@ -2891,7 +2891,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._eth.filter('latest', function(e){
+    var filter = contract._kok.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -2909,10 +2909,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._kok.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
-                        contract._eth.getCode(receipt.contractAddress, function(e, code){
+                        contract._kok.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
@@ -2927,7 +2927,7 @@ var checkForContractAddress = function(contract, callback){
 
                                 contract.address = receipt.contractAddress;
 
-                                // attach events and methods again after we have
+                                // attach events and mkokods again after we have
                                 addFunctionsToContract(contract);
                                 addEventsToContract(contract);
 
@@ -2952,17 +2952,17 @@ var checkForContractAddress = function(contract, callback){
 /**
  * Should be called to create new ContractFactory instance
  *
- * @method ContractFactory
+ * @mkokod ContractFactory
  * @param {Array} abi
  */
-var ContractFactory = function (eth, abi) {
-    this.eth = eth;
+var ContractFactory = function (kok, abi) {
+    this.kok = kok;
     this.abi = abi;
 
     /**
      * Should be called to create new contract on a blockchain
      *
-     * @method new
+     * @mkokod new
      * @param {Any} contract constructor param1 (optional)
      * @param {Any} contract constructor param2 (optional)
      * @param {Object} contract transaction object (required)
@@ -2972,7 +2972,7 @@ var ContractFactory = function (eth, abi) {
     this.new = function () {
         /*jshint maxcomplexity: 7 */
         
-        var contract = new Contract(this.eth, this.abi);
+        var contract = new Contract(this.kok, this.abi);
 
         // parse arguments
         var options = {}; // required!
@@ -3004,7 +3004,7 @@ var ContractFactory = function (eth, abi) {
         if (callback) {
 
             // wait for the contract address adn check if the code was deployed
-            this.eth.sendTransaction(options, function (err, hash) {
+            this.kok.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
                 } else {
@@ -3018,7 +3018,7 @@ var ContractFactory = function (eth, abi) {
                 }
             });
         } else {
-            var hash = this.eth.sendTransaction(options);
+            var hash = this.kok.sendTransaction(options);
             // add the transaction hash
             contract.transactionHash = hash;
             checkForContractAddress(contract);
@@ -3033,7 +3033,7 @@ var ContractFactory = function (eth, abi) {
 /**
  * Should be called to create new ContractFactory
  *
- * @method contract
+ * @mkokod contract
  * @param {Array} abi
  * @returns {ContractFactory} new contract factory
  */
@@ -3046,14 +3046,14 @@ var ContractFactory = function (eth, abi) {
 /**
  * Should be called to get access to existing contract on a blockchain
  *
- * @method at
+ * @mkokod at
  * @param {Address} contract address (required)
  * @param {Function} callback {optional)
  * @returns {Contract} returns contract if no callback was passed,
  * otherwise calls callback function (err, contract)
  */
 ContractFactory.prototype.at = function (address, callback) {
-    var contract = new Contract(this.eth, this.abi, address);
+    var contract = new Contract(this.kok, this.abi, address);
 
     // this functions are not part of prototype,
     // because we dont want to spoil the interface
@@ -3069,7 +3069,7 @@ ContractFactory.prototype.at = function (address, callback) {
 /**
  * Gets the data, which is data to deploy plus constructor params
  *
- * @method getData
+ * @mkokod getData
  */
 ContractFactory.prototype.getData = function () {
     var options = {}; // required!
@@ -3089,12 +3089,12 @@ ContractFactory.prototype.getData = function () {
 /**
  * Should be called to create new contract instance
  *
- * @method Contract
+ * @mkokod Contract
  * @param {Array} abi
  * @param {Address} contract address
  */
-var Contract = function (eth, abi, address) {
-    this._eth = eth;
+var Contract = function (kok, abi, address) {
+    this._kok = kok;
     this.transactionHash = null;
     this.address = address;
     this.abi = abi;
@@ -3121,7 +3121,7 @@ module.exports = ContractFactory;
 */
 /** 
  * @file errors.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -3130,7 +3130,7 @@ module.exports = {
         return new Error('Invalid number of arguments to Solidity function');
     },
     InvalidNumberOfRPCParams: function () {
-        return new Error('Invalid number of input parameters to RPC method');
+        return new Error('Invalid number of input parameters to RPC mkokod');
     },
     InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
@@ -3166,7 +3166,7 @@ module.exports = {
 */
 /**
  * @file event.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2014
  */
 
@@ -3175,7 +3175,7 @@ var coder = require('../solidity/coder');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 var Filter = require('./filter');
-var watches = require('./methods/watches');
+var watches = require('./mkokods/watches');
 
 /**
  * This prototype should be used to create event filters
@@ -3191,7 +3191,7 @@ var SolidityEvent = function (requestManager, json, address) {
 /**
  * Should be used to get filtered param types
  *
- * @method types
+ * @mkokod types
  * @param {Bool} decide if returned typed should be indexed
  * @return {Array} array of types
  */
@@ -3206,7 +3206,7 @@ SolidityEvent.prototype.types = function (indexed) {
 /**
  * Should be used to get event display name
  *
- * @method displayName
+ * @mkokod displayName
  * @return {String} event display name
  */
 SolidityEvent.prototype.displayName = function () {
@@ -3216,7 +3216,7 @@ SolidityEvent.prototype.displayName = function () {
 /**
  * Should be used to get event type name
  *
- * @method typeName
+ * @mkokod typeName
  * @return {String} event type name
  */
 SolidityEvent.prototype.typeName = function () {
@@ -3226,7 +3226,7 @@ SolidityEvent.prototype.typeName = function () {
 /**
  * Should be used to get event signature
  *
- * @method signature
+ * @mkokod signature
  * @return {String} event signature
  */
 SolidityEvent.prototype.signature = function () {
@@ -3236,10 +3236,10 @@ SolidityEvent.prototype.signature = function () {
 /**
  * Should be used to encode indexed params and options to one final object
  *
- * @method encode
+ * @mkokod encode
  * @param {Object} indexed
  * @param {Object} options
- * @return {Object} everything combined together and encoded
+ * @return {Object} everything combined togkoker and encoded
  */
 SolidityEvent.prototype.encode = function (indexed, options) {
     indexed = indexed || {};
@@ -3283,7 +3283,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
 /**
  * Should be used to decode indexed params and options
  *
- * @method decode
+ * @mkokod decode
  * @param {Object} data
  * @return {Object} result object with decoded indexed && not indexed params
  */
@@ -3317,7 +3317,7 @@ SolidityEvent.prototype.decode = function (data) {
 /**
  * Should be used to create new filter object from event
  *
- * @method execute
+ * @mkokod execute
  * @param {Object} indexed
  * @param {Object} options
  * @return {Object} filter object
@@ -3336,13 +3336,13 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
 
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
+    return new Filter(o, 'kok', this._requestManager, watches.kok(), formatter, callback);
 };
 
 /**
  * Should be used to attach event to contract object
  *
- * @method attachToContract
+ * @mkokod attachToContract
  * @param {Contract}
  */
 SolidityEvent.prototype.attachToContract = function (contract) {
@@ -3357,10 +3357,10 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./methods/watches":43}],28:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./mkokods/watches":43}],28:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
-var Method = require('./method');
+var Mkokod = require('./mkokod');
 var Property = require('./property');
 
 // TODO: refactor, so the input params are not altered.
@@ -3379,10 +3379,10 @@ var extend = function (web3) {
             extendedObject = web3;
         }
 
-        if (extension.methods) {
-            extension.methods.forEach(function (method) {
-                method.attachToObject(extendedObject);
-                method.setRequestManager(web3._requestManager);
+        if (extension.mkokods) {
+            extension.mkokods.forEach(function (mkokod) {
+                mkokod.attachToObject(extendedObject);
+                mkokod.setRequestManager(web3._requestManager);
             });
         }
 
@@ -3396,7 +3396,7 @@ var extend = function (web3) {
 
     ex.formatters = formatters; 
     ex.utils = utils;
-    ex.Method = Method;
+    ex.Mkokod = Mkokod;
     ex.Property = Property;
 
     return ex;
@@ -3407,7 +3407,7 @@ var extend = function (web3) {
 module.exports = extend;
 
 
-},{"./../utils/utils":20,"./formatters":30,"./method":36,"./property":45}],29:[function(require,module,exports){
+},{"./../utils/utils":20,"./formatters":30,"./mkokod":36,"./property":45}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3426,11 +3426,11 @@ module.exports = extend;
 */
 /** @file filter.js
  * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
+ *   Jeffrey Wilcke <jeff@kokdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
+ *   Marian Oancea <marian@kokdev.com>
+ *   Fabian Vogelsteller <fabian@kokdev.com>
+ *   Gav Wood <g@kokdev.com>
  * @date 2014
  */
 
@@ -3456,7 +3456,7 @@ var toTopic = function(value){
         return utils.fromUtf8(value);
 };
 
-/// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
+/// This mkokod should be called on options object, to verify deprecated properties && lazy load dynamic ones
 /// @param should be string or object
 /// @returns options string or object
 var getOptions = function (options, type) {
@@ -3470,7 +3470,7 @@ var getOptions = function (options, type) {
 
 
     switch(type) {
-        case 'eth':
+        case 'kok':
 
             // make sure topics, get converted to hex
             options.topics = options.topics || [];
@@ -3492,9 +3492,9 @@ var getOptions = function (options, type) {
 };
 
 /**
-Adds the callback and sets up the methods, to iterate over the results.
+Adds the callback and sets up the mkokods, to iterate over the results.
 
-@method getLogsAtStart
+@mkokod getLogsAtStart
 @param {Object} self
 @param {function} callback
 */
@@ -3517,9 +3517,9 @@ var getLogsAtStart = function(self, callback){
 };
 
 /**
-Adds the callback and sets up the methods, to iterate over the results.
+Adds the callback and sets up the mkokods, to iterate over the results.
 
-@method pollFilter
+@mkokod pollFilter
 @param {Object} self
 */
 var pollFilter = function(self) {
@@ -3542,18 +3542,18 @@ var pollFilter = function(self) {
     };
 
     self.requestManager.startPolling({
-        method: self.implementation.poll.call,
+        mkokod: self.implementation.poll.call,
         params: [self.filterId],
     }, self.filterId, onMessage, self.stopWatching.bind(self));
 
 };
 
-var Filter = function (options, type, requestManager, methods, formatter, callback, filterCreationErrorCallback) {
+var Filter = function (options, type, requestManager, mkokods, formatter, callback, filterCreationErrorCallback) {
     var self = this;
     var implementation = {};
-    methods.forEach(function (method) {
-        method.setRequestManager(requestManager);
-        method.attachToObject(implementation);
+    mkokods.forEach(function (mkokod) {
+        mkokod.setRequestManager(requestManager);
+        mkokod.attachToObject(implementation);
     });
     this.requestManager = requestManager;
     this.options = getOptions(options, type);
@@ -3640,7 +3640,7 @@ Filter.prototype.get = function (callback) {
         }
     } else {
         if (this.filterId === null) {
-            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() method.');
+            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() mkokod.');
         }
         var logs = this.implementation.getLogs(this.filterId);
         return logs.map(function (log) {
@@ -3675,8 +3675,8 @@ module.exports = Filter;
 */
 /**
  * @file formatters.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
+ * @author Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
@@ -3687,7 +3687,7 @@ var Iban = require('./iban');
 /**
  * Should the format output to a big number
  *
- * @method outputBigNumberFormatter
+ * @mkokod outputBigNumberFormatter
  * @param {String|Number|BigNumber}
  * @returns {BigNumber} object
  */
@@ -3718,7 +3718,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
- * @method inputCallFormatter
+ * @mkokod inputCallFormatter
  * @param {Object} transaction options
  * @returns object
 */
@@ -3746,7 +3746,7 @@ var inputCallFormatter = function (options){
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
- * @method inputTransactionFormatter
+ * @mkokod inputTransactionFormatter
  * @param {Object} transaction options
  * @returns object
 */
@@ -3771,7 +3771,7 @@ var inputTransactionFormatter = function (options){
 /**
  * Formats the output of a transaction to its proper values
  *
- * @method outputTransactionFormatter
+ * @mkokod outputTransactionFormatter
  * @param {Object} tx
  * @returns {Object}
 */
@@ -3790,7 +3790,7 @@ var outputTransactionFormatter = function (tx){
 /**
  * Formats the output of a transaction receipt to its proper values
  *
- * @method outputTransactionReceiptFormatter
+ * @mkokod outputTransactionReceiptFormatter
  * @param {Object} receipt
  * @returns {Object}
 */
@@ -3814,7 +3814,7 @@ var outputTransactionReceiptFormatter = function (receipt){
 /**
  * Formats the output of a block to its proper values
  *
- * @method outputBlockFormatter
+ * @mkokod outputBlockFormatter
  * @param {Object} block
  * @returns {Object}
 */
@@ -3844,7 +3844,7 @@ var outputBlockFormatter = function(block) {
 /**
  * Formats the output of a log
  *
- * @method outputLogFormatter
+ * @mkokod outputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
 */
@@ -3862,7 +3862,7 @@ var outputLogFormatter = function(log) {
 /**
  * Formats the input of a whisper post and converts all values to HEX
  *
- * @method inputPostFormatter
+ * @mkokod inputPostFormatter
  * @param {Object} transaction object
  * @returns {Object}
 */
@@ -3890,7 +3890,7 @@ var inputPostFormatter = function(post) {
 /**
  * Formats the output of a received post message
  *
- * @method outputPostFormatter
+ * @mkokod outputPostFormatter
  * @param {Object}
  * @returns {Object}
  */
@@ -3983,7 +3983,7 @@ module.exports = {
 */
 /**
  * @file function.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -3996,8 +3996,8 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (eth, json, address) {
-    this._eth = eth;
+var SolidityFunction = function (kok, json, address) {
+    this._kok = kok;
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -4025,7 +4025,7 @@ SolidityFunction.prototype.extractDefaultBlock = function (args) {
 /**
  * Should be called to check if the number of arguments is correct
  *
- * @method validateArgs
+ * @mkokod validateArgs
  * @param {Array} arguments
  * @throws {Error} if it is not
  */
@@ -4045,7 +4045,7 @@ SolidityFunction.prototype.validateArgs = function (args) {
 /**
  * Should be used to create payload from arguments
  *
- * @method toPayload
+ * @mkokod toPayload
  * @param {Array} solidity function params
  * @param {Object} optional payload options
  */
@@ -4063,7 +4063,7 @@ SolidityFunction.prototype.toPayload = function (args) {
 /**
  * Should be used to get function signature
  *
- * @method signature
+ * @mkokod signature
  * @return {String} function signature
  */
 SolidityFunction.prototype.signature = function () {
@@ -4084,7 +4084,7 @@ SolidityFunction.prototype.unpackOutput = function (output) {
 /**
  * Calls a contract function.
  *
- * @method call
+ * @mkokod call
  * @param {...Object} Contract function arguments
  * @param {function} If the last argument is a function, the contract function
  *   call will be asynchronous, and the callback will be passed the
@@ -4099,12 +4099,12 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        var output = this._eth.call(payload, defaultBlock);
+        var output = this._kok.call(payload, defaultBlock);
         return this.unpackOutput(output);
     }
 
     var self = this;
-    this._eth.call(payload, defaultBlock, function (error, output) {
+    this._kok.call(payload, defaultBlock, function (error, output) {
         if (error) return callback(error, null);
 
         var unpacked = null;
@@ -4122,7 +4122,7 @@ SolidityFunction.prototype.call = function () {
 /**
  * Should be used to sendTransaction to solidity function
  *
- * @method sendTransaction
+ * @mkokod sendTransaction
  */
 SolidityFunction.prototype.sendTransaction = function () {
     var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
@@ -4134,16 +4134,16 @@ SolidityFunction.prototype.sendTransaction = function () {
     }
 
     if (!callback) {
-        return this._eth.sendTransaction(payload);
+        return this._kok.sendTransaction(payload);
     }
 
-    this._eth.sendTransaction(payload, callback);
+    this._kok.sendTransaction(payload, callback);
 };
 
 /**
  * Should be used to estimateGas of solidity function
  *
- * @method estimateGas
+ * @mkokod estimateGas
  */
 SolidityFunction.prototype.estimateGas = function () {
     var args = Array.prototype.slice.call(arguments);
@@ -4151,16 +4151,16 @@ SolidityFunction.prototype.estimateGas = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._eth.estimateGas(payload);
+        return this._kok.estimateGas(payload);
     }
 
-    this._eth.estimateGas(payload, callback);
+    this._kok.estimateGas(payload, callback);
 };
 
 /**
  * Return the encoded data of the call
  *
- * @method getData
+ * @mkokod getData
  * @return {String} the encoded data
  */
 SolidityFunction.prototype.getData = function () {
@@ -4173,7 +4173,7 @@ SolidityFunction.prototype.getData = function () {
 /**
  * Should be used to get function display name
  *
- * @method displayName
+ * @mkokod displayName
  * @return {String} display name of the function
  */
 SolidityFunction.prototype.displayName = function () {
@@ -4183,7 +4183,7 @@ SolidityFunction.prototype.displayName = function () {
 /**
  * Should be used to get function type name
  *
- * @method typeName
+ * @mkokod typeName
  * @return {String} type name of the function
  */
 SolidityFunction.prototype.typeName = function () {
@@ -4193,7 +4193,7 @@ SolidityFunction.prototype.typeName = function () {
 /**
  * Should be called to get rpc requests from solidity function
  *
- * @method request
+ * @mkokod request
  * @returns {Object}
  */
 SolidityFunction.prototype.request = function () {
@@ -4203,7 +4203,7 @@ SolidityFunction.prototype.request = function () {
     var format = this.unpackOutput.bind(this);
 
     return {
-        method: this._constant ? 'eth_call' : 'eth_sendTransaction',
+        mkokod: this._constant ? 'kok_call' : 'kok_sendTransaction',
         callback: callback,
         params: [payload],
         format: format
@@ -4213,7 +4213,7 @@ SolidityFunction.prototype.request = function () {
 /**
  * Should be called to execute function
  *
- * @method execute
+ * @mkokod execute
  */
 SolidityFunction.prototype.execute = function () {
     var transaction = !this._constant;
@@ -4230,7 +4230,7 @@ SolidityFunction.prototype.execute = function () {
 /**
  * Should be called to attach function to contract
  *
- * @method attachToContract
+ * @mkokod attachToContract
  * @param {Contract}
  */
 SolidityFunction.prototype.attachToContract = function (contract) {
@@ -4268,9 +4268,9 @@ module.exports = SolidityFunction;
 */
 /** @file httpprovider.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
+ *   Marian Oancea <marian@kokdev.com>
+ *   Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
@@ -4301,7 +4301,7 @@ var HttpProvider = function (host, timeout, user, password) {
 /**
  * Should be called to prepare new XMLHttpRequest
  *
- * @method prepareRequest
+ * @mkokod prepareRequest
  * @param {Boolean} true if request should be async
  * @return {XMLHttpRequest} object
  */
@@ -4326,7 +4326,7 @@ HttpProvider.prototype.prepareRequest = function (async) {
 /**
  * Should be called to make sync request
  *
- * @method send
+ * @mkokod send
  * @param {Object} payload
  * @return {Object} result
  */
@@ -4353,7 +4353,7 @@ HttpProvider.prototype.send = function (payload) {
 /**
  * Should be used to make async request
  *
- * @method sendAsync
+ * @mkokod sendAsync
  * @param {Object} payload
  * @param {Function} callback triggered on end with (err, result)
  */
@@ -4389,7 +4389,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 /**
  * Synchronously tries to make Http request
  *
- * @method isConnected
+ * @mkokod isConnected
  * @return {Boolean} returns true if request haven't failed. Otherwise false
  */
 HttpProvider.prototype.isConnected = function () {
@@ -4397,7 +4397,7 @@ HttpProvider.prototype.isConnected = function () {
     this.send({
       id: 9999999999,
       jsonrpc: '2.0',
-      method: 'net_listening',
+      mkokod: 'net_listening',
       params: []
     });
     return true;
@@ -4427,7 +4427,7 @@ module.exports = HttpProvider;
 */
 /** 
  * @file iban.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -4445,7 +4445,7 @@ var padLeft = function (string, bytes) {
  * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
  * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
  *
- * @method iso13616Prepare
+ * @mkokod iso13616Prepare
  * @param {String} iban the IBAN
  * @returns {String} the prepared IBAN
  */
@@ -4470,7 +4470,7 @@ var iso13616Prepare = function (iban) {
 /**
  * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
  *
- * @method mod9710
+ * @mkokod mod9710
  * @param {String} iban
  * @returns {Number}
  */
@@ -4496,9 +4496,9 @@ var Iban = function (iban) {
 };
 
 /**
- * This method should be used to create iban object from ethereum address
+ * This mkokod should be used to create iban object from kokereum address
  *
- * @method fromAddress
+ * @mkokod fromAddress
  * @param {String} address
  * @return {Iban} the IBAN object
  */
@@ -4512,9 +4512,9 @@ Iban.fromAddress = function (address) {
 /**
  * Convert the passed BBAN to an IBAN for this country specification.
  * Please note that <i>"generation of the IBAN shall be the exclusive responsibility of the bank/branch servicing the account"</i>.
- * This method implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
+ * This mkokod implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
  *
- * @method fromBban
+ * @mkokod fromBban
  * @param {String} bban the BBAN to convert to IBAN
  * @returns {Iban} the IBAN object
  */
@@ -4530,18 +4530,18 @@ Iban.fromBban = function (bban) {
 /**
  * Should be used to create IBAN object for given institution and identifier
  *
- * @method createIndirect
+ * @mkokod createIndirect
  * @param {Object} options, required options are "institution" and "identifier"
  * @return {Iban} the IBAN object
  */
 Iban.createIndirect = function (options) {
-    return Iban.fromBban('ETH' + options.institution + options.identifier);
+    return Iban.fromBban('kok' + options.institution + options.identifier);
 };
 
 /**
- * Thos method should be used to check if given string is valid iban object
+ * Thos mkokod should be used to check if given string is valid iban object
  *
- * @method isValid
+ * @mkokod isValid
  * @param {String} iban string
  * @return {Boolean} true if it is valid IBAN
  */
@@ -4553,18 +4553,18 @@ Iban.isValid = function (iban) {
 /**
  * Should be called to check if iban is correct
  *
- * @method isValid
+ * @mkokod isValid
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isValid = function () {
-    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
+    return /^XE[0-9]{2}(kok[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
         mod9710(iso13616Prepare(this._iban)) === 1;
 };
 
 /**
  * Should be called to check if iban number is direct
  *
- * @method isDirect
+ * @mkokod isDirect
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isDirect = function () {
@@ -4574,7 +4574,7 @@ Iban.prototype.isDirect = function () {
 /**
  * Should be called to check if iban number if indirect
  *
- * @method isIndirect
+ * @mkokod isIndirect
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isIndirect = function () {
@@ -4585,7 +4585,7 @@ Iban.prototype.isIndirect = function () {
  * Should be called to get iban checksum
  * Uses the mod-97-10 checksumming protocol (ISO/IEC 7064:2003)
  *
- * @method checksum
+ * @mkokod checksum
  * @returns {String} checksum
  */
 Iban.prototype.checksum = function () {
@@ -4596,7 +4596,7 @@ Iban.prototype.checksum = function () {
  * Should be called to get institution identifier
  * eg. XREG
  *
- * @method institution
+ * @mkokod institution
  * @returns {String} institution identifier
  */
 Iban.prototype.institution = function () {
@@ -4607,7 +4607,7 @@ Iban.prototype.institution = function () {
  * Should be called to get client identifier within institution
  * eg. GAVOFYORK
  *
- * @method client
+ * @mkokod client
  * @returns {String} client identifier
  */
 Iban.prototype.client = function () {
@@ -4617,7 +4617,7 @@ Iban.prototype.client = function () {
 /**
  * Should be called to get client direct address
  *
- * @method address
+ * @mkokod address
  * @returns {String} client direct address
  */
 Iban.prototype.address = function () {
@@ -4656,7 +4656,7 @@ module.exports = Iban;
 */
 /** @file ipcprovider.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
@@ -4713,7 +4713,7 @@ var IpcProvider = function (path, net) {
 /**
 Will parse the response and make an array out of it.
 
-@method _parseResponse
+@mkokod _parseResponse
 @param {String} data
 */
 IpcProvider.prototype._parseResponse = function(data) {
@@ -4769,20 +4769,20 @@ IpcProvider.prototype._parseResponse = function(data) {
 Get the adds a callback to the responseCallbacks object,
 which will be called if a response matching the response Id will arrive.
 
-@method _addResponseCallback
+@mkokod _addResponseCallback
 */
 IpcProvider.prototype._addResponseCallback = function(payload, callback) {
     var id = payload.id || payload[0].id;
-    var method = payload.method || payload[0].method;
+    var mkokod = payload.mkokod || payload[0].mkokod;
 
     this.responseCallbacks[id] = callback;
-    this.responseCallbacks[id].method = method;
+    this.responseCallbacks[id].mkokod = mkokod;
 };
 
 /**
 Timeout all requests when the end/error event is fired
 
-@method _timeout
+@mkokod _timeout
 */
 IpcProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
@@ -4797,7 +4797,7 @@ IpcProvider.prototype._timeout = function() {
 /**
 Check if the current connection is still valid.
 
-@method isConnected
+@mkokod isConnected
 */
 IpcProvider.prototype.isConnected = function() {
     var _this = this;
@@ -4829,7 +4829,7 @@ IpcProvider.prototype.send = function (payload) {
         return result;
 
     } else {
-        throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
+        throw new Error('You tried to send "'+ payload.mkokod +'" synchronously. Synchronous requests are not supported by the IPC provider.');
     }
 };
 
@@ -4865,7 +4865,7 @@ module.exports = IpcProvider;
 */
 /** @file jsonrpc.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
  *   Aaron Kumavis <aaron@kumavis.me>
  * @date 2015
  */
@@ -4878,14 +4878,14 @@ var Jsonrpc = {
 /**
  * Should be called to valid json create payload object
  *
- * @method toPayload
- * @param {Function} method of jsonrpc call, required
- * @param {Array} params, an array of method params, optional
+ * @mkokod toPayload
+ * @param {Function} mkokod of jsonrpc call, required
+ * @param {Array} params, an array of mkokod params, optional
  * @returns {Object} valid jsonrpc payload object
  */
-Jsonrpc.toPayload = function (method, params) {
-    if (!method)
-        console.error('jsonrpc method should be specified!');
+Jsonrpc.toPayload = function (mkokod, params) {
+    if (!mkokod)
+        console.error('jsonrpc mkokod should be specified!');
 
     // advance message ID
     Jsonrpc.messageId++;
@@ -4893,7 +4893,7 @@ Jsonrpc.toPayload = function (method, params) {
     return {
         jsonrpc: '2.0',
         id: Jsonrpc.messageId,
-        method: method,
+        mkokod: mkokod,
         params: params || []
     };
 };
@@ -4901,7 +4901,7 @@ Jsonrpc.toPayload = function (method, params) {
 /**
  * Should be called to check if jsonrpc response is valid
  *
- * @method isValidResponse
+ * @mkokod isValidResponse
  * @param {Object}
  * @returns {Boolean} true if response is valid, otherwise false
  */
@@ -4920,13 +4920,13 @@ Jsonrpc.isValidResponse = function (response) {
 /**
  * Should be called to create batch payload object
  *
- * @method toBatchPayload
- * @param {Array} messages, an array of objects with method (required) and params (optional) fields
+ * @mkokod toBatchPayload
+ * @param {Array} messages, an array of objects with mkokod (required) and params (optional) fields
  * @returns {Array} batch payload
  */
 Jsonrpc.toBatchPayload = function (messages) {
     return messages.map(function (message) {
-        return Jsonrpc.toPayload(message.method, message.params);
+        return Jsonrpc.toPayload(message.mkokod, message.params);
     });
 };
 
@@ -4951,15 +4951,15 @@ module.exports = Jsonrpc;
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file method.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @file mkokod.js
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
-var Method = function (options) {
+var Mkokod = function (options) {
     this.name = options.name;
     this.call = options.call;
     this.params = options.params || 0;
@@ -4968,29 +4968,29 @@ var Method = function (options) {
     this.requestManager = null;
 };
 
-Method.prototype.setRequestManager = function (rm) {
+Mkokod.prototype.setRequestManager = function (rm) {
     this.requestManager = rm;
 };
 
 /**
- * Should be used to determine name of the jsonrpc method based on arguments
+ * Should be used to determine name of the jsonrpc mkokod based on arguments
  *
- * @method getCall
+ * @mkokod getCall
  * @param {Array} arguments
- * @return {String} name of jsonrpc method
+ * @return {String} name of jsonrpc mkokod
  */
-Method.prototype.getCall = function (args) {
+Mkokod.prototype.getCall = function (args) {
     return utils.isFunction(this.call) ? this.call(args) : this.call;
 };
 
 /**
  * Should be used to extract callback from array of arguments. Modifies input param
  *
- * @method extractCallback
+ * @mkokod extractCallback
  * @param {Array} arguments
  * @return {Function|Null} callback, if exists
  */
-Method.prototype.extractCallback = function (args) {
+Mkokod.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
@@ -4999,24 +4999,24 @@ Method.prototype.extractCallback = function (args) {
 /**
  * Should be called to check if the number of arguments is correct
  * 
- * @method validateArgs
+ * @mkokod validateArgs
  * @param {Array} arguments
  * @throws {Error} if it is not
  */
-Method.prototype.validateArgs = function (args) {
+Mkokod.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
         throw errors.InvalidNumberOfRPCParams();
     }
 };
 
 /**
- * Should be called to format input args of method
+ * Should be called to format input args of mkokod
  * 
- * @method formatInput
+ * @mkokod formatInput
  * @param {Array}
  * @return {Array}
  */
-Method.prototype.formatInput = function (args) {
+Mkokod.prototype.formatInput = function (args) {
     if (!this.inputFormatter) {
         return args;
     }
@@ -5027,37 +5027,37 @@ Method.prototype.formatInput = function (args) {
 };
 
 /**
- * Should be called to format output(result) of method
+ * Should be called to format output(result) of mkokod
  *
- * @method formatOutput
+ * @mkokod formatOutput
  * @param {Object}
  * @return {Object}
  */
-Method.prototype.formatOutput = function (result) {
+Mkokod.prototype.formatOutput = function (result) {
     return this.outputFormatter && result ? this.outputFormatter(result) : result;
 };
 
 /**
  * Should create payload from given input args
  *
- * @method toPayload
+ * @mkokod toPayload
  * @param {Array} args
  * @return {Object}
  */
-Method.prototype.toPayload = function (args) {
+Mkokod.prototype.toPayload = function (args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
     var params = this.formatInput(args);
     this.validateArgs(params);
 
     return {
-        method: call,
+        mkokod: call,
         params: params,
         callback: callback
     };
 };
 
-Method.prototype.attachToObject = function (obj) {
+Mkokod.prototype.attachToObject = function (obj) {
     var func = this.buildCall();
     func.call = this.call; // TODO!!! that's ugly. filter.js uses it
     var name = this.name.split('.');
@@ -5069,16 +5069,16 @@ Method.prototype.attachToObject = function (obj) {
     }
 };
 
-Method.prototype.buildCall = function() {
-    var method = this;
+Mkokod.prototype.buildCall = function() {
+    var mkokod = this;
     var send = function () {
-        var payload = method.toPayload(Array.prototype.slice.call(arguments));
+        var payload = mkokod.toPayload(Array.prototype.slice.call(arguments));
         if (payload.callback) {
-            return method.requestManager.sendAsync(payload, function (err, result) {
-                payload.callback(err, method.formatOutput(result));
+            return mkokod.requestManager.sendAsync(payload, function (err, result) {
+                payload.callback(err, mkokod.formatOutput(result));
             });
         }
-        return method.formatOutput(method.requestManager.send(payload));
+        return mkokod.formatOutput(mkokod.requestManager.send(payload));
     };
     send.request = this.request.bind(this);
     return send;
@@ -5087,17 +5087,17 @@ Method.prototype.buildCall = function() {
 /**
  * Should be called to create pure JSONRPC request which can be used in batch request
  *
- * @method request
+ * @mkokod request
  * @param {...} params
  * @return {Object} jsonrpc request
  */
-Method.prototype.request = function () {
+Mkokod.prototype.request = function () {
     var payload = this.toPayload(Array.prototype.slice.call(arguments));
     payload.format = this.formatOutput.bind(this);
     return payload;
 };
 
-module.exports = Method;
+module.exports = Mkokod;
 
 },{"../utils/utils":20,"./errors":26}],37:[function(require,module,exports){
 /*
@@ -5118,56 +5118,56 @@ module.exports = Method;
 */
 /** @file db.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 
 var DB = function (web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
     
-    methods().forEach(function(method) { 
-        method.attachToObject(self);
-        method.setRequestManager(web3._requestManager);
+    mkokods().forEach(function(mkokod) { 
+        mkokod.attachToObject(self);
+        mkokod.setRequestManager(web3._requestManager);
     });
 };
 
-var methods = function () {
-    var putString = new Method({
+var mkokods = function () {
+    var putString = new Mkokod({
         name: 'putString',
         call: 'db_putString',
         params: 3
     });
 
-    var getString = new Method({
+    var getString = new Mkokod({
         name: 'getString',
         call: 'db_getString',
         params: 2
     });
 
-    var putHex = new Method({
+    var putHex = new Mkokod({
         name: 'putHex',
         call: 'db_putHex',
         params: 3
     });
 
-    var getHex = new Method({
-        name: 'getHex',
-        call: 'db_getHex',
+    var gkokex = new Mkokod({
+        name: 'gkokex',
+        call: 'db_gkokex',
         params: 2
     });
 
     return [
-        putString, getString, putHex, getHex
+        putString, getString, putHex, gkokex
     ];
 };
 
 module.exports = DB;
 
-},{"../method":36}],38:[function(require,module,exports){
+},{"../mkokod":36}],38:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5185,9 +5185,9 @@ module.exports = DB;
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
+ * @file kok.js
+ * @author Marek Kotewicz <marek@kokdev.com>
+ * @author Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
@@ -5195,7 +5195,7 @@ module.exports = DB;
 
 var formatters = require('../formatters');
 var utils = require('../../utils/utils');
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 var Property = require('../property');
 var c = require('../../utils/config');
 var Contract = require('../contract');
@@ -5207,33 +5207,33 @@ var Iban = require('../iban');
 var transfer = require('../transfer');
 
 var blockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "kok_getBlockByHash" : "kok_getBlockByNumber";
 };
 
 var transactionFromBlockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'kok_getTransactionByBlockHashAndIndex' : 'kok_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'kok_getUncleByBlockHashAndIndex' : 'kok_getUncleByBlockNumberAndIndex';
 };
 
 var getBlockTransactionCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'kok_getBlockTransactionCountByHash' : 'kok_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'kok_getUncleCountByBlockHash' : 'kok_getUncleCountByBlockNumber';
 };
 
-function Eth(web3) {
+function kok(web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
 
-    methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+    mkokods().forEach(function(mkokod) {
+        mkokod.attachToObject(self);
+        mkokod.setRequestManager(self._requestManager);
     });
 
     properties().forEach(function(p) {
@@ -5246,7 +5246,7 @@ function Eth(web3) {
     this.sendIBANTransaction = transfer.bind(null, this);
 }
 
-Object.defineProperty(Eth.prototype, 'defaultBlock', {
+Object.defineProperty(kok.prototype, 'defaultBlock', {
     get: function () {
         return c.defaultBlock;
     },
@@ -5256,7 +5256,7 @@ Object.defineProperty(Eth.prototype, 'defaultBlock', {
     }
 });
 
-Object.defineProperty(Eth.prototype, 'defaultAccount', {
+Object.defineProperty(kok.prototype, 'defaultAccount', {
     get: function () {
         return c.defaultAccount;
     },
@@ -5266,30 +5266,30 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
     }
 });
 
-var methods = function () {
-    var getBalance = new Method({
+var mkokods = function () {
+    var getBalance = new Mkokod({
         name: 'getBalance',
-        call: 'eth_getBalance',
+        call: 'kok_getBalance',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: formatters.outputBigNumberFormatter
     });
 
-    var getStorageAt = new Method({
+    var getStorageAt = new Mkokod({
         name: 'getStorageAt',
-        call: 'eth_getStorageAt',
+        call: 'kok_getStorageAt',
         params: 3,
         inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
     });
 
-    var getCode = new Method({
+    var getCode = new Mkokod({
         name: 'getCode',
-        call: 'eth_getCode',
+        call: 'kok_getCode',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
     });
 
-    var getBlock = new Method({
+    var getBlock = new Mkokod({
         name: 'getBlock',
         call: blockCall,
         params: 2,
@@ -5297,7 +5297,7 @@ var methods = function () {
         outputFormatter: formatters.outputBlockFormatter
     });
 
-    var getUncle = new Method({
+    var getUncle = new Mkokod({
         name: 'getUncle',
         call: uncleCall,
         params: 2,
@@ -5306,13 +5306,13 @@ var methods = function () {
 
     });
 
-    var getCompilers = new Method({
+    var getCompilers = new Mkokod({
         name: 'getCompilers',
-        call: 'eth_getCompilers',
+        call: 'kok_getCompilers',
         params: 0
     });
 
-    var getBlockTransactionCount = new Method({
+    var getBlockTransactionCount = new Mkokod({
         name: 'getBlockTransactionCount',
         call: getBlockTransactionCountCall,
         params: 1,
@@ -5320,7 +5320,7 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
-    var getBlockUncleCount = new Method({
+    var getBlockUncleCount = new Mkokod({
         name: 'getBlockUncleCount',
         call: uncleCountCall,
         params: 1,
@@ -5328,14 +5328,14 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
-    var getTransaction = new Method({
+    var getTransaction = new Mkokod({
         name: 'getTransaction',
-        call: 'eth_getTransactionByHash',
+        call: 'kok_getTransactionByHash',
         params: 1,
         outputFormatter: formatters.outputTransactionFormatter
     });
 
-    var getTransactionFromBlock = new Method({
+    var getTransactionFromBlock = new Mkokod({
         name: 'getTransactionFromBlock',
         call: transactionFromBlockCall,
         params: 2,
@@ -5343,91 +5343,91 @@ var methods = function () {
         outputFormatter: formatters.outputTransactionFormatter
     });
 
-    var getTransactionReceipt = new Method({
+    var getTransactionReceipt = new Mkokod({
         name: 'getTransactionReceipt',
-        call: 'eth_getTransactionReceipt',
+        call: 'kok_getTransactionReceipt',
         params: 1,
         outputFormatter: formatters.outputTransactionReceiptFormatter
     });
 
-    var getTransactionCount = new Method({
+    var getTransactionCount = new Mkokod({
         name: 'getTransactionCount',
-        call: 'eth_getTransactionCount',
+        call: 'kok_getTransactionCount',
         params: 2,
         inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: utils.toDecimal
     });
 
-    var sendRawTransaction = new Method({
+    var sendRawTransaction = new Mkokod({
         name: 'sendRawTransaction',
-        call: 'eth_sendRawTransaction',
+        call: 'kok_sendRawTransaction',
         params: 1,
         inputFormatter: [null]
     });
 
-    var sendTransaction = new Method({
+    var sendTransaction = new Mkokod({
         name: 'sendTransaction',
-        call: 'eth_sendTransaction',
+        call: 'kok_sendTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
-    var signTransaction = new Method({
+    var signTransaction = new Mkokod({
         name: 'signTransaction',
-        call: 'eth_signTransaction',
+        call: 'kok_signTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
-    var sign = new Method({
+    var sign = new Mkokod({
         name: 'sign',
-        call: 'eth_sign',
+        call: 'kok_sign',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, null]
     });
 
-    var call = new Method({
+    var call = new Mkokod({
         name: 'call',
-        call: 'eth_call',
+        call: 'kok_call',
         params: 2,
         inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
     });
 
-    var estimateGas = new Method({
+    var estimateGas = new Mkokod({
         name: 'estimateGas',
-        call: 'eth_estimateGas',
+        call: 'kok_estimateGas',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
         outputFormatter: utils.toDecimal
     });
 
-    var compileSolidity = new Method({
+    var compileSolidity = new Mkokod({
         name: 'compile.solidity',
-        call: 'eth_compileSolidity',
+        call: 'kok_compileSolidity',
         params: 1
     });
 
-    var compileLLL = new Method({
+    var compileLLL = new Mkokod({
         name: 'compile.lll',
-        call: 'eth_compileLLL',
+        call: 'kok_compileLLL',
         params: 1
     });
 
-    var compileSerpent = new Method({
+    var compileSerpent = new Mkokod({
         name: 'compile.serpent',
-        call: 'eth_compileSerpent',
+        call: 'kok_compileSerpent',
         params: 1
     });
 
-    var submitWork = new Method({
+    var submitWork = new Mkokod({
         name: 'submitWork',
-        call: 'eth_submitWork',
+        call: 'kok_submitWork',
         params: 3
     });
 
-    var getWork = new Method({
+    var getWork = new Mkokod({
         name: 'getWork',
-        call: 'eth_getWork',
+        call: 'kok_getWork',
         params: 0
     });
 
@@ -5463,71 +5463,71 @@ var properties = function () {
     return [
         new Property({
             name: 'validator',
-            getter: 'eth_validator'
+            getter: 'kok_validator'
         }),
         new Property({
             name: 'coinbase',
-            getter: 'eth_coinbase'
+            getter: 'kok_coinbase'
         }),
         new Property({
             name: 'mining',
-            getter: 'eth_mining'
+            getter: 'kok_mining'
         }),
         new Property({
             name: 'hashrate',
-            getter: 'eth_hashrate',
+            getter: 'kok_hashrate',
             outputFormatter: utils.toDecimal
         }),
         new Property({
             name: 'syncing',
-            getter: 'eth_syncing',
+            getter: 'kok_syncing',
             outputFormatter: formatters.outputSyncingFormatter
         }),
         new Property({
             name: 'gasPrice',
-            getter: 'eth_gasPrice',
+            getter: 'kok_gasPrice',
             outputFormatter: formatters.outputBigNumberFormatter
         }),
         new Property({
             name: 'accounts',
-            getter: 'eth_accounts'
+            getter: 'kok_accounts'
         }),
         new Property({
             name: 'blockNumber',
-            getter: 'eth_blockNumber',
+            getter: 'kok_blockNumber',
             outputFormatter: utils.toDecimal
         }),
         new Property({
             name: 'protocolVersion',
-            getter: 'eth_protocolVersion'
+            getter: 'kok_protocolVersion'
         })
     ];
 };
 
-Eth.prototype.contract = function (abi) {
+kok.prototype.contract = function (abi) {
     var factory = new Contract(this, abi);
     return factory;
 };
 
-Eth.prototype.filter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'eth', this._requestManager, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
+kok.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'kok', this._requestManager, watches.kok(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
-Eth.prototype.namereg = function () {
+kok.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
 
-Eth.prototype.icapNamereg = function () {
+kok.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
+kok.prototype.isSyncing = function (callback) {
     return new IsSyncing(this._requestManager, callback);
 };
 
-module.exports = Eth;
+module.exports = kok;
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../mkokod":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5544,9 +5544,9 @@ module.exports = Eth;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file eth.js
+/** @file kok.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -5564,7 +5564,7 @@ var Net = function (web3) {
     });
 };
 
-/// @returns an array of objects describing web3.eth api properties
+/// @returns an array of objects describing web3.kok api properties
 var properties = function () {
     return [
         new Property({
@@ -5599,15 +5599,15 @@ module.exports = Net;
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
+ * @file kok.js
+ * @author Marek Kotewicz <marek@kokdev.com>
+ * @author Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
 "use strict";
 
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 var Property = require('../property');
 var formatters = require('../formatters');
 
@@ -5616,9 +5616,9 @@ function Personal(web3) {
 
     var self = this;
 
-    methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+    mkokods().forEach(function(mkokod) {
+        mkokod.attachToObject(self);
+        mkokod.setRequestManager(self._requestManager);
     });
 
     properties().forEach(function(p) {
@@ -5627,48 +5627,48 @@ function Personal(web3) {
     });
 }
 
-var methods = function () {
-    var newAccount = new Method({
+var mkokods = function () {
+    var newAccount = new Mkokod({
         name: 'newAccount',
         call: 'personal_newAccount',
         params: 1,
         inputFormatter: [null]
     });
 
-    var importRawKey = new Method({
+    var importRawKey = new Mkokod({
         name: 'importRawKey',
 		call: 'personal_importRawKey',
 		params: 2
     });
 
-    var sign = new Method({
+    var sign = new Mkokod({
         name: 'sign',
 		call: 'personal_sign',
 		params: 3,
 		inputFormatter: [null, formatters.inputAddressFormatter, null]
     });
 
-    var ecRecover = new Method({
+    var ecRecover = new Mkokod({
         name: 'ecRecover',
 		call: 'personal_ecRecover',
 		params: 2
     });
 
-    var unlockAccount = new Method({
+    var unlockAccount = new Mkokod({
         name: 'unlockAccount',
         call: 'personal_unlockAccount',
         params: 3,
         inputFormatter: [formatters.inputAddressFormatter, null, null]
     });
 
-    var sendTransaction = new Method({
+    var sendTransaction = new Mkokod({
         name: 'sendTransaction',
         call: 'personal_sendTransaction',
         params: 2,
         inputFormatter: [formatters.inputTransactionFormatter, null]
     });
 
-    var lockAccount = new Method({
+    var lockAccount = new Mkokod({
         name: 'lockAccount',
         call: 'personal_lockAccount',
         params: 1,
@@ -5698,7 +5698,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../formatters":30,"../method":36,"../property":45}],41:[function(require,module,exports){
+},{"../formatters":30,"../mkokod":36,"../property":45}],41:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5717,12 +5717,12 @@ module.exports = Personal;
 */
 /** @file shh.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Marek Kotewicz <marek@ethcore.io>
+ *   Fabian Vogelsteller <fabian@kokereum.org>
+ *   Marek Kotewicz <marek@kokcore.io>
  * @date 2017
  */
 
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 var Filter = require('../filter');
 var watches = require('./watches');
 
@@ -5731,9 +5731,9 @@ var Shh = function (web3) {
 
     var self = this;
 
-    methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+    mkokods().forEach(function(mkokod) {
+        mkokod.attachToObject(self);
+        mkokod.setRequestManager(self._requestManager);
     });
 };
 
@@ -5741,90 +5741,90 @@ Shh.prototype.newMessageFilter = function (options, callback, filterCreationErro
     return new Filter(options, 'shh', this._requestManager, watches.shh(), null, callback, filterCreationErrorCallback);
 };
 
-var methods = function () {
+var mkokods = function () {
 
     return [
-        new Method({
+        new Mkokod({
             name: 'version',
             call: 'shh_version',
             params: 0
         }),
-        new Method({
+        new Mkokod({
             name: 'info',
             call: 'shh_info',
             params: 0
         }),
-        new Method({
+        new Mkokod({
             name: 'setMaxMessageSize',
             call: 'shh_setMaxMessageSize',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'setMinPoW',
             call: 'shh_setMinPoW',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'markTrustedPeer',
             call: 'shh_markTrustedPeer',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'newKeyPair',
             call: 'shh_newKeyPair',
             params: 0
         }),
-        new Method({
+        new Mkokod({
             name: 'addPrivateKey',
             call: 'shh_addPrivateKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'deleteKeyPair',
             call: 'shh_deleteKeyPair',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'hasKeyPair',
             call: 'shh_hasKeyPair',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'getPublicKey',
             call: 'shh_getPublicKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'getPrivateKey',
             call: 'shh_getPrivateKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'newSymKey',
             call: 'shh_newSymKey',
             params: 0
         }),
-        new Method({
+        new Mkokod({
             name: 'addSymKey',
             call: 'shh_addSymKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'generateSymKeyFromPassword',
             call: 'shh_generateSymKeyFromPassword',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'hasSymKey',
             call: 'shh_hasSymKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'getSymKey',
             call: 'shh_getSymKey',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'deleteSymKey',
             call: 'shh_deleteSymKey',
             params: 1
@@ -5832,7 +5832,7 @@ var methods = function () {
 
         // subscribe and unsubscribe missing
 
-        new Method({
+        new Mkokod({
             name: 'post',
             call: 'shh_post',
             params: 1,
@@ -5844,7 +5844,7 @@ var methods = function () {
 module.exports = Shh;
 
 
-},{"../filter":29,"../method":36,"./watches":43}],42:[function(require,module,exports){
+},{"../filter":29,"../mkokod":36,"./watches":43}],42:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5866,12 +5866,12 @@ module.exports = Shh;
  * @author Alex Beregszaszi <alex@rtfs.hu>
  * @date 2016
  *
- * Reference: https://github.com/ethereum/go-ethereum/blob/swarm/internal/web3ext/web3ext.go#L33
+ * Reference: https://github.com/kokereum/go-kokereum/blob/swarm/internal/web3ext/web3ext.go#L33
  */
 
 "use strict";
 
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 var Property = require('../property');
 
 function Swarm(web3) {
@@ -5879,9 +5879,9 @@ function Swarm(web3) {
 
     var self = this;
 
-    methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+    mkokods().forEach(function(mkokod) {
+        mkokod.attachToObject(self);
+        mkokod.setRequestManager(self._requestManager);
     });
 
     properties().forEach(function(p) {
@@ -5890,71 +5890,71 @@ function Swarm(web3) {
     });
 }
 
-var methods = function () {
-    var blockNetworkRead = new Method({
+var mkokods = function () {
+    var blockNetworkRead = new Mkokod({
         name: 'blockNetworkRead',
         call: 'bzz_blockNetworkRead',
         params: 1,
         inputFormatter: [null]
     });
 
-    var syncEnabled = new Method({
+    var syncEnabled = new Mkokod({
         name: 'syncEnabled',
         call: 'bzz_syncEnabled',
         params: 1,
         inputFormatter: [null]
     });
 
-    var swapEnabled = new Method({
+    var swapEnabled = new Mkokod({
         name: 'swapEnabled',
         call: 'bzz_swapEnabled',
         params: 1,
         inputFormatter: [null]
     });
 
-    var download = new Method({
+    var download = new Mkokod({
         name: 'download',
         call: 'bzz_download',
         params: 2,
         inputFormatter: [null, null]
     });
 
-    var upload = new Method({
+    var upload = new Mkokod({
         name: 'upload',
         call: 'bzz_upload',
         params: 2,
         inputFormatter: [null, null]
     });
 
-    var retrieve = new Method({
+    var retrieve = new Mkokod({
         name: 'retrieve',
         call: 'bzz_retrieve',
         params: 1,
         inputFormatter: [null]
     });
 
-    var store = new Method({
+    var store = new Mkokod({
         name: 'store',
         call: 'bzz_store',
         params: 2,
         inputFormatter: [null, null]
     });
 
-    var get = new Method({
+    var get = new Mkokod({
         name: 'get',
         call: 'bzz_get',
         params: 1,
         inputFormatter: [null]
     });
 
-    var put = new Method({
+    var put = new Mkokod({
         name: 'put',
         call: 'bzz_put',
         params: 2,
         inputFormatter: [null, null]
     });
 
-    var modify = new Method({
+    var modify = new Mkokod({
         name: 'modify',
         call: 'bzz_modify',
         params: 4,
@@ -5991,7 +5991,7 @@ var properties = function () {
 
 module.exports = Swarm;
 
-},{"../method":36,"../property":45}],43:[function(require,module,exports){
+},{"../mkokod":36,"../property":45}],43:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6010,14 +6010,14 @@ module.exports = Swarm;
 */
 /** @file watches.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+ *   Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
-var Method = require('../method');
+var Mkokod = require('../mkokod');
 
-/// @returns an array of objects describing web3.eth.filter api methods
-var eth = function () {
+/// @returns an array of objects describing web3.kok.filter api mkokods
+var kok = function () {
     var newFilterCall = function (args) {
         var type = args[0];
 
@@ -6025,37 +6025,37 @@ var eth = function () {
             case 'latest':
                 args.shift();
                 this.params = 0;
-                return 'eth_newBlockFilter';
+                return 'kok_newBlockFilter';
             case 'pending':
                 args.shift();
                 this.params = 0;
-                return 'eth_newPendingTransactionFilter';
+                return 'kok_newPendingTransactionFilter';
             default:
-                return 'eth_newFilter';
+                return 'kok_newFilter';
         }
     };
 
-    var newFilter = new Method({
+    var newFilter = new Mkokod({
         name: 'newFilter',
         call: newFilterCall,
         params: 1
     });
 
-    var uninstallFilter = new Method({
+    var uninstallFilter = new Mkokod({
         name: 'uninstallFilter',
-        call: 'eth_uninstallFilter',
+        call: 'kok_uninstallFilter',
         params: 1
     });
 
-    var getLogs = new Method({
+    var getLogs = new Mkokod({
         name: 'getLogs',
-        call: 'eth_getFilterLogs',
+        call: 'kok_getFilterLogs',
         params: 1
     });
 
-    var poll = new Method({
+    var poll = new Mkokod({
         name: 'poll',
-        call: 'eth_getFilterChanges',
+        call: 'kok_getFilterChanges',
         params: 1
     });
 
@@ -6067,26 +6067,26 @@ var eth = function () {
     ];
 };
 
-/// @returns an array of objects describing web3.shh.watch api methods
+/// @returns an array of objects describing web3.shh.watch api mkokods
 var shh = function () {
 
     return [
-        new Method({
+        new Mkokod({
             name: 'newFilter',
             call: 'shh_newMessageFilter',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'uninstallFilter',
             call: 'shh_deleteMessageFilter',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'getLogs',
             call: 'shh_getFilterMessages',
             params: 1
         }),
-        new Method({
+        new Mkokod({
             name: 'poll',
             call: 'shh_getFilterMessages',
             params: 1
@@ -6095,12 +6095,12 @@ var shh = function () {
 };
 
 module.exports = {
-    eth: eth,
+    kok: kok,
     shh: shh
 };
 
 
-},{"../method":36}],44:[function(require,module,exports){
+},{"../mkokod":36}],44:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6119,7 +6119,7 @@ module.exports = {
 */
 /** 
  * @file namereg.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -6161,7 +6161,7 @@ module.exports = {
 /**
  * @file property.js
  * @author Fabian Vogelsteller <fabian@frozeman.de>
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -6181,9 +6181,9 @@ Property.prototype.setRequestManager = function (rm) {
 };
 
 /**
- * Should be called to format input args of method
+ * Should be called to format input args of mkokod
  *
- * @method formatInput
+ * @mkokod formatInput
  * @param {Array}
  * @return {Array}
  */
@@ -6192,9 +6192,9 @@ Property.prototype.formatInput = function (arg) {
 };
 
 /**
- * Should be called to format output(result) of method
+ * Should be called to format output(result) of mkokod
  *
- * @method formatOutput
+ * @mkokod formatOutput
  * @param {Object}
  * @return {Object}
  */
@@ -6205,7 +6205,7 @@ Property.prototype.formatOutput = function (result) {
 /**
  * Should be used to extract callback from array of arguments. Modifies input param
  *
- * @method extractCallback
+ * @mkokod extractCallback
  * @param {Array} arguments
  * @return {Function|Null} callback, if exists
  */
@@ -6217,9 +6217,9 @@ Property.prototype.extractCallback = function (args) {
 
 
 /**
- * Should attach function to method
+ * Should attach function to mkokod
  *
- * @method attachToObject
+ * @mkokod attachToObject
  * @param {Object}
  * @param {Function}
  */
@@ -6249,7 +6249,7 @@ Property.prototype.buildGet = function () {
     var property = this;
     return function get() {
         return property.formatOutput(property.requestManager.send({
-            method: property.getter
+            mkokod: property.getter
         }));
     };
 };
@@ -6258,7 +6258,7 @@ Property.prototype.buildAsyncGet = function () {
     var property = this;
     var get = function (callback) {
         property.requestManager.sendAsync({
-            method: property.getter
+            mkokod: property.getter
         }, function (err, result) {
             callback(err, property.formatOutput(result));
         });
@@ -6270,13 +6270,13 @@ Property.prototype.buildAsyncGet = function () {
 /**
  * Should be called to create pure JSONRPC request which can be used in batch request
  *
- * @method request
+ * @mkokod request
  * @param {...} params
  * @return {Object} jsonrpc request
  */
 Property.prototype.request = function () {
     var payload = {
-        method: this.getter,
+        mkokod: this.getter,
         params: [],
         callback: this.extractCallback(Array.prototype.slice.call(arguments))
     };
@@ -6306,11 +6306,11 @@ module.exports = Property;
 */
 /** 
  * @file requestmanager.js
- * @author Jeffrey Wilcke <jeff@ethdev.com>
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Marian Oancea <marian@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
- * @author Gav Wood <g@ethdev.com>
+ * @author Jeffrey Wilcke <jeff@kokdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
+ * @author Marian Oancea <marian@kokdev.com>
+ * @author Fabian Vogelsteller <fabian@kokdev.com>
+ * @author Gav Wood <g@kokdev.com>
  * @date 2014
  */
 
@@ -6321,7 +6321,7 @@ var errors = require('./errors');
 
 /**
  * It's responsible for passing messages to providers
- * It's also responsible for polling the ethereum node for incoming messages
+ * It's also responsible for polling the kokereum node for incoming messages
  * Default poll timeout is 1 second
  * Singleton
  */
@@ -6334,7 +6334,7 @@ var RequestManager = function (provider) {
 /**
  * Should be used to synchronously send request
  *
- * @method send
+ * @mkokod send
  * @param {Object} data
  * @return {Object}
  */
@@ -6344,7 +6344,7 @@ RequestManager.prototype.send = function (data) {
         return null;
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
+    var payload = Jsonrpc.toPayload(data.mkokod, data.params);
     var result = this.provider.send(payload);
 
     if (!Jsonrpc.isValidResponse(result)) {
@@ -6357,7 +6357,7 @@ RequestManager.prototype.send = function (data) {
 /**
  * Should be used to asynchronously send request
  *
- * @method sendAsync
+ * @mkokod sendAsync
  * @param {Object} data
  * @param {Function} callback
  */
@@ -6366,7 +6366,7 @@ RequestManager.prototype.sendAsync = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
+    var payload = Jsonrpc.toPayload(data.mkokod, data.params);
     this.provider.sendAsync(payload, function (err, result) {
         if (err) {
             return callback(err);
@@ -6383,7 +6383,7 @@ RequestManager.prototype.sendAsync = function (data, callback) {
 /**
  * Should be called to asynchronously send batch request
  *
- * @method sendBatch
+ * @mkokod sendBatch
  * @param {Array} batch data
  * @param {Function} callback
  */
@@ -6410,7 +6410,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
 /**
  * Should be used to set provider of request manager
  *
- * @method setProvider
+ * @mkokod setProvider
  * @param {Object}
  */
 RequestManager.prototype.setProvider = function (p) {
@@ -6420,7 +6420,7 @@ RequestManager.prototype.setProvider = function (p) {
 /**
  * Should be used to start polling
  *
- * @method startPolling
+ * @mkokod startPolling
  * @param {Object} data
  * @param {Number} pollId
  * @param {Function} callback
@@ -6441,7 +6441,7 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
 /**
  * Should be used to stop polling for filter with given id
  *
- * @method stopPolling
+ * @mkokod stopPolling
  * @param {Number} pollId
  */
 RequestManager.prototype.stopPolling = function (pollId) {
@@ -6457,7 +6457,7 @@ RequestManager.prototype.stopPolling = function (pollId) {
 /**
  * Should be called to reset the polling mechanism of the request manager
  *
- * @method reset
+ * @mkokod reset
  */
 RequestManager.prototype.reset = function (keepIsSyncing) {
     /*jshint maxcomplexity:5 */
@@ -6481,11 +6481,11 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
 /**
  * Should be called to poll for changes on filter with given id
  *
- * @method poll
+ * @mkokod poll
  */
 RequestManager.prototype.poll = function () {
     /*jshint maxcomplexity: 6 */
-    this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
+    this.timeout = setTimeout(this.poll.bind(this), c.kok_POLLING_TIMEOUT);
 
     if (Object.keys(this.polls).length === 0) {
         return;
@@ -6584,7 +6584,7 @@ module.exports = Settings;
 */
 /** @file syncing.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@kokdev.com>
  * @date 2015
  */
 
@@ -6594,9 +6594,9 @@ var utils = require('../utils/utils');
 var count = 1;
 
 /**
-Adds the callback and sets up the methods, to iterate over the results.
+Adds the callback and sets up the mkokods, to iterate over the results.
 
-@method pollSyncing
+@mkokod pollSyncing
 @param {Object} self
 */
 var pollSyncing = function(self) {
@@ -6629,7 +6629,7 @@ var pollSyncing = function(self) {
     };
 
     self.requestManager.startPolling({
-        method: 'eth_syncing',
+        mkokod: 'kok_syncing',
         params: [],
     }, self.pollId, onMessage, self.stopWatching.bind(self));
 
@@ -6679,7 +6679,7 @@ module.exports = IsSyncing;
 */
 /** 
  * @file transfer.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@kokdev.com>
  * @date 2015
  */
 
@@ -6689,29 +6689,29 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
 /**
  * Should be used to make Iban transfer
  *
- * @method transfer
+ * @mkokod transfer
  * @param {String} from
  * @param {String} to iban
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transfer = function (eth, from, to, value, callback) {
+var transfer = function (kok, from, to, value, callback) {
     var iban = new Iban(to); 
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
 
     if (iban.isDirect()) {
-        return transferToAddress(eth, from, iban.address(), value, callback);
+        return transferToAddress(kok, from, iban.address(), value, callback);
     }
     
     if (!callback) {
-        var address = eth.icapNamereg().addr(iban.institution());
-        return deposit(eth, from, address, value, iban.client());
+        var address = kok.icapNamereg().addr(iban.institution());
+        return deposit(kok, from, address, value, iban.client());
     }
 
-    eth.icapNamereg().addr(iban.institution(), function (err, address) {
-        return deposit(eth, from, address, value, iban.client(), callback);
+    kok.icapNamereg().addr(iban.institution(), function (err, address) {
+        return deposit(kok, from, address, value, iban.client(), callback);
     });
     
 };
@@ -6719,14 +6719,14 @@ var transfer = function (eth, from, to, value, callback) {
 /**
  * Should be used to transfer funds to certain address
  *
- * @method transferToAddress
+ * @mkokod transferToAddress
  * @param {String} from
  * @param {String} to
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (eth, from, to, value, callback) {
-    return eth.sendTransaction({
+var transferToAddress = function (kok, from, to, value, callback) {
+    return kok.sendTransaction({
         address: to,
         from: from,
         value: value
@@ -6734,18 +6734,18 @@ var transferToAddress = function (eth, from, to, value, callback) {
 };
 
 /**
- * Should be used to deposit funds to generic Exchange contract (must implement deposit(bytes32) method!)
+ * Should be used to deposit funds to generic Exchange contract (must implement deposit(bytes32) mkokod!)
  *
- * @method deposit
+ * @mkokod deposit
  * @param {String} from
  * @param {String} to
  * @param {Value} value to be transfered
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (eth, from, to, value, client, callback) {
+var deposit = function (kok, from, to, value, client, callback) {
     var abi = exchangeAbi;
-    return eth.contract(abi).at(to).deposit(client, {
+    return kok.contract(abi).at(to).deposit(client, {
         from: from,
         value: value
     }, callback);
@@ -7935,7 +7935,7 @@ module.exports = transfer;
 	             *     var MyType = CryptoJS.lib.Base.extend({
 	             *         field: 'value',
 	             *
-	             *         method: function () {
+	             *         mkokod: function () {
 	             *         }
 	             *     });
 	             */
@@ -7965,7 +7965,7 @@ module.exports = transfer;
 	            },
 
 	            /**
-	             * Extends this object and runs the init method.
+	             * Extends this object and runs the init mkokod.
 	             * Arguments to create() will be passed to init().
 	             *
 	             * @return {Object} The new object.
@@ -7985,7 +7985,7 @@ module.exports = transfer;
 
 	            /**
 	             * Initializes a newly created object.
-	             * Override this method to add some logic when your objects are created.
+	             * Override this mkokod to add some logic when your objects are created.
 	             *
 	             * @example
 	             *
@@ -8410,9 +8410,9 @@ module.exports = transfer;
 	        /**
 	         * Processes available data blocks.
 	         *
-	         * This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
+	         * This mkokod invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
 	         *
-	         * @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
+	         * @param {boolean} doFlush Whkoker all blocks and partial blocks should be processed.
 	         *
 	         * @return {WordArray} The processed data.
 	         *
@@ -10084,7 +10084,7 @@ module.exports = transfer;
 }(this, function (CryptoJS) {
 
 	/**
-	 * ISO/IEC 9797-1 Padding Method 2.
+	 * ISO/IEC 9797-1 Padding Mkokod 2.
 	 */
 	CryptoJS.pad.Iso97971 = {
 	    pad: function (data, blockSize) {
@@ -10879,7 +10879,7 @@ module.exports = transfer;
 	    - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 	    - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHkokER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	*/
 
 	(function (Math) {

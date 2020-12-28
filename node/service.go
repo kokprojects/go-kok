@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package node
 
@@ -20,7 +20,7 @@ import (
 	"reflect"
 
 	"github.com/kokprojects/go-kok/accounts"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/p2p"
 	"github.com/kokprojects/go-kok/rpc"
@@ -28,7 +28,7 @@ import (
 
 // ServiceContext is a collection of service independent options inherited from
 // the protocol stack, that is passed to all constructors to be optionally used;
-// as well as utility methods to operate on the service environment.
+// as well as utility mkokods to operate on the service environment.
 type ServiceContext struct {
 	config         *Config
 	services       map[reflect.Type]Service // Index of the already constructed services
@@ -39,11 +39,11 @@ type ServiceContext struct {
 // OpenDatabase opens an existing database with the given name (or creates one
 // if no previous can be found) from within the node's data directory. If the
 // node is an ephemeral one, a memory database is returned.
-func (ctx *ServiceContext) OpenDatabase(name string, cache int, handles int) (ethdb.Database, error) {
+func (ctx *ServiceContext) OpenDatabase(name string, cache int, handles int) (kokdb.Database, error) {
 	if ctx.config.DataDir == "" {
-		return ethdb.NewMemDatabase()
+		return kokdb.NewMemDatabase()
 	}
-	db, err := ethdb.NewLDBDatabase(ctx.config.resolvePath(name), cache, handles)
+	db, err := kokdb.NewLDBDatabase(ctx.config.resolvePath(name), cache, handles)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ type ServiceConstructor func(ctx *ServiceContext) (Service, error)
 //
 // • Service life-cycle management is delegated to the node. The service is allowed to
 // initialize itself upon creation, but no goroutines should be spun up outside of the
-// Start method.
+// Start mkokod.
 //
 // • Restart logic is not required as the node will create a fresh instance
 // every time a service is started.

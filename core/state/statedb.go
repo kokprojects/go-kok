@@ -1,20 +1,20 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package state provides a caching layer atop the Ethereum state trie.
+// Package state provides a caching layer atop the kokereum state trie.
 package state
 
 import (
@@ -36,7 +36,7 @@ type revision struct {
 	journalIndex int
 }
 
-// StateDBs within the ethereum protocol are used to store anything
+// StateDBs within the kokereum protocol are used to store anything
 // within the merkle trie. StateDBs take care of caching and storing
 // nested states. It's the general query interface to retrieve:
 // * Contracts
@@ -166,13 +166,13 @@ func (self *StateDB) AddRefund(gas *big.Int) {
 	self.refund.Add(self.refund, gas)
 }
 
-// Exist reports whether the given account address exists in the state.
+// Exist reports whkoker the given account address exists in the state.
 // Notably this also returns true for suicided accounts.
 func (self *StateDB) Exist(addr common.Address) bool {
 	return self.getStateObject(addr) != nil
 }
 
-// Empty returns whether the state object is either non-existent
+// Empty returns whkoker the state object is either non-existent
 // or empty according to the EIP161 specification (balance = nonce = code = 0)
 func (self *StateDB) Empty(addr common.Address) bool {
 	so := self.getStateObject(addr)
@@ -325,7 +325,7 @@ func (self *StateDB) Suicide(addr common.Address) bool {
 }
 
 //
-// Setting, updating & deleting state object methods
+// Setting, updating & deleting state object mkokods
 //
 
 // updateStateObject writes the given object to the trie.
@@ -415,7 +415,7 @@ func (self *StateDB) createObject(addr common.Address) (newobj, prev *stateObjec
 //   1. sends funds to sha(account ++ (nonce + 1))
 //   2. tx_create(sha(account ++ nonce)) (note that this gets the address of 1)
 //
-// Carrying over the balance ensures that Ether doesn't disappear.
+// Carrying over the balance ensures that koker doesn't disappear.
 func (self *StateDB) CreateAccount(addr common.Address) {
 	new, prev := self.createObject(addr)
 	if prev != nil {
@@ -550,7 +550,7 @@ func (self *StateDB) Prepare(thash, bhash common.Hash, ti int) {
 // DeleteSuicides should not be used for consensus related updates
 // under any circumstances.
 func (s *StateDB) DeleteSuicides() {
-	// Reset refund so that any used-gas calculations can use this method.
+	// Reset refund so that any used-gas calculations can use this mkokod.
 	s.clearJournalAndRefund()
 
 	for addr := range s.stateObjectsDirty {

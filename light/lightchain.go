@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package light
 
@@ -27,7 +27,7 @@ import (
 	"github.com/kokprojects/go-kok/consensus"
 	"github.com/kokprojects/go-kok/core"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/event"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
@@ -45,7 +45,7 @@ var (
 // interface. It only does header validation during chain insertion.
 type LightChain struct {
 	hc            *core.HeaderChain
-	chainDb       ethdb.Database
+	chainDb       kokdb.Database
 	odr           OdrBackend
 	chainFeed     event.Feed
 	chainSideFeed event.Feed
@@ -70,7 +70,7 @@ type LightChain struct {
 }
 
 // NewLightChain returns a fully initialised light chain using information
-// available in the database. It initialises the default Ethereum header
+// available in the database. It initialises the default kokereum header
 // validator.
 func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.Engine) (*LightChain, error) {
 	bodyCache, _ := lru.New(bodyCacheLimit)
@@ -104,9 +104,9 @@ func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.
 	}
 	// Check the current state of the block hashes and make sure that we do not have any of the bad blocks in our chain
 	for hash := range core.BadHashes {
-		if header := bc.GetHeaderByHash(hash); header != nil {
+		if header := bc.GkokeaderByHash(hash); header != nil {
 			log.Error("Found bad hash, rewinding chain", "number", header.Number, "hash", header.ParentHash)
-			bc.SetHead(header.Number.Uint64() - 1)
+			bc.Skokead(header.Number.Uint64() - 1)
 			log.Error("Chain rewind was successful, resuming normal operation")
 		}
 	}
@@ -138,14 +138,14 @@ func (self *LightChain) Odr() OdrBackend {
 	return self.odr
 }
 
-// loadLastState loads the last known chain state from the database. This method
+// loadLastState loads the last known chain state from the database. This mkokod
 // assumes that the chain manager mutex is held.
 func (self *LightChain) loadLastState() error {
-	if head := core.GetHeadHeaderHash(self.chainDb); head == (common.Hash{}) {
+	if head := core.GkokeadHeaderHash(self.chainDb); head == (common.Hash{}) {
 		// Corrupt or empty database, init from scratch
 		self.Reset()
 	} else {
-		if header := self.GetHeaderByHash(head); header != nil {
+		if header := self.GkokeaderByHash(head); header != nil {
 			self.hc.SetCurrentHeader(header)
 		}
 	}
@@ -158,13 +158,13 @@ func (self *LightChain) loadLastState() error {
 	return nil
 }
 
-// SetHead rewinds the local chain to a new head. Everything above the new
+// Skokead rewinds the local chain to a new head. Everything above the new
 // head will be deleted and the new one set.
-func (bc *LightChain) SetHead(head uint64) {
+func (bc *LightChain) Skokead(head uint64) {
 	bc.mu.Lock()
 	defer bc.mu.Unlock()
 
-	bc.hc.SetHead(head, nil)
+	bc.hc.Skokead(head, nil)
 	bc.loadLastState()
 }
 
@@ -204,7 +204,7 @@ func (bc *LightChain) Reset() {
 // specified genesis state.
 func (bc *LightChain) ResetWithGenesisBlock(genesis *types.Block) {
 	// Dump the entire block chain and purge the caches
-	bc.SetHead(0)
+	bc.Skokead(0)
 
 	bc.mu.Lock()
 	defer bc.mu.Unlock()
@@ -326,7 +326,7 @@ func (self *LightChain) Rollback(chain []common.Hash) {
 		hash := chain[i]
 
 		if head := self.hc.CurrentHeader(); head.Hash() == hash {
-			self.hc.SetCurrentHeader(self.GetHeader(head.ParentHash, head.Number.Uint64()-1))
+			self.hc.SetCurrentHeader(self.Gkokeader(head.ParentHash, head.Number.Uint64()-1))
 		}
 	}
 }
@@ -349,7 +349,7 @@ func (self *LightChain) postChainEvents(events []interface{}) {
 // chain, possibly creating a reorg. If an error is returned, it will return the
 // index number of the failing header as well an error describing what went wrong.
 //
-// The verify parameter can be used to fine tune whether nonce verification
+// The verify parameter can be used to fine tune whkoker nonce verification
 // should be done or not. The reason behind the optional check is because some
 // of the header retrieval mechanisms already need to verfy nonces, as well as
 // because nonces can be verified sparsely, not needing to check each.
@@ -415,16 +415,16 @@ func (self *LightChain) GetTdByHash(hash common.Hash) *big.Int {
 	return self.hc.GetTdByHash(hash)
 }
 
-// GetHeader retrieves a block header from the database by hash and number,
+// Gkokeader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (self *LightChain) GetHeader(hash common.Hash, number uint64) *types.Header {
-	return self.hc.GetHeader(hash, number)
+func (self *LightChain) Gkokeader(hash common.Hash, number uint64) *types.Header {
+	return self.hc.Gkokeader(hash, number)
 }
 
-// GetHeaderByHash retrieves a block header from the database by hash, caching it if
+// GkokeaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (self *LightChain) GetHeaderByHash(hash common.Hash) *types.Header {
-	return self.hc.GetHeaderByHash(hash)
+func (self *LightChain) GkokeaderByHash(hash common.Hash) *types.Header {
+	return self.hc.GkokeaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
@@ -439,19 +439,19 @@ func (self *LightChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []c
 	return self.hc.GetBlockHashesFromHash(hash, max)
 }
 
-// GetHeaderByNumber retrieves a block header from the database by number,
+// GkokeaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumber(number uint64) *types.Header {
-	return self.hc.GetHeaderByNumber(number)
+func (self *LightChain) GkokeaderByNumber(number uint64) *types.Header {
+	return self.hc.GkokeaderByNumber(number)
 }
 
-// GetHeaderByNumberOdr retrieves a block header from the database or network
+// GkokeaderByNumberOdr retrieves a block header from the database or network
 // by number, caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
-	if header := self.hc.GetHeaderByNumber(number); header != nil {
+func (self *LightChain) GkokeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
+	if header := self.hc.GkokeaderByNumber(number); header != nil {
 		return header, nil
 	}
-	return GetHeaderByNumber(ctx, self.odr, number)
+	return GkokeaderByNumber(ctx, self.odr, number)
 }
 
 func (self *LightChain) SyncCht(ctx context.Context) bool {
@@ -462,7 +462,7 @@ func (self *LightChain) SyncCht(ctx context.Context) bool {
 	chtCount, _, _ := self.odr.ChtIndexer().Sections()
 	if headNum+1 < chtCount*ChtFrequency {
 		num := chtCount*ChtFrequency - 1
-		header, err := GetHeaderByNumber(ctx, self.odr, num)
+		header, err := GkokeaderByNumber(ctx, self.odr, num)
 		if header != nil && err == nil {
 			self.mu.Lock()
 			if self.hc.CurrentHeader().Number.Uint64() < header.Number.Uint64() {

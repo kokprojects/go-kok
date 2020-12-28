@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	"github.com/kokprojects/go-kok/cmd/utils"
-	"github.com/kokprojects/go-kok/eth"
+	"github.com/kokprojects/go-kok/kok"
 	"github.com/kokprojects/go-kok/params"
 	"gopkg.in/urfave/cli.v1"
 )
@@ -55,8 +55,8 @@ func version(ctx *cli.Context) error {
 		fmt.Println("Git Commit:", gitCommit)
 	}
 	fmt.Println("Architecture:", runtime.GOARCH)
-	fmt.Println("Protocol Versions:", eth.ProtocolVersions)
-	fmt.Println("Network Id:", eth.DefaultConfig.NetworkId)
+	fmt.Println("Protocol Versions:", kok.ProtocolVersions)
+	fmt.Println("Network Id:", kok.DefaultConfig.NetworkId)
 	fmt.Println("Go Version:", runtime.Version())
 	fmt.Println("Operating System:", runtime.GOOS)
 	fmt.Printf("GOPATH=%s\n", os.Getenv("GOPATH"))
@@ -65,18 +65,18 @@ func version(ctx *cli.Context) error {
 }
 
 func license(_ *cli.Context) error {
-	fmt.Println(`Geth is free software: you can redistribute it and/or modify
+	fmt.Println(`Gkok is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Geth is distributed in the hope that it will be useful,
+Gkok is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with geth. If not, see <http://www.gnu.org/licenses/>.
+along with gkok. If not, see <http://www.gnu.org/licenses/>.
 `)
 	return nil
 }

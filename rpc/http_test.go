@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -24,11 +24,11 @@ import (
 )
 
 func TestHTTPErrorResponseWithDelete(t *testing.T) {
-	testHTTPErrorResponse(t, "DELETE", contentType, "", http.StatusMethodNotAllowed)
+	testHTTPErrorResponse(t, "DELETE", contentType, "", http.StatusMkokodNotAllowed)
 }
 
 func TestHTTPErrorResponseWithPut(t *testing.T) {
-	testHTTPErrorResponse(t, "PUT", contentType, "", http.StatusMethodNotAllowed)
+	testHTTPErrorResponse(t, "PUT", contentType, "", http.StatusMkokodNotAllowed)
 }
 
 func TestHTTPErrorResponseWithMaxContentLength(t *testing.T) {
@@ -45,8 +45,8 @@ func TestHTTPErrorResponseWithValidRequest(t *testing.T) {
 	testHTTPErrorResponse(t, "POST", contentType, "", 0)
 }
 
-func testHTTPErrorResponse(t *testing.T, method, contentType, body string, expected int) {
-	request := httptest.NewRequest(method, "http://url.com", strings.NewReader(body))
+func testHTTPErrorResponse(t *testing.T, mkokod, contentType, body string, expected int) {
+	request := httptest.NewRequest(mkokod, "http://url.com", strings.NewReader(body))
 	request.Header.Set("content-type", contentType)
 	if code, _ := validateRequest(request); code != expected {
 		t.Fatalf("response code should be %d not %d", expected, code)

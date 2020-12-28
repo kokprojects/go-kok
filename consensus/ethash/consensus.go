@@ -1,20 +1,20 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package ethash
+package kokash
 
 import (
 	"bytes"
@@ -34,7 +34,7 @@ import (
 	set "gopkg.in/fatih/set.v0"
 )
 
-// Ethash proof-of-work protocol constants.
+// kokash proof-of-work protocol constants.
 var (
 	frontierBlockReward  *big.Int = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
 	byzantiumBlockReward *big.Int = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
@@ -60,36 +60,36 @@ var (
 
 // Author implements consensus.Engine, returning the header's coinbase as the
 // proof-of-work verified author of the block.
-func (ethash *Ethash) Author(header *types.Header) (common.Address, error) {
+func (kokash *kokash) Author(header *types.Header) (common.Address, error) {
 	return header.Coinbase, nil
 }
 
-// VerifyHeader checks whether a header conforms to the consensus rules of the
-// stock Ethereum ethash engine.
-func (ethash *Ethash) VerifyHeader(chain consensus.ChainReader, header *types.Header, seal bool) error {
+// VerifyHeader checks whkoker a header conforms to the consensus rules of the
+// stock kokereum kokash engine.
+func (kokash *kokash) VerifyHeader(chain consensus.ChainReader, header *types.Header, seal bool) error {
 	// If we're running a full engine faking, accept any input as valid
-	if ethash.fakeFull {
+	if kokash.fakeFull {
 		return nil
 	}
 	// Short circuit if the header is known, or it's parent not
 	number := header.Number.Uint64()
-	if chain.GetHeader(header.Hash(), number) != nil {
+	if chain.Gkokeader(header.Hash(), number) != nil {
 		return nil
 	}
-	parent := chain.GetHeader(header.ParentHash, number-1)
+	parent := chain.Gkokeader(header.ParentHash, number-1)
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
 	// Sanity checks passed, do a proper verification
-	return ethash.verifyHeader(chain, header, parent, false, seal)
+	return kokash.verifyHeader(chain, header, parent, false, seal)
 }
 
 // VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers
-// concurrently. The method returns a quit channel to abort the operations and
+// concurrently. The mkokod returns a quit channel to abort the operations and
 // a results channel to retrieve the async verifications.
-func (ethash *Ethash) VerifyHeaders(chain consensus.ChainReader, headers []*types.Header, seals []bool) (chan<- struct{}, <-chan error) {
+func (kokash *kokash) VerifyHeaders(chain consensus.ChainReader, headers []*types.Header, seals []bool) (chan<- struct{}, <-chan error) {
 	// If we're running a full engine faking, accept any input as valid
-	if ethash.fakeFull || len(headers) == 0 {
+	if kokash.fakeFull || len(headers) == 0 {
 		abort, results := make(chan struct{}), make(chan error, len(headers))
 		for i := 0; i < len(headers); i++ {
 			results <- nil
@@ -113,7 +113,7 @@ func (ethash *Ethash) VerifyHeaders(chain consensus.ChainReader, headers []*type
 	for i := 0; i < workers; i++ {
 		go func() {
 			for index := range inputs {
-				errors[index] = ethash.verifyHeaderWorker(chain, headers, seals, index)
+				errors[index] = kokash.verifyHeaderWorker(chain, headers, seals, index)
 				done <- index
 			}
 		}()
@@ -149,27 +149,27 @@ func (ethash *Ethash) VerifyHeaders(chain consensus.ChainReader, headers []*type
 	return abort, errorsOut
 }
 
-func (ethash *Ethash) verifyHeaderWorker(chain consensus.ChainReader, headers []*types.Header, seals []bool, index int) error {
+func (kokash *kokash) verifyHeaderWorker(chain consensus.ChainReader, headers []*types.Header, seals []bool, index int) error {
 	var parent *types.Header
 	if index == 0 {
-		parent = chain.GetHeader(headers[0].ParentHash, headers[0].Number.Uint64()-1)
+		parent = chain.Gkokeader(headers[0].ParentHash, headers[0].Number.Uint64()-1)
 	} else if headers[index-1].Hash() == headers[index].ParentHash {
 		parent = headers[index-1]
 	}
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
-	if chain.GetHeader(headers[index].Hash(), headers[index].Number.Uint64()) != nil {
+	if chain.Gkokeader(headers[index].Hash(), headers[index].Number.Uint64()) != nil {
 		return nil // known block
 	}
-	return ethash.verifyHeader(chain, headers[index], parent, false, seals[index])
+	return kokash.verifyHeader(chain, headers[index], parent, false, seals[index])
 }
 
 // VerifyUncles verifies that the given block's uncles conform to the consensus
-// rules of the stock Ethereum ethash engine.
-func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Block) error {
+// rules of the stock kokereum kokash engine.
+func (kokash *kokash) VerifyUncles(chain consensus.ChainReader, block *types.Block) error {
 	// If we're running a full engine faking, accept any input as valid
-	if ethash.fakeFull {
+	if kokash.fakeFull {
 		return nil
 	}
 	// Verify that there are at most 2 uncles included in this block
@@ -210,17 +210,17 @@ func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Blo
 		if ancestors[uncle.ParentHash] == nil || uncle.ParentHash == block.ParentHash() {
 			return errDanglingUncle
 		}
-		if err := ethash.verifyHeader(chain, uncle, ancestors[uncle.ParentHash], true, true); err != nil {
+		if err := kokash.verifyHeader(chain, uncle, ancestors[uncle.ParentHash], true, true); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// verifyHeader checks whether a header conforms to the consensus rules of the
-// stock Ethereum ethash engine.
+// verifyHeader checks whkoker a header conforms to the consensus rules of the
+// stock kokereum kokash engine.
 // See YP section 4.3.4. "Block Header Validity"
-func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *types.Header, uncle bool, seal bool) error {
+func (kokash *kokash) verifyHeader(chain consensus.ChainReader, header, parent *types.Header, uncle bool, seal bool) error {
 	// Ensure that the header's extra-data section is of a reasonable size
 	if uint64(len(header.Extra)) > params.MaximumExtraDataSize {
 		return fmt.Errorf("extra-data too long: %d > %d", len(header.Extra), params.MaximumExtraDataSize)
@@ -269,7 +269,7 @@ func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *
 	}
 	// Verify the engine specific seal securing the block
 	if seal {
-		if err := ethash.VerifySeal(chain, header); err != nil {
+		if err := kokash.VerifySeal(chain, header); err != nil {
 			return err
 		}
 	}
@@ -314,7 +314,7 @@ var (
 // the difficulty that a new block should have when created at time given the
 // parent block's time and difficulty. The calculation uses the Byzantium rules.
 func calcDifficultyByzantium(time uint64, parent *types.Header) *big.Int {
-	// https://github.com/ethereum/EIPs/issues/100.
+	// https://github.com/kokereum/EIPs/issues/100.
 	// algorithm:
 	// diff = (parent_diff +
 	//         (parent_diff / 2048 * max((2 if len(parent.uncles) else 1) - ((timestamp - parent.timestamp) // 9), -99))
@@ -349,7 +349,7 @@ func calcDifficultyByzantium(time uint64, parent *types.Header) *big.Int {
 		x.Set(params.MinimumDifficulty)
 	}
 	// calculate a fake block numer for the ice-age delay:
-	//   https://github.com/ethereum/EIPs/pull/669
+	//   https://github.com/kokereum/EIPs/pull/669
 	//   fake_block_number = min(0, block.number - 3_000_000
 	fakeBlockNumber := new(big.Int)
 	if parent.Number.Cmp(big2999999) >= 0 {
@@ -373,7 +373,7 @@ func calcDifficultyByzantium(time uint64, parent *types.Header) *big.Int {
 // the difficulty that a new block should have when created at time given the
 // parent block's time and difficulty. The calculation uses the Homestead rules.
 func calcDifficultyHomestead(time uint64, parent *types.Header) *big.Int {
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2.mediawiki
+	// https://github.com/kokereum/EIPs/blob/master/EIPS/eip-2.mediawiki
 	// algorithm:
 	// diff = (parent_diff +
 	//         (parent_diff / 2048 * max(1 - (block_timestamp - parent_timestamp) // 10, -99))
@@ -451,20 +451,20 @@ func calcDifficultyFrontier(time uint64, parent *types.Header) *big.Int {
 	return diff
 }
 
-// VerifySeal implements consensus.Engine, checking whether the given block satisfies
+// VerifySeal implements consensus.Engine, checking whkoker the given block satisfies
 // the PoW difficulty requirements.
-func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
+func (kokash *kokash) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
 	// If we're running a fake PoW, accept any seal as valid
-	if ethash.fakeMode {
-		time.Sleep(ethash.fakeDelay)
-		if ethash.fakeFail == header.Number.Uint64() {
+	if kokash.fakeMode {
+		time.Sleep(kokash.fakeDelay)
+		if kokash.fakeFail == header.Number.Uint64() {
 			return errInvalidPoW
 		}
 		return nil
 	}
 	// If we're running a shared PoW, delegate verification to it
-	if ethash.shared != nil {
-		return ethash.shared.VerifySeal(chain, header)
+	if kokash.shared != nil {
+		return kokash.shared.VerifySeal(chain, header)
 	}
 	// Sanity check that the block number is below the lookup table size (60M blocks)
 	number := header.Number.Uint64()
@@ -477,10 +477,10 @@ func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Head
 		return errInvalidDifficulty
 	}
 	// Recompute the digest and PoW value and verify against the header
-	cache := ethash.cache(number)
+	cache := kokash.cache(number)
 
 	size := datasetSize(number)
-	if ethash.tester {
+	if kokash.tester {
 		size = 32 * 1024
 	}
 	digest, result := hashimotoLight(size, cache, header.HashNoNonce().Bytes(), header.Nonce.Uint64())
@@ -495,9 +495,9 @@ func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Head
 }
 
 // Prepare implements consensus.Engine, initializing the difficulty field of a
-// header to conform to the ethash protocol. The changes are done inline.
-func (ethash *Ethash) Prepare(chain consensus.ChainReader, header *types.Header) error {
-	parent := chain.GetHeader(header.ParentHash, header.Number.Uint64()-1)
+// header to conform to the kokash protocol. The changes are done inline.
+func (kokash *kokash) Prepare(chain consensus.ChainReader, header *types.Header) error {
+	parent := chain.Gkokeader(header.ParentHash, header.Number.Uint64()-1)
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
@@ -508,7 +508,7 @@ func (ethash *Ethash) Prepare(chain consensus.ChainReader, header *types.Header)
 
 // Finalize implements consensus.Engine, accumulating the block and uncle rewards,
 // setting the final state and assembling the block.
-func (ethash *Ethash) Finalize(chain consensus.ChainReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header, receipts []*types.Receipt, ctx *types.DposContext) (*types.Block, error) {
+func (kokash *kokash) Finalize(chain consensus.ChainReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header, receipts []*types.Receipt, ctx *types.DposContext) (*types.Block, error) {
 	// Accumulate any block and uncle rewards and commit the final state root
 	AccumulateRewards(chain.Config(), state, header, uncles)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))

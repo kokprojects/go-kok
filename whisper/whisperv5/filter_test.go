@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package whisperv5
 
@@ -357,10 +357,10 @@ func TestMatchEnvelope(t *testing.T) {
 		t.Fatalf("failed Wrap() with seed %d: %s.", seed, err)
 	}
 
-	// encryption method mismatch
+	// encryption mkokod mismatch
 	match = fsym.MatchEnvelope(env)
 	if match {
-		t.Fatalf("failed MatchEnvelope(encryption method mismatch) with seed %d.", seed)
+		t.Fatalf("failed MatchEnvelope(encryption mkokod mismatch) with seed %d.", seed)
 	}
 
 	// asymmetric + mismatching topic: mismatch
@@ -492,14 +492,14 @@ func TestMatchMessageSym(t *testing.T) {
 		t.Fatalf("failed MatchEnvelope(key hash match) with seed %d.", seed)
 	}
 
-	// encryption method mismatch
+	// encryption mkokod mismatch
 	f.KeySym = nil
 	f.KeyAsym, err = crypto.GenerateKey()
 	if err != nil {
 		t.Fatalf("failed GenerateKey with seed %d: %s.", seed, err)
 	}
 	if f.MatchMessage(msg) {
-		t.Fatalf("failed MatchEnvelope(encryption method mismatch) with seed %d.", seed)
+		t.Fatalf("failed MatchEnvelope(encryption mkokod mismatch) with seed %d.", seed)
 	}
 }
 
@@ -576,11 +576,11 @@ func TestMatchMessageAsym(t *testing.T) {
 		t.Fatalf("failed MatchEnvelope(src absent) with seed %d.", seed)
 	}
 
-	// encryption method mismatch
+	// encryption mkokod mismatch
 	f.KeySym = keySymOrig
 	f.KeyAsym = nil
 	if f.MatchMessage(msg) {
-		t.Fatalf("failed MatchEnvelope(encryption method mismatch) with seed %d.", seed)
+		t.Fatalf("failed MatchEnvelope(encryption mkokod mismatch) with seed %d.", seed)
 	}
 }
 

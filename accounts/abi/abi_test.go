@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package abi
 
@@ -56,7 +56,7 @@ const jsondata2 = `
 func TestReader(t *testing.T) {
 	Uint256, _ := NewType("uint256")
 	exp := ABI{
-		Methods: map[string]Method{
+		Mkokods: map[string]Mkokod{
 			"balance": {
 				"balance", true, nil, nil,
 			},
@@ -159,9 +159,9 @@ func TestTestSlice(t *testing.T) {
 	}
 }
 
-func TestMethodSignature(t *testing.T) {
+func TestMkokodSignature(t *testing.T) {
 	String, _ := NewType("string")
-	m := Method{"foo", false, []Argument{{"bar", String, false}, {"baz", String, false}}, nil}
+	m := Mkokod{"foo", false, []Argument{{"bar", String, false}, {"baz", String, false}}, nil}
 	exp := "foo(string,string)"
 	if m.Sig() != exp {
 		t.Error("signature mismatch", exp, "!=", m.Sig())
@@ -173,7 +173,7 @@ func TestMethodSignature(t *testing.T) {
 	}
 
 	uintt, _ := NewType("uint256")
-	m = Method{"foo", false, []Argument{{"bar", uintt, false}}, nil}
+	m = Mkokod{"foo", false, []Argument{{"bar", uintt, false}}, nil}
 	exp = "foo(uint256)"
 	if m.Sig() != exp {
 		t.Error("signature mismatch", exp, "!=", m.Sig())
@@ -356,7 +356,7 @@ func TestDefaultFunctionParsing(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, ok := abi.Methods["balance"]; !ok {
+	if _, ok := abi.Mkokods["balance"]; !ok {
 		t.Error("expected 'balance' to be present")
 	}
 }

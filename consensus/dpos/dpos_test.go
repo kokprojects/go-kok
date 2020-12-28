@@ -7,7 +7,7 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/trie"
 	"github.com/stretchr/testify/assert"
 )
@@ -38,7 +38,7 @@ var (
 	}
 )
 
-func mockNewDposContext(db ethdb.Database) *types.DposContext {
+func mockNewDposContext(db kokdb.Database) *types.DposContext {
 	dposContext, err := types.NewDposContextFromProto(db, &types.DposContextProto{})
 	if err != nil {
 		return nil
@@ -80,7 +80,7 @@ func getMintCnt(epochID int64, candidate common.Address, mintCntTrie *trie.Trie)
 }
 
 func TestUpdateMintCnt(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := kokdb.NewMemDatabase()
 	dposContext := mockNewDposContext(db)
 
 	// new block still in the same epoch with current block, but newMiner is the first time to mint in the epoch

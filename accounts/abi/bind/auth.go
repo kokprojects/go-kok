@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package bind
 
@@ -28,7 +28,7 @@ import (
 	"github.com/kokprojects/go-kok/crypto"
 )
 
-// NewTransactor is a utility method to easily create a transaction signer from
+// NewTransactor is a utility mkokod to easily create a transaction signer from
 // an encrypted json key stream and the associated passphrase.
 func NewTransactor(keyin io.Reader, passphrase string) (*TransactOpts, error) {
 	json, err := ioutil.ReadAll(keyin)
@@ -42,7 +42,7 @@ func NewTransactor(keyin io.Reader, passphrase string) (*TransactOpts, error) {
 	return NewKeyedTransactor(key.PrivateKey), nil
 }
 
-// NewKeyedTransactor is a utility method to easily create a transaction signer
+// NewKeyedTransactor is a utility mkokod to easily create a transaction signer
 // from a single private key.
 func NewKeyedTransactor(key *ecdsa.PrivateKey) *TransactOpts {
 	keyAddr := crypto.PubkeyToAddress(key.PublicKey)

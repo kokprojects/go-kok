@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -31,8 +31,8 @@ type ChainContext interface {
 	// Engine retrieves the chain's consensus engine.
 	Engine() consensus.Engine
 
-	// GetHeader returns the hash corresponding to their hash.
-	GetHeader(common.Hash, uint64) *types.Header
+	// Gkokeader returns the hash corresponding to their hash.
+	Gkokeader(common.Hash, uint64) *types.Header
 }
 
 // NewEVMContext creates a new context for use in the EVM.
@@ -47,7 +47,7 @@ func NewEVMContext(msg Message, header *types.Header, chain ChainContext, author
 	return vm.Context{
 		CanTransfer: CanTransfer,
 		Transfer:    Transfer,
-		GetHash:     GetHashFn(header, chain),
+		Gkokash:     GkokashFn(header, chain),
 		Origin:      msg.From(),
 		Coinbase:    beneficiary,
 		BlockNumber: new(big.Int).Set(header.Number),
@@ -58,10 +58,10 @@ func NewEVMContext(msg Message, header *types.Header, chain ChainContext, author
 	}
 }
 
-// GetHashFn returns a GetHashFunc which retrieves header hashes by number
-func GetHashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash {
+// GkokashFn returns a GkokashFunc which retrieves header hashes by number
+func GkokashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash {
 	return func(n uint64) common.Hash {
-		for header := chain.GetHeader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.GetHeader(header.ParentHash, header.Number.Uint64()-1) {
+		for header := chain.Gkokeader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.Gkokeader(header.ParentHash, header.Number.Uint64()-1) {
 			if header.Number.Uint64() == n {
 				return header.Hash()
 			}
@@ -71,7 +71,7 @@ func GetHashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash
 	}
 }
 
-// CanTransfer checks wether there are enough funds in the address' account to make a transfer.
+// CanTransfer checks wkoker there are enough funds in the address' account to make a transfer.
 // This does not take the necessary gas in to account to make the transfer valid.
 func CanTransfer(db vm.StateDB, addr common.Address, amount *big.Int) bool {
 	return db.GetBalance(addr).Cmp(amount) >= 0

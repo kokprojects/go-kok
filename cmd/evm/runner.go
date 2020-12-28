@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -34,7 +34,7 @@ import (
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/vm"
 	"github.com/kokprojects/go-kok/core/vm/runtime"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
 	cli "gopkg.in/urfave/cli.v1"
@@ -72,7 +72,7 @@ func readGenesis(genesisPath string) *core.Genesis {
 func runCmd(ctx *cli.Context) error {
 	glogger := log.NewGlogHandler(log.StreamHandler(os.Stderr, log.TerminalFormat(false)))
 	glogger.Verbosity(log.Lvl(ctx.GlobalInt(VerbosityFlag.Name)))
-	log.Root().SetHandler(glogger)
+	log.Root().Skokandler(glogger)
 	logconfig := &vm.LogConfig{
 		DisableMemory: ctx.GlobalBool(DisableMemoryFlag.Name),
 		DisableStack:  ctx.GlobalBool(DisableStackFlag.Name),
@@ -99,7 +99,7 @@ func runCmd(ctx *cli.Context) error {
 		_, statedb = gen.ToBlock()
 		chainConfig = gen.Config
 	} else {
-		db, _ := ethdb.NewMemDatabase()
+		db, _ := kokdb.NewMemDatabase()
 		statedb, _ = state.New(common.Hash{}, state.NewDatabase(db))
 	}
 	if ctx.GlobalString(SenderFlag.Name) != "" {

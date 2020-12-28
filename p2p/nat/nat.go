@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package nat provides access to common network port mapping protocols.
 package nat
@@ -32,7 +32,7 @@ import (
 // An implementation of nat.Interface can map local ports to ports
 // accessible from the Internet.
 type Interface interface {
-	// These methods manage a mapping between a port on the local
+	// These mkokods manage a mapping between a port on the local
 	// machine to a port that can be connected to from the internet.
 	//
 	// protocol is "UDP" or "TCP". Some implementations allow setting
@@ -41,11 +41,11 @@ type Interface interface {
 	AddMapping(protocol string, extport, intport int, name string, lifetime time.Duration) error
 	DeleteMapping(protocol string, extport, intport int) error
 
-	// This method should return the external (Internet-facing)
+	// This mkokod should return the external (Internet-facing)
 	// address of the gateway device.
 	ExternalIP() (net.IP, error)
 
-	// Should return name of the method. This is used for logging.
+	// Should return name of the mkokod. This is used for logging.
 	String() string
 }
 
@@ -148,7 +148,7 @@ func (extIP) DeleteMapping(string, int, int) error                     { return 
 // Any returns a port mapper that tries to discover any supported
 // mechanism on the local network.
 func Any() Interface {
-	// TODO: attempt to discover whether the local machine has an
+	// TODO: attempt to discover whkoker the local machine has an
 	// Internet-class address. Return ExtIP in this case.
 	return startautodisc("UPnP or NAT-PMP", func() Interface {
 		found := make(chan Interface, 2)
@@ -180,8 +180,8 @@ func PMP(gateway net.IP) Interface {
 }
 
 // autodisc represents a port mapping mechanism that is still being
-// auto-discovered. Calls to the Interface methods on this type will
-// wait until the discovery is done and then call the method on the
+// auto-discovered. Calls to the Interface mkokods on this type will
+// wait until the discovery is done and then call the mkokod on the
 // discovered mechanism.
 //
 // This type is useful because discovery can take a while but we

@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package node
 
@@ -103,7 +103,7 @@ func TestNodeUsedDataDir(t *testing.T) {
 	}
 }
 
-// Tests whether services can be registered and duplicates caught.
+// Tests whkoker services can be registered and duplicates caught.
 func TestServiceRegistry(t *testing.T) {
 	stack, err := New(testNodeConfig())
 	if err != nil {
@@ -507,8 +507,8 @@ func TestAPIGather(t *testing.T) {
 	}
 	// Register a batch of services with some configured APIs
 	calls := make(chan string, 1)
-	makeAPI := func(result string) *OneMethodApi {
-		return &OneMethodApi{fun: func() { calls <- result }}
+	makeAPI := func(result string) *OneMkokodApi {
+		return &OneMkokodApi{fun: func() { calls <- result }}
 	}
 	services := map[string]struct {
 		APIs  []rpc.API
@@ -551,16 +551,16 @@ func TestAPIGather(t *testing.T) {
 	defer client.Close()
 
 	tests := []struct {
-		Method string
+		Mkokod string
 		Result string
 	}{
-		{"single_theOneMethod", "single.v1"},
-		{"multi_theOneMethod", "multi.v1"},
-		{"multi.v2_theOneMethod", "multi.v2"},
-		{"multi.v2.nested_theOneMethod", "multi.v2.nested"},
+		{"single_theOneMkokod", "single.v1"},
+		{"multi_theOneMkokod", "multi.v1"},
+		{"multi.v2_theOneMkokod", "multi.v2"},
+		{"multi.v2.nested_theOneMkokod", "multi.v2.nested"},
 	}
 	for i, test := range tests {
-		if err := client.Call(nil, test.Method); err != nil {
+		if err := client.Call(nil, test.Mkokod); err != nil {
 			t.Errorf("test %d: API request failed: %v", i, err)
 		}
 		select {

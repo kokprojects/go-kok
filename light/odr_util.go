@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package light
 
@@ -29,12 +29,12 @@ import (
 
 var sha3_nil = crypto.Keccak256Hash(nil)
 
-func GetHeaderByNumber(ctx context.Context, odr OdrBackend, number uint64) (*types.Header, error) {
+func GkokeaderByNumber(ctx context.Context, odr OdrBackend, number uint64) (*types.Header, error) {
 	db := odr.Database()
 	hash := core.GetCanonicalHash(db, number)
 	if (hash != common.Hash{}) {
 		// if there is a canonical hash, there is a header too
-		header := core.GetHeader(db, hash, number)
+		header := core.Gkokeader(db, hash, number)
 		if header == nil {
 			panic("Canonical hash present but header not found")
 		}
@@ -76,7 +76,7 @@ func GetCanonicalHash(ctx context.Context, odr OdrBackend, number uint64) (commo
 	if (hash != common.Hash{}) {
 		return hash, nil
 	}
-	header, err := GetHeaderByNumber(ctx, odr, number)
+	header, err := GkokeaderByNumber(ctx, odr, number)
 	if header != nil {
 		return header.Hash(), nil
 	}
@@ -114,7 +114,7 @@ func GetBody(ctx context.Context, odr OdrBackend, hash common.Hash, number uint6
 // back from the stored header and body.
 func GetBlock(ctx context.Context, odr OdrBackend, hash common.Hash, number uint64) (*types.Block, error) {
 	// Retrieve the block header and body contents
-	header := core.GetHeader(odr.Database(), hash, number)
+	header := core.Gkokeader(odr.Database(), hash, number)
 	if header == nil {
 		return nil, ErrNoHeader
 	}

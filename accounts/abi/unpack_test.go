@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package abi
 
@@ -261,7 +261,7 @@ var unpackTests = []unpackTest{
 
 func TestUnpack(t *testing.T) {
 	for i, test := range unpackTests {
-		def := fmt.Sprintf(`[{ "name" : "method", "outputs": %s}]`, test.def)
+		def := fmt.Sprintf(`[{ "name" : "mkokod", "outputs": %s}]`, test.def)
 		abi, err := JSON(strings.NewReader(def))
 		if err != nil {
 			t.Fatalf("invalid ABI definition %s: %v", def, err)
@@ -271,7 +271,7 @@ func TestUnpack(t *testing.T) {
 			t.Fatalf("invalid hex: %s" + test.enc)
 		}
 		outptr := reflect.New(reflect.TypeOf(test.want))
-		err = abi.Unpack(outptr.Interface(), "method", encb)
+		err = abi.Unpack(outptr.Interface(), "mkokod", encb)
 		if err := test.checkError(err); err != nil {
 			t.Errorf("test %d (%v) failed: %v", i, test.def, err)
 			continue

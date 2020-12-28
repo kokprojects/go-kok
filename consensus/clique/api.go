@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package clique
 
@@ -37,7 +37,7 @@ func (api *API) GetSnapshot(number *rpc.BlockNumber) (*Snapshot, error) {
 	if number == nil || *number == rpc.LatestBlockNumber {
 		header = api.chain.CurrentHeader()
 	} else {
-		header = api.chain.GetHeaderByNumber(uint64(number.Int64()))
+		header = api.chain.GkokeaderByNumber(uint64(number.Int64()))
 	}
 	// Ensure we have an actually valid block and return its snapshot
 	if header == nil {
@@ -48,7 +48,7 @@ func (api *API) GetSnapshot(number *rpc.BlockNumber) (*Snapshot, error) {
 
 // GetSnapshotAtHash retrieves the state snapshot at a given block.
 func (api *API) GetSnapshotAtHash(hash common.Hash) (*Snapshot, error) {
-	header := api.chain.GetHeaderByHash(hash)
+	header := api.chain.GkokeaderByHash(hash)
 	if header == nil {
 		return nil, errUnknownBlock
 	}
@@ -62,7 +62,7 @@ func (api *API) GetSigners(number *rpc.BlockNumber) ([]common.Address, error) {
 	if number == nil || *number == rpc.LatestBlockNumber {
 		header = api.chain.CurrentHeader()
 	} else {
-		header = api.chain.GetHeaderByNumber(uint64(number.Int64()))
+		header = api.chain.GkokeaderByNumber(uint64(number.Int64()))
 	}
 	// Ensure we have an actually valid block and return the signers from its snapshot
 	if header == nil {
@@ -77,7 +77,7 @@ func (api *API) GetSigners(number *rpc.BlockNumber) ([]common.Address, error) {
 
 // GetSignersAtHash retrieves the state snapshot at a given block.
 func (api *API) GetSignersAtHash(hash common.Hash) ([]common.Address, error) {
-	header := api.chain.GetHeaderByHash(hash)
+	header := api.chain.GkokeaderByHash(hash)
 	if header == nil {
 		return nil, errUnknownBlock
 	}

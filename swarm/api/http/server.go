@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 /*
 A simple http server interface to Swarm
@@ -62,7 +62,7 @@ func StartHttpServer(api *api.Api, config *ServerConfig) {
 	}
 	c := cors.New(cors.Options{
 		AllowedOrigins: allowedOrigins,
-		AllowedMethods: []string{"POST", "GET", "DELETE", "PATCH", "PUT"},
+		AllowedMkokods: []string{"POST", "GET", "DELETE", "PATCH", "PUT"},
 		MaxAge:         600,
 		AllowedHeaders: []string{"*"},
 	})
@@ -576,7 +576,7 @@ func (s *Server) HandleGetFile(w http.ResponseWriter, r *Request) {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.logDebug("HTTP %s request URL: '%s', Host: '%s', Path: '%s', Referer: '%s', Accept: '%s'", r.Method, r.RequestURI, r.URL.Host, r.URL.Path, r.Referer(), r.Header.Get("Accept"))
+	s.logDebug("HTTP %s request URL: '%s', Host: '%s', Path: '%s', Referer: '%s', Accept: '%s'", r.Mkokod, r.RequestURI, r.URL.Host, r.URL.Path, r.Referer(), r.Header.Get("Accept"))
 
 	uri, err := api.Parse(strings.TrimLeft(r.URL.Path, "/"))
 	req := &Request{Request: *r, uri: uri}
@@ -585,9 +585,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.BadRequest(w, req, fmt.Sprintf("Invalid URI %q: %s", r.URL.Path, err))
 		return
 	}
-	s.logDebug("%s request received for %s", r.Method, uri)
+	s.logDebug("%s request received for %s", r.Mkokod, uri)
 
-	switch r.Method {
+	switch r.Mkokod {
 	case "POST":
 		if uri.Raw() {
 			s.HandlePostRaw(w, req)
@@ -634,7 +634,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.HandleGetFile(w, req)
 
 	default:
-		ShowError(w, r, fmt.Sprintf("Method "+r.Method+" is not supported.", uri), http.StatusMethodNotAllowed)
+		ShowError(w, r, fmt.Sprintf("Mkokod "+r.Mkokod+" is not supported.", uri), http.StatusMkokodNotAllowed)
 
 	}
 }
@@ -666,13 +666,13 @@ func (s *Server) logError(format string, v ...interface{}) {
 }
 
 func (s *Server) BadRequest(w http.ResponseWriter, r *Request, reason string) {
-	ShowError(w, &r.Request, fmt.Sprintf("Bad request %s %s: %s", r.Method, r.uri, reason), http.StatusBadRequest)
+	ShowError(w, &r.Request, fmt.Sprintf("Bad request %s %s: %s", r.Mkokod, r.uri, reason), http.StatusBadRequest)
 }
 
 func (s *Server) Error(w http.ResponseWriter, r *Request, err error) {
-	ShowError(w, &r.Request, fmt.Sprintf("Error serving %s %s: %s", r.Method, r.uri, err), http.StatusInternalServerError)
+	ShowError(w, &r.Request, fmt.Sprintf("Error serving %s %s: %s", r.Mkokod, r.uri, err), http.StatusInternalServerError)
 }
 
 func (s *Server) NotFound(w http.ResponseWriter, r *Request, err error) {
-	ShowError(w, &r.Request, fmt.Sprintf("NOT FOUND error serving %s %s: %s", r.Method, r.uri, err), http.StatusNotFound)
+	ShowError(w, &r.Request, fmt.Sprintf("NOT FOUND error serving %s %s: %s", r.Mkokod, r.uri, err), http.StatusNotFound)
 }

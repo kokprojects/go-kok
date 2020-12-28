@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -35,8 +35,8 @@ const MetadataApi = "rpc"
 type CodecOption int
 
 const (
-	// OptionMethodInvocation is an indication that the codec supports RPC method calls
-	OptionMethodInvocation CodecOption = 1 << iota
+	// OptionMkokodInvocation is an indication that the codec supports RPC mkokod calls
+	OptionMkokodInvocation CodecOption = 1 << iota
 
 	// OptionSubscriptions is an indication that the codec suports RPC notifications
 	OptionSubscriptions = 1 << iota // support pub sub
@@ -51,7 +51,7 @@ func NewServer() *Server {
 	}
 
 	// register a default service which will provide meta information about the RPC service such as the services and
-	// methods it offers.
+	// mkokods it offers.
 	rpcService := &RPCService{server}
 	server.RegisterName(MetadataApi, rpcService)
 
@@ -73,8 +73,8 @@ func (s *RPCService) Modules() map[string]string {
 	return modules
 }
 
-// RegisterName will create a service for the given rcvr type under the given name. When no methods on the given rcvr
-// match the criteria to be either a RPC method or a subscription an error is returned. Otherwise a new service is
+// RegisterName will create a service for the given rcvr type under the given name. When no mkokods on the given rcvr
+// match the criteria to be either a RPC mkokod or a subscription an error is returned. Otherwise a new service is
 // created and added to the service collection this server instance serves.
 func (s *Server) RegisterName(name string, rcvr interface{}) error {
 	if s.services == nil {
@@ -92,27 +92,27 @@ func (s *Server) RegisterName(name string, rcvr interface{}) error {
 		return fmt.Errorf("%s is not exported", reflect.Indirect(rcvrVal).Type().Name())
 	}
 
-	methods, subscriptions := suitableCallbacks(rcvrVal, svc.typ)
+	mkokods, subscriptions := suitableCallbacks(rcvrVal, svc.typ)
 
-	// already a previous service register under given sname, merge methods/subscriptions
+	// already a previous service register under given sname, merge mkokods/subscriptions
 	if regsvc, present := s.services[name]; present {
-		if len(methods) == 0 && len(subscriptions) == 0 {
-			return fmt.Errorf("Service %T doesn't have any suitable methods/subscriptions to expose", rcvr)
+		if len(mkokods) == 0 && len(subscriptions) == 0 {
+			return fmt.Errorf("Service %T doesn't have any suitable mkokods/subscriptions to expose", rcvr)
 		}
-		for _, m := range methods {
-			regsvc.callbacks[formatName(m.method.Name)] = m
+		for _, m := range mkokods {
+			regsvc.callbacks[formatName(m.mkokod.Name)] = m
 		}
 		for _, s := range subscriptions {
-			regsvc.subscriptions[formatName(s.method.Name)] = s
+			regsvc.subscriptions[formatName(s.mkokod.Name)] = s
 		}
 		return nil
 	}
 
 	svc.name = name
-	svc.callbacks, svc.subscriptions = methods, subscriptions
+	svc.callbacks, svc.subscriptions = mkokods, subscriptions
 
 	if len(svc.callbacks) == 0 && len(svc.subscriptions) == 0 {
-		return fmt.Errorf("Service %T doesn't have any suitable methods/subscriptions to expose", rcvr)
+		return fmt.Errorf("Service %T doesn't have any suitable mkokods/subscriptions to expose", rcvr)
 	}
 
 	s.services[svc.name] = svc
@@ -219,7 +219,7 @@ func (s *Server) ServeCodec(codec ServerCodec, options CodecOption) {
 }
 
 // ServeSingleRequest reads and processes a single RPC request from the given codec. It will not
-// close the codec unless a non-recoverable error has occurred. Note, this method will return after
+// close the codec unless a non-recoverable error has occurred. Note, this mkokod will return after
 // a single request has been processed!
 func (s *Server) ServeSingleRequest(codec ServerCodec, options CodecOption) {
 	s.serveRequest(codec, true, options)
@@ -244,7 +244,7 @@ func (s *Server) createSubscription(ctx context.Context, c ServerCodec, req *ser
 	// subscription have as first argument the context following optional arguments
 	args := []reflect.Value{req.callb.rcvr, reflect.ValueOf(ctx)}
 	args = append(args, req.args...)
-	reply := req.callb.method.Func.Call(args)
+	reply := req.callb.mkokod.Func.Call(args)
 
 	if !reply[1].IsNil() { // subscription creation failed
 		return "", reply[1].Interface().(error)
@@ -294,7 +294,7 @@ func (s *Server) handle(ctx context.Context, codec ServerCodec, req *serverReque
 	// regular RPC call, prepare arguments
 	if len(req.args) != len(req.callb.argTypes) {
 		rpcErr := &invalidParamsError{fmt.Sprintf("%s%s%s expects %d parameters, got %d",
-			req.svcname, serviceMethodSeparator, req.callb.method.Name,
+			req.svcname, serviceMkokodSeparator, req.callb.mkokod.Name,
 			len(req.callb.argTypes), len(req.args))}
 		return codec.CreateErrorResponse(&req.id, rpcErr), nil
 	}
@@ -307,13 +307,13 @@ func (s *Server) handle(ctx context.Context, codec ServerCodec, req *serverReque
 		arguments = append(arguments, req.args...)
 	}
 
-	// execute RPC method and return result
-	reply := req.callb.method.Func.Call(arguments)
+	// execute RPC mkokod and return result
+	reply := req.callb.mkokod.Func.Call(arguments)
 	if len(reply) == 0 {
 		return codec.CreateResponse(req.id, nil), nil
 	}
 
-	if req.callb.errPos >= 0 { // test if method returned an error
+	if req.callb.errPos >= 0 { // test if mkokod returned an error
 		if !reply[req.callb.errPos].IsNil() {
 			e := reply[req.callb.errPos].Interface().(error)
 			res := codec.CreateErrorResponse(&req.id, &callbackError{e.Error()})
@@ -392,7 +392,7 @@ func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) 
 			continue
 		}
 
-		if r.isPubSub && strings.HasSuffix(r.method, unsubscribeMethodSuffix) {
+		if r.isPubSub && strings.HasSuffix(r.mkokod, unsubscribeMkokodSuffix) {
 			requests[i] = &serverRequest{id: r.id, isUnsubscribe: true}
 			argTypes := []reflect.Type{reflect.TypeOf("")} // expect subscription id as first arg
 			if args, err := codec.ParseRequestArguments(argTypes, r.params); err == nil {
@@ -403,30 +403,30 @@ func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) 
 			continue
 		}
 
-		if svc, ok = s.services[r.service]; !ok { // rpc method isn't available
-			requests[i] = &serverRequest{id: r.id, err: &methodNotFoundError{r.service, r.method}}
+		if svc, ok = s.services[r.service]; !ok { // rpc mkokod isn't available
+			requests[i] = &serverRequest{id: r.id, err: &mkokodNotFoundError{r.service, r.mkokod}}
 			continue
 		}
 
-		if r.isPubSub { // eth_subscribe, r.method contains the subscription method name
-			if callb, ok := svc.subscriptions[r.method]; ok {
+		if r.isPubSub { // kok_subscribe, r.mkokod contains the subscription mkokod name
+			if callb, ok := svc.subscriptions[r.mkokod]; ok {
 				requests[i] = &serverRequest{id: r.id, svcname: svc.name, callb: callb}
 				if r.params != nil && len(callb.argTypes) > 0 {
 					argTypes := []reflect.Type{reflect.TypeOf("")}
 					argTypes = append(argTypes, callb.argTypes...)
 					if args, err := codec.ParseRequestArguments(argTypes, r.params); err == nil {
-						requests[i].args = args[1:] // first one is service.method name which isn't an actual argument
+						requests[i].args = args[1:] // first one is service.mkokod name which isn't an actual argument
 					} else {
 						requests[i].err = &invalidParamsError{err.Error()}
 					}
 				}
 			} else {
-				requests[i] = &serverRequest{id: r.id, err: &methodNotFoundError{r.method, r.method}}
+				requests[i] = &serverRequest{id: r.id, err: &mkokodNotFoundError{r.mkokod, r.mkokod}}
 			}
 			continue
 		}
 
-		if callb, ok := svc.callbacks[r.method]; ok { // lookup RPC method
+		if callb, ok := svc.callbacks[r.mkokod]; ok { // lookup RPC mkokod
 			requests[i] = &serverRequest{id: r.id, svcname: svc.name, callb: callb}
 			if r.params != nil && len(callb.argTypes) > 0 {
 				if args, err := codec.ParseRequestArguments(callb.argTypes, r.params); err == nil {
@@ -438,7 +438,7 @@ func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, Error) 
 			continue
 		}
 
-		requests[i] = &serverRequest{id: r.id, err: &methodNotFoundError{r.service, r.method}}
+		requests[i] = &serverRequest{id: r.id, err: &mkokodNotFoundError{r.service, r.mkokod}}
 	}
 
 	return requests, batch, nil

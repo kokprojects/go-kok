@@ -1,4 +1,4 @@
-package ethapi
+package kokapi
 
 import (
 	"math/big"

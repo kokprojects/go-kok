@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package simulations
 
@@ -40,7 +40,7 @@ type NetworkConfig struct {
 // simulated nodes and the connections which exist between them.
 //
 // The Network has a single NodeAdapter which is responsible for actually
-// starting nodes and connecting them together.
+// starting nodes and connecting them togkoker.
 //
 // The Network emits events when nodes are started and stopped, when they are
 // connected and disconnected, and also when messages are sent between nodes.
@@ -267,8 +267,8 @@ func (self *Network) Stop(id discover.NodeID) error {
 	return nil
 }
 
-// Connect connects two nodes together by calling the "admin_addPeer" RPC
-// method on the "one" node so that it connects to the "other" node
+// Connect connects two nodes togkoker by calling the "admin_addPeer" RPC
+// mkokod on the "one" node so that it connects to the "other" node
 func (self *Network) Connect(oneID, otherID discover.NodeID) error {
 	log.Debug(fmt.Sprintf("connecting %s to %s", oneID, otherID))
 	conn, err := self.GetOrCreateConn(oneID, otherID)
@@ -290,7 +290,7 @@ func (self *Network) Connect(oneID, otherID discover.NodeID) error {
 }
 
 // Disconnect disconnects two nodes by calling the "admin_removePeer" RPC
-// method on the "one" node so that it disconnects from the "other" node
+// mkokod on the "one" node so that it disconnects from the "other" node
 func (self *Network) Disconnect(oneID, otherID discover.NodeID) error {
 	conn := self.GetConn(oneID, otherID)
 	if conn == nil {
@@ -467,7 +467,7 @@ type Node struct {
 	// Config if the config used to created the node
 	Config *adapters.NodeConfig `json:"config"`
 
-	// Up tracks whether or not the node is running
+	// Up tracks whkoker or not the node is running
 	Up bool `json:"up"`
 }
 
@@ -514,14 +514,14 @@ type Conn struct {
 	// Other is the node which the connection was made to
 	Other discover.NodeID `json:"other"`
 
-	// Up tracks whether or not the connection is active
+	// Up tracks whkoker or not the connection is active
 	Up bool `json:"up"`
 
 	one   *Node
 	other *Node
 }
 
-// nodesUp returns whether both nodes are currently up
+// nodesUp returns whkoker both nodes are currently up
 func (self *Conn) nodesUp() error {
 	if !self.one.Up {
 		return fmt.Errorf("one %v is not up", self.One)

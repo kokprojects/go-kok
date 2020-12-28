@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package les
 
@@ -29,20 +29,20 @@ import (
 	"github.com/kokprojects/go-kok/core/state"
 	"github.com/kokprojects/go-kok/core/types"
 	"github.com/kokprojects/go-kok/core/vm"
-	"github.com/kokprojects/go-kok/eth"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kok"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/light"
 	"github.com/kokprojects/go-kok/params"
 	"github.com/kokprojects/go-kok/rlp"
 )
 
-type odrTestFn func(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte
+type odrTestFn func(ctx context.Context, db kokdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte
 
 func TestOdrGetBlockLes1(t *testing.T) { testOdr(t, 1, 1, odrGetBlock) }
 
 func TestOdrGetBlockLes2(t *testing.T) { testOdr(t, 2, 1, odrGetBlock) }
 
-func odrGetBlock(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
+func odrGetBlock(ctx context.Context, db kokdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
 	var block *types.Block
 	if bc != nil {
 		block = bc.GetBlockByHash(bhash)
@@ -60,7 +60,7 @@ func TestOdrGetReceiptsLes1(t *testing.T) { testOdr(t, 1, 1, odrGetReceipts) }
 
 func TestOdrGetReceiptsLes2(t *testing.T) { testOdr(t, 2, 1, odrGetReceipts) }
 
-func odrGetReceipts(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
+func odrGetReceipts(ctx context.Context, db kokdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
 	var receipts types.Receipts
 	if bc != nil {
 		receipts = core.GetBlockReceipts(db, bhash, core.GetBlockNumber(db, bhash))
@@ -78,7 +78,7 @@ func TestOdrAccountsLes1(t *testing.T) { testOdr(t, 1, 1, odrAccounts) }
 
 func TestOdrAccountsLes2(t *testing.T) { testOdr(t, 2, 1, odrAccounts) }
 
-func odrAccounts(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
+func odrAccounts(ctx context.Context, db kokdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
 	dummyAddr := common.HexToAddress("1234567812345678123456781234567812345678")
 	acc := []common.Address{testBankAddress, acc1Addr, acc2Addr, dummyAddr}
 
@@ -89,10 +89,10 @@ func odrAccounts(ctx context.Context, db ethdb.Database, config *params.ChainCon
 	)
 	for _, addr := range acc {
 		if bc != nil {
-			header := bc.GetHeaderByHash(bhash)
+			header := bc.GkokeaderByHash(bhash)
 			st, err = state.New(header.Root, state.NewDatabase(db))
 		} else {
-			header := lc.GetHeaderByHash(bhash)
+			header := lc.GkokeaderByHash(bhash)
 			st = light.NewState(ctx, header, lc.Odr())
 		}
 		if err == nil {
@@ -115,14 +115,14 @@ type callmsg struct {
 
 func (callmsg) CheckNonce() bool { return false }
 
-func odrContractCall(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
+func odrContractCall(ctx context.Context, db kokdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte {
 	data := common.Hex2Bytes("60CD26850000000000000000000000000000000000000000000000000000000000000000")
 
 	var res []byte
 	for i := 0; i < 3; i++ {
 		data[35] = byte(i)
 		if bc != nil {
-			header := bc.GetHeaderByHash(bhash)
+			header := bc.GkokeaderByHash(bhash)
 			statedb, err := state.New(header.Root, state.NewDatabase(db))
 
 			if err == nil {
@@ -140,7 +140,7 @@ func odrContractCall(ctx context.Context, db ethdb.Database, config *params.Chai
 				res = append(res, ret...)
 			}
 		} else {
-			header := lc.GetHeaderByHash(bhash)
+			header := lc.GkokeaderByHash(bhash)
 			state := light.NewState(ctx, header, lc.Odr())
 			state.SetBalance(testBankAddress, math.MaxBig256)
 			msg := callmsg{types.NewMessage(testBankAddress, &testContractAddr, 0, new(big.Int), big.NewInt(100000), new(big.Int), data, false)}
@@ -161,9 +161,9 @@ func testOdr(t *testing.T, protocol int, expFail uint64, fn odrTestFn) {
 	peers := newPeerSet()
 	dist := newRequestDistributor(peers, make(chan struct{}))
 	rm := newRetrieveManager(peers, dist, nil)
-	db, _ := ethdb.NewMemDatabase()
-	ldb, _ := ethdb.NewMemDatabase()
-	odr := NewLesOdr(ldb, light.NewChtIndexer(db, true), light.NewBloomTrieIndexer(db, true), eth.NewBloomIndexer(db, light.BloomTrieFrequency), rm)
+	db, _ := kokdb.NewMemDatabase()
+	ldb, _ := kokdb.NewMemDatabase()
+	odr := NewLesOdr(ldb, light.NewChtIndexer(db, true), light.NewBloomTrieIndexer(db, true), kok.NewBloomIndexer(db, light.BloomTrieFrequency), rm)
 	pm := newTestProtocolManagerMust(t, false, 4, testChainGen, nil, nil, db)
 	lpm := newTestProtocolManagerMust(t, true, 0, nil, peers, odr, ldb)
 	_, err1, lpeer, err2 := newTestPeerPair("peer", protocol, pm, lpm)

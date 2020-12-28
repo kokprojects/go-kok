@@ -1,20 +1,20 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light kokereum Subprotocol.
 package les
 
 import (
@@ -28,7 +28,7 @@ import (
 
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/eth"
+	"github.com/kokprojects/go-kok/kok"
 	"github.com/kokprojects/go-kok/les/flowcontrol"
 	"github.com/kokprojects/go-kok/light"
 	"github.com/kokprojects/go-kok/p2p"
@@ -102,8 +102,8 @@ func (p *peer) queueSend(f func()) {
 }
 
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *peer) Info() *eth.PeerInfo {
-	return &eth.PeerInfo{
+func (p *peer) Info() *kok.PeerInfo {
+	return &kok.PeerInfo{
 		Version:    p.version,
 		Difficulty: p.Td(),
 		Head:       fmt.Sprintf("%x", p.Head()),
@@ -298,9 +298,9 @@ func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq)
 			// convert HelperTrie request to old CHT request
 			reqsV1[i] = ChtReq{ChtNum: (req.TrieIdx+1)*(light.ChtFrequency/light.ChtV1Frequency) - 1, BlockNum: blockNum, FromLevel: req.FromLevel}
 		}
-		return sendRequest(p.rw, GetHeaderProofsMsg, reqID, cost, reqsV1)
+		return sendRequest(p.rw, GkokeaderProofsMsg, reqID, cost, reqsV1)
 	case lpv2:
-		return sendRequest(p.rw, GetHelperTrieProofsMsg, reqID, cost, reqs)
+		return sendRequest(p.rw, GkokelperTrieProofsMsg, reqID, cost, reqs)
 	default:
 		panic(nil)
 	}
@@ -511,7 +511,7 @@ type peerSetNotify interface {
 }
 
 // peerSet represents the collection of active peers currently participating in
-// the Light Ethereum sub-protocol.
+// the Light kokereum sub-protocol.
 type peerSet struct {
 	peers      map[string]*peer
 	lock       sync.RWMutex

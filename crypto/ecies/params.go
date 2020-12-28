@@ -23,7 +23,7 @@
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// THEORY OF LIABILITY, WHkokER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
@@ -42,11 +42,11 @@ import (
 	"fmt"
 	"hash"
 
-	ethcrypto "github.com/kokprojects/go-kok/crypto"
+	kokcrypto "github.com/kokprojects/go-kok/crypto"
 )
 
 var (
-	DefaultCurve                  = ethcrypto.S256()
+	DefaultCurve                  = kokcrypto.S256()
 	ErrUnsupportedECDHAlgorithm   = fmt.Errorf("ecies: unsupported ECDH algorithm")
 	ErrUnsupportedECIESParameters = fmt.Errorf("ecies: unsupported ECIES parameters")
 )
@@ -100,7 +100,7 @@ var (
 )
 
 var paramsFromCurve = map[elliptic.Curve]*ECIESParams{
-	ethcrypto.S256(): ECIES_AES128_SHA256,
+	kokcrypto.S256(): ECIES_AES128_SHA256,
 	elliptic.P256():  ECIES_AES128_SHA256,
 	elliptic.P384():  ECIES_AES256_SHA384,
 	elliptic.P521():  ECIES_AES256_SHA512,

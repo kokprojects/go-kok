@@ -10,10 +10,10 @@ fi
 # Create fake Go workspace if it doesn't exist yet.
 workspace="$PWD/build/_workspace"
 root="$PWD"
-ethdir="$workspace/src/github.com/kokprojects"
-if [ ! -L "$ethdir/go-kok" ]; then
-    mkdir -p "$ethdir"
-    cd "$ethdir"
+kokdir="$workspace/src/github.com/kokprojects"
+if [ ! -L "$kokdir/go-kok" ]; then
+    mkdir -p "$kokdir"
+    cd "$kokdir"
     ln -s ../../../../../. go-kok
     cd "$root"
 fi
@@ -23,8 +23,8 @@ GOPATH="$workspace"
 export GOPATH
 
 # Run the command inside the workspace.
-cd "$ethdir/go-kok"
-PWD="$ethdir/go-kok"
+cd "$kokdir/go-kok"
+PWD="$kokdir/go-kok"
 
 # Launch the arguments with the configured environment.
 exec "$@"

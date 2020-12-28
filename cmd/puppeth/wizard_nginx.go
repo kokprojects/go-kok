@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of go-ethereum.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of go-kokereum.
 //
-// go-ethereum is free software: you can redistribute it and/or modify
+// go-kokereum is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// go-ethereum is distributed in the hope that it will be useful,
+// go-kokereum is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+// along with go-kokereum. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -22,9 +22,9 @@ import (
 	"github.com/kokprojects/go-kok/log"
 )
 
-// ensureVirtualHost checks whether a reverse-proxy is running on the specified
+// ensureVirtualHost checks whkoker a reverse-proxy is running on the specified
 // host machine, and if yes requests a virtual host from the user to host a
-// specific web service on. If no proxy exists, the method will offer to deploy
+// specific web service on. If no proxy exists, the mkokod will offer to deploy
 // one.
 //
 // If the user elects not to use a reverse proxy, an empty hostname is returned!

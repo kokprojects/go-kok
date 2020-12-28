@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package miner
 
@@ -36,7 +36,7 @@ type CpuAgent struct {
 	chain  consensus.ChainReader
 	engine consensus.Engine
 
-	isMining int32 // isMining indicates whether the agent is currently mining
+	isMining int32 // isMining indicates whkoker the agent is currently mining
 }
 
 func NewCpuAgent(chain consensus.ChainReader, engine consensus.Engine) *CpuAgent {
@@ -111,7 +111,7 @@ func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) {
 	}
 }
 
-func (self *CpuAgent) GetHashRate() int64 {
+func (self *CpuAgent) GkokashRate() int64 {
 	if pow, ok := self.engine.(consensus.PoW); ok {
 		return int64(pow.Hashrate())
 	}

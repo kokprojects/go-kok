@@ -3,7 +3,7 @@
 # A script to boot a dev swarm cluster on a Linux host (typically in a Docker
 # container started with swarm/dev/run.sh).
 #
-# The cluster contains a bootnode, a geth node and multiple swarm nodes, with
+# The cluster contains a bootnode, a gkok node and multiple swarm nodes, with
 # each node having its own data directory in a base directory passed with the
 # --dir flag (default is swarm/dev/cluster).
 #
@@ -12,7 +12,7 @@
 # the 192.168.33.0/24 subnet:
 #
 # bootnode: 192.168.33.2
-# geth:     192.168.33.3
+# gkok:     192.168.33.3
 # swarm:    192.168.33.10{1,2,...,n}
 
 set -e
@@ -37,10 +37,10 @@ BOOTNODE_KEY="32078f313bea771848db70745225c52c00981589ad6b5b49163f0f5ee852617d"
 BOOTNODE_PUBKEY="760c4460e5336ac9bbd87952a3c7ec4363fc0a97bd31c86430806e287b437fd1b01abc6e1db640cf3106b520344af1d58b00b57823db3e1407cbc433e1b6d04d"
 BOOTNODE_URL="enode://${BOOTNODE_PUBKEY}@${BOOTNODE_IP}:${BOOTNODE_PORT}"
 
-# static geth configuration
-GETH_IP="192.168.33.3"
-GETH_RPC_PORT="8545"
-GETH_RPC_URL="http://${GETH_IP}:${GETH_RPC_PORT}"
+# static gkok configuration
+Gkok_IP="192.168.33.3"
+Gkok_RPC_PORT="8545"
+Gkok_RPC_URL="http://${Gkok_IP}:${Gkok_RPC_PORT}"
 
 usage() {
   cat >&2 <<USAGE
@@ -68,7 +68,7 @@ main() {
   stop_cluster
   create_network
   start_bootnode
-  start_geth_node
+  start_gkok_node
   start_swarm_nodes
 }
 
@@ -111,7 +111,7 @@ stop_cluster() {
 }
 
 # create_network creates a Linux bridge which is used to connect the node
-# network namespaces together
+# network namespaces togkoker
 create_network() {
   local subnet="${BRIDGE_IP}/24"
 
@@ -121,7 +121,7 @@ create_network() {
   ip address add "${subnet}" dev "${BRIDGE_NAME}"
 }
 
-# start_bootnode starts a bootnode which is used to bootstrap the geth and
+# start_bootnode starts a bootnode which is used to bootstrap the gkok and
 # swarm nodes
 start_bootnode() {
   local key_file="${base_dir}/bootnode.key"
@@ -136,25 +136,25 @@ start_bootnode() {
   start_node "bootnode" "${BOOTNODE_IP}" "$(which bootnode)" ${args[@]}
 }
 
-# start_geth_node starts a geth node with --datadir pointing at <base-dir>/geth
-# and a single, unlocked account with password "geth"
-start_geth_node() {
-  local dir="${base_dir}/geth"
+# start_gkok_node starts a gkok node with --datadir pointing at <base-dir>/gkok
+# and a single, unlocked account with password "gkok"
+start_gkok_node() {
+  local dir="${base_dir}/gkok"
   mkdir -p "${dir}"
 
-  local password="geth"
+  local password="gkok"
   echo "${password}" > "${dir}/password"
 
   # create an account if necessary
   if [[ ! -e "${dir}/keystore" ]]; then
-    info "creating geth account"
+    info "creating gkok account"
     create_account "${dir}" "${password}"
   fi
 
   # get the account address
   local address="$(jq --raw-output '.address' ${dir}/keystore/*)"
   if [[ -z "${address}" ]]; then
-    fail "failed to get geth account address"
+    fail "failed to get gkok account address"
   fi
 
   local args=(
@@ -164,12 +164,12 @@ start_geth_node() {
     --unlock    "${address}"
     --password  "${dir}/password"
     --rpc
-    --rpcaddr   "${GETH_IP}"
-    --rpcport   "${GETH_RPC_PORT}"
+    --rpcaddr   "${Gkok_IP}"
+    --rpcport   "${Gkok_RPC_PORT}"
     --verbosity "6"
   )
 
-  start_node "geth" "${GETH_IP}" "$(which geth)" ${args[@]}
+  start_node "gkok" "${Gkok_IP}" "$(which gkok)" ${args[@]}
 }
 
 start_swarm_nodes() {
@@ -208,7 +208,7 @@ start_swarm_node() {
     --bootnodes    "${BOOTNODE_URL}"
     --datadir      "${dir}"
     --identity     "${name}"
-    --ens-api      "${GETH_RPC_URL}"
+    --ens-api      "${Gkok_RPC_URL}"
     --bzznetworkid "321"
     --bzzaccount   "${address}"
     --password     "${dir}/password"
@@ -254,7 +254,7 @@ EOF
 }
 
 # create_node_network creates a network namespace and connects it to the Linux
-# bridge using a veth pair
+# bridge using a vkok pair
 create_node_network() {
   local name="$1"
   local ip="$2"
@@ -262,27 +262,27 @@ create_node_network() {
   # create the namespace
   ip netns add "${name}"
 
-  # create the veth pair
-  local veth0="veth${name}0"
-  local veth1="veth${name}1"
-  ip link add name "${veth0}" type veth peer name "${veth1}"
+  # create the vkok pair
+  local vkok0="vkok${name}0"
+  local vkok1="vkok${name}1"
+  ip link add name "${vkok0}" type vkok peer name "${vkok1}"
 
   # add one end to the bridge
-  ip link set dev "${veth0}" master "${BRIDGE_NAME}"
-  ip link set dev "${veth0}" up
+  ip link set dev "${vkok0}" master "${BRIDGE_NAME}"
+  ip link set dev "${vkok0}" up
 
-  # add the other end to the namespace, rename it eth0 and give it the ip
-  ip link set dev "${veth1}" netns "${name}"
-  ip netns exec "${name}" ip link set dev "${veth1}" name "eth0"
-  ip netns exec "${name}" ip link set dev "eth0" up
-  ip netns exec "${name}" ip address add "${ip}/24" dev "eth0"
+  # add the other end to the namespace, rename it kok0 and give it the ip
+  ip link set dev "${vkok1}" netns "${name}"
+  ip netns exec "${name}" ip link set dev "${vkok1}" name "kok0"
+  ip netns exec "${name}" ip link set dev "kok0" up
+  ip netns exec "${name}" ip address add "${ip}/24" dev "kok0"
 }
 
 create_account() {
   local dir=$1
   local password=$2
 
-  geth --datadir "${dir}" --password /dev/stdin account new <<< "${password}"
+  gkok --datadir "${dir}" --password /dev/stdin account new <<< "${password}"
 }
 
 main "$@"

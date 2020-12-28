@@ -1,35 +1,35 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Contains all the wrappers from the go-ethereum root package.
+// Contains all the wrappers from the go-kokereum root package.
 
-package geth
+package gkok
 
 import (
 	"errors"
 	"math/big"
 
-	ethereum "github.com/kokprojects/go-kok"
+	kokereum "github.com/kokprojects/go-kok"
 	"github.com/kokprojects/go-kok/common"
 )
 
 // Subscription represents an event subscription where events are
 // delivered on a data channel.
 type Subscription struct {
-	sub ethereum.Subscription
+	sub kokereum.Subscription
 }
 
 // Unsubscribe cancels the sending of events to the data channel
@@ -40,7 +40,7 @@ func (s *Subscription) Unsubscribe() {
 
 // CallMsg contains parameters for contract calls.
 type CallMsg struct {
-	msg ethereum.CallMsg
+	msg kokereum.CallMsg
 }
 
 // NewCallMsg creates an empty contract call parameter list.
@@ -73,14 +73,14 @@ func (msg *CallMsg) SetTo(address *Address) {
 }
 
 // SyncProgress gives progress indications when the node is synchronising with
-// the Ethereum network.
+// the kokereum network.
 type SyncProgress struct {
-	progress ethereum.SyncProgress
+	progress kokereum.SyncProgress
 }
 
 func (p *SyncProgress) GetStartingBlock() int64 { return int64(p.progress.StartingBlock) }
 func (p *SyncProgress) GetCurrentBlock() int64  { return int64(p.progress.CurrentBlock) }
-func (p *SyncProgress) GetHighestBlock() int64  { return int64(p.progress.HighestBlock) }
+func (p *SyncProgress) GkokighestBlock() int64  { return int64(p.progress.HighestBlock) }
 func (p *SyncProgress) GetPulledStates() int64  { return int64(p.progress.PulledStates) }
 func (p *SyncProgress) GetKnownStates() int64   { return int64(p.progress.KnownStates) }
 
@@ -128,7 +128,7 @@ func (t *Topics) Append(topics *Hashes) {
 
 // FilterQuery contains options for contact log filtering.
 type FilterQuery struct {
-	query ethereum.FilterQuery
+	query kokereum.FilterQuery
 }
 
 // NewFilterQuery creates an empty filter query for contact log filtering.

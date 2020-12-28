@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -83,17 +83,17 @@ func isSubscriptionType(t reflect.Type) bool {
 	return t == subscriptionType
 }
 
-// isPubSub tests whether the given method has as as first argument a context.Context
+// isPubSub tests whkoker the given mkokod has as as first argument a context.Context
 // and returns the pair (Subscription, error)
-func isPubSub(methodType reflect.Type) bool {
+func isPubSub(mkokodType reflect.Type) bool {
 	// numIn(0) is the receiver type
-	if methodType.NumIn() < 2 || methodType.NumOut() != 2 {
+	if mkokodType.NumIn() < 2 || mkokodType.NumOut() != 2 {
 		return false
 	}
 
-	return isContextType(methodType.In(1)) &&
-		isSubscriptionType(methodType.Out(0)) &&
-		isErrorType(methodType.Out(1))
+	return isContextType(mkokodType.In(1)) &&
+		isSubscriptionType(mkokodType.Out(0)) &&
+		isErrorType(mkokodType.Out(1))
 }
 
 // formatName will convert to first character to lower case
@@ -119,26 +119,26 @@ func isHexNum(t reflect.Type) bool {
 	return t == bigIntType
 }
 
-// suitableCallbacks iterates over the methods of the given type. It will determine if a method satisfies the criteria
+// suitableCallbacks iterates over the mkokods of the given type. It will determine if a mkokod satisfies the criteria
 // for a RPC callback or a subscription callback and adds it to the collection of callbacks or subscriptions. See server
 // documentation for a summary of these criteria.
 func suitableCallbacks(rcvr reflect.Value, typ reflect.Type) (callbacks, subscriptions) {
 	callbacks := make(callbacks)
 	subscriptions := make(subscriptions)
 
-METHODS:
-	for m := 0; m < typ.NumMethod(); m++ {
-		method := typ.Method(m)
-		mtype := method.Type
-		mname := formatName(method.Name)
-		if method.PkgPath != "" { // method must be exported
+MkokODS:
+	for m := 0; m < typ.NumMkokod(); m++ {
+		mkokod := typ.Mkokod(m)
+		mtype := mkokod.Type
+		mname := formatName(mkokod.Name)
+		if mkokod.PkgPath != "" { // mkokod must be exported
 			continue
 		}
 
 		var h callback
 		h.isSubscribe = isPubSub(mtype)
 		h.rcvr = rcvr
-		h.method = method
+		h.mkokod = mkokod
 		h.errPos = -1
 
 		firstArg := 1
@@ -155,21 +155,21 @@ METHODS:
 				if isExportedOrBuiltinType(argType) {
 					h.argTypes[i-firstArg] = argType
 				} else {
-					continue METHODS
+					continue MkokODS
 				}
 			}
 
 			subscriptions[mname] = &h
-			continue METHODS
+			continue MkokODS
 		}
 
-		// determine method arguments, ignore first arg since it's the receiver type
+		// determine mkokod arguments, ignore first arg since it's the receiver type
 		// Arguments must be exported or builtin types
 		h.argTypes = make([]reflect.Type, numIn-firstArg)
 		for i := firstArg; i < numIn; i++ {
 			argType := mtype.In(i)
 			if !isExportedOrBuiltinType(argType) {
-				continue METHODS
+				continue MkokODS
 			}
 			h.argTypes[i-firstArg] = argType
 		}
@@ -177,11 +177,11 @@ METHODS:
 		// check that all returned values are exported or builtin types
 		for i := 0; i < mtype.NumOut(); i++ {
 			if !isExportedOrBuiltinType(mtype.Out(i)) {
-				continue METHODS
+				continue MkokODS
 			}
 		}
 
-		// when a method returns an error it must be the last returned value
+		// when a mkokod returns an error it must be the last returned value
 		h.errPos = -1
 		for i := 0; i < mtype.NumOut(); i++ {
 			if isErrorType(mtype.Out(i)) {
@@ -191,13 +191,13 @@ METHODS:
 		}
 
 		if h.errPos >= 0 && h.errPos != mtype.NumOut()-1 {
-			continue METHODS
+			continue MkokODS
 		}
 
 		switch mtype.NumOut() {
 		case 0, 1, 2:
-			if mtype.NumOut() == 2 && h.errPos == -1 { // method must one return value and 1 error
-				continue METHODS
+			if mtype.NumOut() == 2 && h.errPos == -1 { // mkokod must one return value and 1 error
+				continue MkokODS
 			}
 			callbacks[mname] = &h
 		}

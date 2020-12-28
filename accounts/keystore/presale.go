@@ -1,18 +1,18 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2016 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package keystore
 
@@ -46,7 +46,7 @@ func importPreSaleKey(keyStore keyStore, keyJSON []byte, password string) (accou
 func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error) {
 	preSaleKeyStruct := struct {
 		EncSeed string
-		EthAddr string
+		kokAddr string
 		Email   string
 		BtcAddr string
 	}{}
@@ -61,9 +61,9 @@ func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error
 	iv := encSeedBytes[:16]
 	cipherText := encSeedBytes[16:]
 	/*
-		See https://github.com/ethereum/pyethsaletool
+		See https://github.com/kokereum/pykoksaletool
 
-		pyethsaletool generates the encryption key from password by
+		pykoksaletool generates the encryption key from password by
 		2000 rounds of PBKDF2 with HMAC-SHA-256 using password as salt (:().
 		16 byte key length within PBKDF2 and resulting key is used as AES key
 	*/
@@ -73,8 +73,8 @@ func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error
 	if err != nil {
 		return nil, err
 	}
-	ethPriv := crypto.Keccak256(plainText)
-	ecKey := crypto.ToECDSAUnsafe(ethPriv)
+	kokPriv := crypto.Keccak256(plainText)
+	ecKey := crypto.ToECDSAUnsafe(kokPriv)
 
 	key = &Key{
 		Id:         nil,
@@ -82,7 +82,7 @@ func decryptPreSaleKey(fileContent []byte, password string) (key *Key, err error
 		PrivateKey: ecKey,
 	}
 	derivedAddr := hex.EncodeToString(key.Address.Bytes()) // needed because .Hex() gives leading "0x"
-	expectedAddr := preSaleKeyStruct.EthAddr
+	expectedAddr := preSaleKeyStruct.kokAddr
 	if derivedAddr != expectedAddr {
 		err = fmt.Errorf("decrypted addr '%s' not equal to expected addr '%s'", derivedAddr, expectedAddr)
 	}

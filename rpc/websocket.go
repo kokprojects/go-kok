@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -32,24 +32,24 @@ import (
 	"gopkg.in/fatih/set.v0"
 )
 
-// WebsocketHandler returns a handler that serves JSON-RPC to WebSocket connections.
+// Websockkokandler returns a handler that serves JSON-RPC to WebSocket connections.
 //
 // allowedOrigins should be a comma-separated list of allowed origin URLs.
 // To allow connections with any origin, pass "*".
-func (srv *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
+func (srv *Server) Websockkokandler(allowedOrigins []string) http.Handler {
 	return websocket.Server{
 		Handshake: wsHandshakeValidator(allowedOrigins),
 		Handler: func(conn *websocket.Conn) {
-			srv.ServeCodec(NewJSONCodec(conn), OptionMethodInvocation|OptionSubscriptions)
+			srv.ServeCodec(NewJSONCodec(conn), OptionMkokodInvocation|OptionSubscriptions)
 		},
 	}
 }
 
 // NewWSServer creates a new websocket RPC server around an API provider.
 //
-// Deprecated: use Server.WebsocketHandler
+// Deprecated: use Server.Websockkokandler
 func NewWSServer(allowedOrigins []string, srv *Server) *http.Server {
-	return &http.Server{Handler: srv.WebsocketHandler(allowedOrigins)}
+	return &http.Server{Handler: srv.Websockkokandler(allowedOrigins)}
 }
 
 // wsHandshakeValidator returns a handler that verifies the origin during the

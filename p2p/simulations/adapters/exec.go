@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package adapters
 
@@ -106,7 +106,7 @@ func (e *ExecAdapter) NewNode(config *NodeConfig) (Node, error) {
 	conf.Stack.NoUSB = true
 
 	// listen on a random localhost port (we'll get the actual port after
-	// starting the node through the RPC admin.nodeInfo method)
+	// starting the node through the RPC admin.nodeInfo mkokod)
 	conf.Stack.P2P.ListenAddr = "127.0.0.1:0"
 
 	node := &ExecNode{
@@ -314,7 +314,7 @@ func (n *ExecNode) ServeRPC(clientConn net.Conn) error {
 }
 
 // Snapshots creates snapshots of the services by calling the
-// simulation_snapshot RPC method
+// simulation_snapshot RPC mkokod
 func (n *ExecNode) Snapshots() (map[string][]byte, error) {
 	if n.client == nil {
 		return nil, errors.New("RPC not started")
@@ -344,7 +344,7 @@ type execNodeConfig struct {
 func execP2PNode() {
 	glogger := log.NewGlogHandler(log.StreamHandler(os.Stderr, log.LogfmtFormat()))
 	glogger.Verbosity(log.LvlInfo)
-	log.Root().SetHandler(glogger)
+	log.Root().Skokandler(glogger)
 
 	// read the services from argv
 	serviceNames := strings.Split(os.Args[1], ",")
@@ -468,7 +468,7 @@ func (s *snapshotService) Stop() error {
 	return nil
 }
 
-// SnapshotAPI provides an RPC method to create snapshots of services
+// SnapshotAPI provides an RPC mkokod to create snapshots of services
 type SnapshotAPI struct {
 	services map[string]node.Service
 }

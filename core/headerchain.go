@@ -1,18 +1,18 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2015 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -28,7 +28,7 @@ import (
 	"github.com/kokprojects/go-kok/common"
 	"github.com/kokprojects/go-kok/consensus"
 	"github.com/kokprojects/go-kok/core/types"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/log"
 	"github.com/kokprojects/go-kok/params"
 	"github.com/hashicorp/golang-lru"
@@ -48,7 +48,7 @@ const (
 type HeaderChain struct {
 	config *params.ChainConfig
 
-	chainDb       ethdb.Database
+	chainDb       kokdb.Database
 	genesisHeader *types.Header
 
 	currentHeader     *types.Header // Current head of the header chain (may be above the block chain!)
@@ -68,7 +68,7 @@ type HeaderChain struct {
 //  getValidator should return the parent's validator
 //  procInterrupt points to the parent's interrupt semaphore
 //  wg points to the parent's shutdown wait group
-func NewHeaderChain(chainDb ethdb.Database, config *params.ChainConfig, engine consensus.Engine, procInterrupt func() bool) (*HeaderChain, error) {
+func NewHeaderChain(chainDb kokdb.Database, config *params.ChainConfig, engine consensus.Engine, procInterrupt func() bool) (*HeaderChain, error) {
 	headerCache, _ := lru.New(headerCacheLimit)
 	tdCache, _ := lru.New(tdCacheLimit)
 	numberCache, _ := lru.New(numberCacheLimit)
@@ -90,14 +90,14 @@ func NewHeaderChain(chainDb ethdb.Database, config *params.ChainConfig, engine c
 		engine:        engine,
 	}
 
-	hc.genesisHeader = hc.GetHeaderByNumber(0)
+	hc.genesisHeader = hc.GkokeaderByNumber(0)
 	if hc.genesisHeader == nil {
 		return nil, ErrNoGenesis
 	}
 
 	hc.currentHeader = hc.genesisHeader
-	if head := GetHeadBlockHash(chainDb); head != (common.Hash{}) {
-		if chead := hc.GetHeaderByHash(head); chead != nil {
+	if head := GkokeadBlockHash(chainDb); head != (common.Hash{}) {
+		if chead := hc.GkokeaderByHash(head); chead != nil {
 			hc.currentHeader = chead
 		}
 	}
@@ -123,7 +123,7 @@ func (hc *HeaderChain) GetBlockNumber(hash common.Hash) uint64 {
 // already known. If the total difficulty of the newly inserted header becomes
 // greater than the current known TD, the canonical chain is re-routed.
 //
-// Note: This method is not concurrent-safe with inserting blocks simultaneously
+// Note: This mkokod is not concurrent-safe with inserting blocks simultaneously
 // into the chain, as side effects caused by reorganisations cannot be emulated
 // without the real blocks. Hence, writing headers directly should only be done
 // in two scenarios: pure-header mode of operation (light clients), or properly
@@ -165,14 +165,14 @@ func (hc *HeaderChain) WriteHeader(header *types.Header) (status WriteStatus, er
 		var (
 			headHash   = header.ParentHash
 			headNumber = header.Number.Uint64() - 1
-			headHeader = hc.GetHeader(headHash, headNumber)
+			headHeader = hc.Gkokeader(headHash, headNumber)
 		)
 		for GetCanonicalHash(hc.chainDb, headNumber) != headHash {
 			WriteCanonicalHash(hc.chainDb, headHash, headNumber)
 
 			headHash = headHeader.ParentHash
 			headNumber = headHeader.Number.Uint64() - 1
-			headHeader = hc.GetHeader(headHash, headNumber)
+			headHeader = hc.Gkokeader(headHash, headNumber)
 		}
 		// Extend the canonical chain with the new header
 		if err := WriteCanonicalHash(hc.chainDb, hash, number); err != nil {
@@ -252,7 +252,7 @@ func (hc *HeaderChain) ValidateHeaderChain(chain []*types.Header, checkFreq int)
 // chain, possibly creating a reorg. If an error is returned, it will return the
 // index number of the failing header as well an error describing what went wrong.
 //
-// The verify parameter can be used to fine tune whether nonce verification
+// The verify parameter can be used to fine tune whkoker nonce verification
 // should be done or not. The reason behind the optional check is because some
 // of the header retrieval mechanisms already need to verfy nonces, as well as
 // because nonces can be verified sparsely, not needing to check each.
@@ -288,7 +288,7 @@ func (hc *HeaderChain) InsertHeaderChain(chain []*types.Header, writeHeader WhCa
 // hash, fetching towards the genesis block.
 func (hc *HeaderChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash {
 	// Get the origin header from which to fetch
-	header := hc.GetHeaderByHash(hash)
+	header := hc.GkokeaderByHash(hash)
 	if header == nil {
 		return nil
 	}
@@ -296,7 +296,7 @@ func (hc *HeaderChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []co
 	chain := make([]common.Hash, 0, max)
 	for i := uint64(0); i < max; i++ {
 		next := header.ParentHash
-		if header = hc.GetHeader(next, header.Number.Uint64()-1); header == nil {
+		if header = hc.Gkokeader(next, header.Number.Uint64()-1); header == nil {
 			break
 		}
 		chain = append(chain, next)
@@ -339,14 +339,14 @@ func (hc *HeaderChain) WriteTd(hash common.Hash, number uint64, td *big.Int) err
 	return nil
 }
 
-// GetHeader retrieves a block header from the database by hash and number,
+// Gkokeader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (hc *HeaderChain) GetHeader(hash common.Hash, number uint64) *types.Header {
+func (hc *HeaderChain) Gkokeader(hash common.Hash, number uint64) *types.Header {
 	// Short circuit if the header's already in the cache, retrieve otherwise
 	if header, ok := hc.headerCache.Get(hash); ok {
 		return header.(*types.Header)
 	}
-	header := GetHeader(hc.chainDb, hash, number)
+	header := Gkokeader(hc.chainDb, hash, number)
 	if header == nil {
 		return nil
 	}
@@ -355,10 +355,10 @@ func (hc *HeaderChain) GetHeader(hash common.Hash, number uint64) *types.Header 
 	return header
 }
 
-// GetHeaderByHash retrieves a block header from the database by hash, caching it if
+// GkokeaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (hc *HeaderChain) GetHeaderByHash(hash common.Hash) *types.Header {
-	return hc.GetHeader(hash, hc.GetBlockNumber(hash))
+func (hc *HeaderChain) GkokeaderByHash(hash common.Hash) *types.Header {
+	return hc.Gkokeader(hash, hc.GetBlockNumber(hash))
 }
 
 // HasHeader checks if a block header is present in the database or not.
@@ -370,14 +370,14 @@ func (hc *HeaderChain) HasHeader(hash common.Hash, number uint64) bool {
 	return ok
 }
 
-// GetHeaderByNumber retrieves a block header from the database by number,
+// GkokeaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (hc *HeaderChain) GetHeaderByNumber(number uint64) *types.Header {
+func (hc *HeaderChain) GkokeaderByNumber(number uint64) *types.Header {
 	hash := GetCanonicalHash(hc.chainDb, number)
 	if hash == (common.Hash{}) {
 		return nil
 	}
-	return hc.GetHeader(hash, number)
+	return hc.Gkokeader(hash, number)
 }
 
 // CurrentHeader retrieves the current head header of the canonical chain. The
@@ -395,13 +395,13 @@ func (hc *HeaderChain) SetCurrentHeader(head *types.Header) {
 	hc.currentHeaderHash = head.Hash()
 }
 
-// DeleteCallback is a callback function that is called by SetHead before
+// DeleteCallback is a callback function that is called by Skokead before
 // each header is deleted.
 type DeleteCallback func(common.Hash, uint64)
 
-// SetHead rewinds the local chain to a new head. Everything above the new head
+// Skokead rewinds the local chain to a new head. Everything above the new head
 // will be deleted and the new one set.
-func (hc *HeaderChain) SetHead(head uint64, delFn DeleteCallback) {
+func (hc *HeaderChain) Skokead(head uint64, delFn DeleteCallback) {
 	height := uint64(0)
 	if hc.currentHeader != nil {
 		height = hc.currentHeader.Number.Uint64()
@@ -415,7 +415,7 @@ func (hc *HeaderChain) SetHead(head uint64, delFn DeleteCallback) {
 		}
 		DeleteHeader(hc.chainDb, hash, num)
 		DeleteTd(hc.chainDb, hash, num)
-		hc.currentHeader = hc.GetHeader(hc.currentHeader.ParentHash, hc.currentHeader.Number.Uint64()-1)
+		hc.currentHeader = hc.Gkokeader(hc.currentHeader.ParentHash, hc.currentHeader.Number.Uint64()-1)
 	}
 	// Roll back the canonical chain numbering
 	for i := height; i > head; i-- {

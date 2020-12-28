@@ -1,18 +1,18 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2014 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // +build none
 
@@ -47,7 +47,7 @@ func main() {
 	name := common.MakeName("whisper-go", "1.0")
 	shh := whisper.New()
 
-	// Create an Ethereum peer to communicate through
+	// Create an kokereum peer to communicate through
 	server := p2p.Server{
 		PrivateKey: key,
 		MaxPeers:   10,
@@ -56,13 +56,13 @@ func main() {
 		ListenAddr: ":30300",
 		NAT:        nat.Any(),
 	}
-	fmt.Println("Starting Ethereum peer...")
+	fmt.Println("Starting kokereum peer...")
 	if err := server.Start(); err != nil {
-		fmt.Printf("Failed to start Ethereum peer: %v.\n", err)
+		fmt.Printf("Failed to start kokereum peer: %v.\n", err)
 		os.Exit(1)
 	}
 
-	// Send a message to self to check that something works
+	// Send a message to self to check that somkoking works
 	payload := fmt.Sprintf("Hello world, this is %v. In case you're wondering, the time is %v", name, time.Now())
 	if err := selfSend(shh, []byte(payload)); err != nil {
 		fmt.Printf("Failed to self message: %v.\n", err)

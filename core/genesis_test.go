@@ -1,18 +1,18 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2017 The go-kokereum Authors
+// This file is part of the go-kokereum library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-kokereum library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-kokereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-kokereum library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -23,9 +23,9 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/kokprojects/go-kok/common"
-	"github.com/kokprojects/go-kok/consensus/ethash"
+	"github.com/kokprojects/go-kok/consensus/kokash"
 	"github.com/kokprojects/go-kok/core/vm"
-	"github.com/kokprojects/go-kok/ethdb"
+	"github.com/kokprojects/go-kok/kokdb"
 	"github.com/kokprojects/go-kok/params"
 )
 
@@ -43,14 +43,14 @@ func TestSetupGenesis(t *testing.T) {
 	oldcustomg.Config = &params.ChainConfig{HomesteadBlock: big.NewInt(2)}
 	tests := []struct {
 		name       string
-		fn         func(ethdb.Database) (*params.ChainConfig, common.Hash, error)
+		fn         func(kokdb.Database) (*params.ChainConfig, common.Hash, error)
 		wantConfig *params.ChainConfig
 		wantHash   common.Hash
 		wantErr    error
 	}{
 		{
 			name: "custom block in DB, genesis == nil",
-			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+			fn: func(db kokdb.Database) (*params.ChainConfig, common.Hash, error) {
 				customg.MustCommit(db)
 				return SetupGenesisBlock(db, nil)
 			},
@@ -59,7 +59,7 @@ func TestSetupGenesis(t *testing.T) {
 		},
 		{
 			name: "compatible config in DB",
-			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+			fn: func(db kokdb.Database) (*params.ChainConfig, common.Hash, error) {
 				oldcustomg.MustCommit(db)
 				return SetupGenesisBlock(db, &customg)
 			},
@@ -68,11 +68,11 @@ func TestSetupGenesis(t *testing.T) {
 		},
 		{
 			name: "incompatible config in DB",
-			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+			fn: func(db kokdb.Database) (*params.ChainConfig, common.Hash, error) {
 				// Commit the 'old' genesis block with Homestead transition at #2.
 				// Advance to block #4, past the homestead transition block of customg.
 				genesis := oldcustomg.MustCommit(db)
-				bc, _ := NewBlockChain(db, oldcustomg.Config, ethash.NewFullFaker(), vm.Config{})
+				bc, _ := NewBlockChain(db, oldcustomg.Config, kokash.NewFullFaker(), vm.Config{})
 				defer bc.Stop()
 				bc.SetValidator(bproc{})
 				bc.InsertChain(makeBlockChainWithDiff(genesis, []int{2, 3, 4, 5}, 0))
@@ -92,7 +92,7 @@ func TestSetupGenesis(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		db, _ := ethdb.NewMemDatabase()
+		db, _ := kokdb.NewMemDatabase()
 		config, hash, err := test.fn(db)
 		// Check the return values.
 		if !reflect.DeepEqual(err, test.wantErr) {
